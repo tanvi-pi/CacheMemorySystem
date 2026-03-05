@@ -1,0 +1,493 @@
+{
+  "generated_at": "2026-03-01T21:58:29",
+  "episodes_per_task": 5,
+  "use_openai": false,
+  "llm_abstracts": false,
+  "agents": {
+    "coder": {
+      "L0_outcome_signals": [
+        {
+          "task_type": "api_integration",
+          "situation_hash": "e6e74777af43cd07cb870490",
+          "success_count": 3,
+          "failure_count": 0,
+          "warning_count": 1,
+          "fail_rate": 0.0,
+          "last_outcome": "warning",
+          "last_episode": "ep_api_integration_8"
+        },
+        {
+          "task_type": "api_integration",
+          "situation_hash": "c9a7cb7110a846695d3a3f9d",
+          "success_count": 1,
+          "failure_count": 0,
+          "warning_count": 0,
+          "fail_rate": 0.0,
+          "last_outcome": "success",
+          "last_episode": "ep_api_integration_9"
+        }
+      ],
+      "L1_abstract_episodes": [
+        {
+          "episode_id": "ep_api_integration_9",
+          "task_type": "api_integration",
+          "outcome": "success",
+          "abstract": "Task api_integration for role coder. Situation oauth refresh token. Cause-effect: decision path produced success.",
+          "cost_tokens": 1969
+        },
+        {
+          "episode_id": "ep_api_integration_6",
+          "task_type": "api_integration",
+          "outcome": "success",
+          "abstract": "Task api_integration for role coder. Situation schema mismatch. Cause-effect: decision path produced success.",
+          "cost_tokens": 926
+        },
+        {
+          "episode_id": "ep_api_integration_7",
+          "task_type": "api_integration",
+          "outcome": "success",
+          "abstract": "Task api_integration for role coder. Situation schema mismatch. Cause-effect: decision path produced success.",
+          "cost_tokens": 1252
+        },
+        {
+          "episode_id": "ep_api_integration_8",
+          "task_type": "api_integration",
+          "outcome": "warning",
+          "abstract": "Task api_integration for role coder. Situation schema mismatch. Cause-effect: decision path produced warning.",
+          "cost_tokens": 1393
+        },
+        {
+          "episode_id": "ep_api_integration_5",
+          "task_type": "api_integration",
+          "outcome": "success",
+          "abstract": "Task api_integration for role coder. Situation schema mismatch. Cause-effect: decision path produced success.",
+          "cost_tokens": 1257
+        }
+      ],
+      "L2_full_trace_episodes": [
+        {
+          "episode_id": "ep_api_integration_9",
+          "task_type": "api_integration",
+          "outcome": "success",
+          "full_trace": "Full execution trace for api_integration/coder with pattern oauth refresh token. Attempt logs, tool calls, and resolution details. Full execution trace for api_integration/coder with pattern oauth refresh token. Attempt logs, tool calls, and resolution details. Full execution trace for api_integration/coder with pattern oauth refresh token. Attempt logs, tool calls, and resolution details. Full execution trace for api_integration/coder with pattern oauth refresh token. Attempt logs, tool calls, and resolution details. Full execution trace for api_integration/coder with pattern oauth refresh token. Attempt logs, tool calls, and resolution details. Full execution trace for api_integration/coder with pattern oauth refresh token. Attempt logs, tool calls, and resolution details. Full execution trace for api_integration/coder with pattern oauth refresh token. Attempt logs, tool calls, and resolution details. Full execution trace for api_integration/coder with pattern oauth refresh token. Attempt logs, tool calls, and resolution details. Full execution trace for api_integration/coder with pattern oauth refresh token. Attempt logs, tool calls, and resolution details. Full execution trace for api_integration/coder with pattern oauth refresh token. Attempt logs, tool calls, and resolution details. "
+        },
+        {
+          "episode_id": "ep_api_integration_6",
+          "task_type": "api_integration",
+          "outcome": "success",
+          "full_trace": "Full execution trace for api_integration/coder with pattern schema mismatch. Attempt logs, tool calls, and resolution details. Full execution trace for api_integration/coder with pattern schema mismatch. Attempt logs, tool calls, and resolution details. Full execution trace for api_integration/coder with pattern schema mismatch. Attempt logs, tool calls, and resolution details. Full execution trace for api_integration/coder with pattern schema mismatch. Attempt logs, tool calls, and resolution details. Full execution trace for api_integration/coder with pattern schema mismatch. Attempt logs, tool calls, and resolution details. Full execution trace for api_integration/coder with pattern schema mismatch. Attempt logs, tool calls, and resolution details. Full execution trace for api_integration/coder with pattern schema mismatch. Attempt logs, tool calls, and resolution details. Full execution trace for api_integration/coder with pattern schema mismatch. Attempt logs, tool calls, and resolution details. Full execution trace for api_integration/coder with pattern schema mismatch. Attempt logs, tool calls, and resolution details. Full execution trace for api_integration/coder with pattern schema mismatch. Attempt logs, tool calls, and resolution details. "
+        },
+        {
+          "episode_id": "ep_api_integration_7",
+          "task_type": "api_integration",
+          "outcome": "success",
+          "full_trace": "Full execution trace for api_integration/coder with pattern schema mismatch. Attempt logs, tool calls, and resolution details. Full execution trace for api_integration/coder with pattern schema mismatch. Attempt logs, tool calls, and resolution details. Full execution trace for api_integration/coder with pattern schema mismatch. Attempt logs, tool calls, and resolution details. Full execution trace for api_integration/coder with pattern schema mismatch. Attempt logs, tool calls, and resolution details. Full execution trace for api_integration/coder with pattern schema mismatch. Attempt logs, tool calls, and resolution details. Full execution trace for api_integration/coder with pattern schema mismatch. Attempt logs, tool calls, and resolution details. Full execution trace for api_integration/coder with pattern schema mismatch. Attempt logs, tool calls, and resolution details. Full execution trace for api_integration/coder with pattern schema mismatch. Attempt logs, tool calls, and resolution details. Full execution trace for api_integration/coder with pattern schema mismatch. Attempt logs, tool calls, and resolution details. Full execution trace for api_integration/coder with pattern schema mismatch. Attempt logs, tool calls, and resolution details. "
+        },
+        {
+          "episode_id": "ep_api_integration_8",
+          "task_type": "api_integration",
+          "outcome": "warning",
+          "full_trace": "Full execution trace for api_integration/coder with pattern schema mismatch. Attempt logs, tool calls, and resolution details. Full execution trace for api_integration/coder with pattern schema mismatch. Attempt logs, tool calls, and resolution details. Full execution trace for api_integration/coder with pattern schema mismatch. Attempt logs, tool calls, and resolution details. Full execution trace for api_integration/coder with pattern schema mismatch. Attempt logs, tool calls, and resolution details. Full execution trace for api_integration/coder with pattern schema mismatch. Attempt logs, tool calls, and resolution details. Full execution trace for api_integration/coder with pattern schema mismatch. Attempt logs, tool calls, and resolution details. Full execution trace for api_integration/coder with pattern schema mismatch. Attempt logs, tool calls, and resolution details. Full execution trace for api_integration/coder with pattern schema mismatch. Attempt logs, tool calls, and resolution details. Full execution trace for api_integration/coder with pattern schema mismatch. Attempt logs, tool calls, and resolution details. Full execution trace for api_integration/coder with pattern schema mismatch. Attempt logs, tool calls, and resolution details. "
+        },
+        {
+          "episode_id": "ep_api_integration_5",
+          "task_type": "api_integration",
+          "outcome": "success",
+          "full_trace": "Full execution trace for api_integration/coder with pattern schema mismatch. Attempt logs, tool calls, and resolution details. Full execution trace for api_integration/coder with pattern schema mismatch. Attempt logs, tool calls, and resolution details. Full execution trace for api_integration/coder with pattern schema mismatch. Attempt logs, tool calls, and resolution details. Full execution trace for api_integration/coder with pattern schema mismatch. Attempt logs, tool calls, and resolution details. Full execution trace for api_integration/coder with pattern schema mismatch. Attempt logs, tool calls, and resolution details. Full execution trace for api_integration/coder with pattern schema mismatch. Attempt logs, tool calls, and resolution details. Full execution trace for api_integration/coder with pattern schema mismatch. Attempt logs, tool calls, and resolution details. Full execution trace for api_integration/coder with pattern schema mismatch. Attempt logs, tool calls, and resolution details. Full execution trace for api_integration/coder with pattern schema mismatch. Attempt logs, tool calls, and resolution details. Full execution trace for api_integration/coder with pattern schema mismatch. Attempt logs, tool calls, and resolution details. "
+        }
+      ]
+    },
+    "executor": {
+      "L0_outcome_signals": [
+        {
+          "task_type": "release_validation",
+          "situation_hash": "005700d0dc39f5ab30b2f58a",
+          "success_count": 0,
+          "failure_count": 2,
+          "warning_count": 0,
+          "fail_rate": 1.0,
+          "last_outcome": "failure",
+          "last_episode": "ep_release_validation_24"
+        },
+        {
+          "task_type": "release_validation",
+          "situation_hash": "4601f94fa9c50c604352a6cf",
+          "success_count": 1,
+          "failure_count": 0,
+          "warning_count": 0,
+          "fail_rate": 0.0,
+          "last_outcome": "success",
+          "last_episode": "ep_release_validation_21"
+        },
+        {
+          "task_type": "release_validation",
+          "situation_hash": "a82de4e5c450240b3d0288ab",
+          "success_count": 2,
+          "failure_count": 0,
+          "warning_count": 0,
+          "fail_rate": 0.0,
+          "last_outcome": "success",
+          "last_episode": "ep_release_validation_23"
+        }
+      ],
+      "L1_abstract_episodes": [
+        {
+          "episode_id": "ep_release_validation_22",
+          "task_type": "release_validation",
+          "outcome": "success",
+          "abstract": "Task release_validation for role executor. Situation e2e smoke failures. Cause-effect: decision path produced success.",
+          "cost_tokens": 1517
+        },
+        {
+          "episode_id": "ep_release_validation_23",
+          "task_type": "release_validation",
+          "outcome": "success",
+          "abstract": "Task release_validation for role executor. Situation e2e smoke failures. Cause-effect: decision path produced success.",
+          "cost_tokens": 1734
+        },
+        {
+          "episode_id": "ep_release_validation_24",
+          "task_type": "release_validation",
+          "outcome": "failure",
+          "abstract": "Task release_validation for role executor. Situation canary rollback needed. Cause-effect: decision path produced failure.",
+          "cost_tokens": 1770
+        },
+        {
+          "episode_id": "ep_release_validation_20",
+          "task_type": "release_validation",
+          "outcome": "failure",
+          "abstract": "Task release_validation for role executor. Situation canary rollback needed. Cause-effect: decision path produced failure.",
+          "cost_tokens": 1663
+        },
+        {
+          "episode_id": "ep_release_validation_21",
+          "task_type": "release_validation",
+          "outcome": "success",
+          "abstract": "Task release_validation for role executor. Situation migration checks pending. Cause-effect: decision path produced success.",
+          "cost_tokens": 1942
+        }
+      ],
+      "L2_full_trace_episodes": [
+        {
+          "episode_id": "ep_release_validation_22",
+          "task_type": "release_validation",
+          "outcome": "success",
+          "full_trace": "Full execution trace for release_validation/executor with pattern e2e smoke failures. Attempt logs, tool calls, and resolution details. Full execution trace for release_validation/executor with pattern e2e smoke failures. Attempt logs, tool calls, and resolution details. Full execution trace for release_validation/executor with pattern e2e smoke failures. Attempt logs, tool calls, and resolution details. Full execution trace for release_validation/executor with pattern e2e smoke failures. Attempt logs, tool calls, and resolution details. Full execution trace for release_validation/executor with pattern e2e smoke failures. Attempt logs, tool calls, and resolution details. Full execution trace for release_validation/executor with pattern e2e smoke failures. Attempt logs, tool calls, and resolution details. Full execution trace for release_validation/executor with pattern e2e smoke failures. Attempt logs, tool calls, and resolution details. Full execution trace for release_validation/executor with pattern e2e smoke failures. Attempt logs, tool calls, and resolution details. Full execution trace for release_validation/executor with pattern e2e smoke failures. Attempt logs, tool calls, and resolution details. Full execution trace for release_validation/executor with pattern e2e smoke failures. Attempt logs, tool calls, and resolution details. "
+        },
+        {
+          "episode_id": "ep_release_validation_23",
+          "task_type": "release_validation",
+          "outcome": "success",
+          "full_trace": "Full execution trace for release_validation/executor with pattern e2e smoke failures. Attempt logs, tool calls, and resolution details. Full execution trace for release_validation/executor with pattern e2e smoke failures. Attempt logs, tool calls, and resolution details. Full execution trace for release_validation/executor with pattern e2e smoke failures. Attempt logs, tool calls, and resolution details. Full execution trace for release_validation/executor with pattern e2e smoke failures. Attempt logs, tool calls, and resolution details. Full execution trace for release_validation/executor with pattern e2e smoke failures. Attempt logs, tool calls, and resolution details. Full execution trace for release_validation/executor with pattern e2e smoke failures. Attempt logs, tool calls, and resolution details. Full execution trace for release_validation/executor with pattern e2e smoke failures. Attempt logs, tool calls, and resolution details. Full execution trace for release_validation/executor with pattern e2e smoke failures. Attempt logs, tool calls, and resolution details. Full execution trace for release_validation/executor with pattern e2e smoke failures. Attempt logs, tool calls, and resolution details. Full execution trace for release_validation/executor with pattern e2e smoke failures. Attempt logs, tool calls, and resolution details. "
+        },
+        {
+          "episode_id": "ep_release_validation_24",
+          "task_type": "release_validation",
+          "outcome": "failure",
+          "full_trace": "Full execution trace for release_validation/executor with pattern canary rollback needed. Attempt logs, tool calls, and resolution details. Full execution trace for release_validation/executor with pattern canary rollback needed. Attempt logs, tool calls, and resolution details. Full execution trace for release_validation/executor with pattern canary rollback needed. Attempt logs, tool calls, and resolution details. Full execution trace for release_validation/executor with pattern canary rollback needed. Attempt logs, tool calls, and resolution details. Full execution trace for release_validation/executor with pattern canary rollback needed. Attempt logs, tool calls, and resolution details. Full execution trace for release_validation/executor with pattern canary rollback needed. Attempt logs, tool calls, and resolution details. Full execution trace for release_validation/executor with pattern canary rollback needed. Attempt logs, tool calls, and resolution details. Full execution trace for release_validation/executor with pattern canary rollback needed. Attempt logs, tool calls, and resolution details. Full execution trace for release_validation/executor with pattern canary rollback needed. Attempt logs, tool calls, and resolution details. Full execution trace for release_validation/executor with pattern canary rollback needed. Attempt logs, tool calls, and resolution details. "
+        },
+        {
+          "episode_id": "ep_release_validation_20",
+          "task_type": "release_validation",
+          "outcome": "failure",
+          "full_trace": "Full execution trace for release_validation/executor with pattern canary rollback needed. Attempt logs, tool calls, and resolution details. Full execution trace for release_validation/executor with pattern canary rollback needed. Attempt logs, tool calls, and resolution details. Full execution trace for release_validation/executor with pattern canary rollback needed. Attempt logs, tool calls, and resolution details. Full execution trace for release_validation/executor with pattern canary rollback needed. Attempt logs, tool calls, and resolution details. Full execution trace for release_validation/executor with pattern canary rollback needed. Attempt logs, tool calls, and resolution details. Full execution trace for release_validation/executor with pattern canary rollback needed. Attempt logs, tool calls, and resolution details. Full execution trace for release_validation/executor with pattern canary rollback needed. Attempt logs, tool calls, and resolution details. Full execution trace for release_validation/executor with pattern canary rollback needed. Attempt logs, tool calls, and resolution details. Full execution trace for release_validation/executor with pattern canary rollback needed. Attempt logs, tool calls, and resolution details. Full execution trace for release_validation/executor with pattern canary rollback needed. Attempt logs, tool calls, and resolution details. "
+        },
+        {
+          "episode_id": "ep_release_validation_21",
+          "task_type": "release_validation",
+          "outcome": "success",
+          "full_trace": "Full execution trace for release_validation/executor with pattern migration checks pending. Attempt logs, tool calls, and resolution details. Full execution trace for release_validation/executor with pattern migration checks pending. Attempt logs, tool calls, and resolution details. Full execution trace for release_validation/executor with pattern migration checks pending. Attempt logs, tool calls, and resolution details. Full execution trace for release_validation/executor with pattern migration checks pending. Attempt logs, tool calls, and resolution details. Full execution trace for release_validation/executor with pattern migration checks pending. Attempt logs, tool calls, and resolution details. Full execution trace for release_validation/executor with pattern migration checks pending. Attempt logs, tool calls, and resolution details. Full execution trace for release_validation/executor with pattern migration checks pending. Attempt logs, tool calls, and resolution details. Full execution trace for release_validation/executor with pattern migration checks pending. Attempt logs, tool calls, and resolution details. Full execution trace for release_validation/executor with pattern migration checks pending. Attempt logs, tool calls, and resolution details. Full execution trace for release_validation/executor with pattern migration checks pending. Attempt logs, tool calls, and resolution details. "
+        }
+      ]
+    },
+    "researcher": {
+      "L0_outcome_signals": [
+        {
+          "task_type": "incident_investigation",
+          "situation_hash": "a65a5224e3a3e89c6dbaf5e2",
+          "success_count": 3,
+          "failure_count": 0,
+          "warning_count": 0,
+          "fail_rate": 0.0,
+          "last_outcome": "success",
+          "last_episode": "ep_incident_investigation_18"
+        },
+        {
+          "task_type": "incident_investigation",
+          "situation_hash": "7ef1687bc43e15e203c82667",
+          "success_count": 1,
+          "failure_count": 0,
+          "warning_count": 1,
+          "fail_rate": 0.0,
+          "last_outcome": "success",
+          "last_episode": "ep_incident_investigation_19"
+        }
+      ],
+      "L1_abstract_episodes": [
+        {
+          "episode_id": "ep_incident_investigation_19",
+          "task_type": "incident_investigation",
+          "outcome": "success",
+          "abstract": "Task incident_investigation for role researcher. Situation network saturation. Cause-effect: decision path produced success.",
+          "cost_tokens": 2350
+        },
+        {
+          "episode_id": "ep_incident_investigation_15",
+          "task_type": "incident_investigation",
+          "outcome": "success",
+          "abstract": "Task incident_investigation for role researcher. Situation error spike after deploy. Cause-effect: decision path produced success.",
+          "cost_tokens": 1308
+        },
+        {
+          "episode_id": "ep_incident_investigation_16",
+          "task_type": "incident_investigation",
+          "outcome": "warning",
+          "abstract": "Task incident_investigation for role researcher. Situation network saturation. Cause-effect: decision path produced warning.",
+          "cost_tokens": 967
+        },
+        {
+          "episode_id": "ep_incident_investigation_17",
+          "task_type": "incident_investigation",
+          "outcome": "success",
+          "abstract": "Task incident_investigation for role researcher. Situation error spike after deploy. Cause-effect: decision path produced success.",
+          "cost_tokens": 1503
+        },
+        {
+          "episode_id": "ep_incident_investigation_18",
+          "task_type": "incident_investigation",
+          "outcome": "success",
+          "abstract": "Task incident_investigation for role researcher. Situation error spike after deploy. Cause-effect: decision path produced success.",
+          "cost_tokens": 949
+        }
+      ],
+      "L2_full_trace_episodes": [
+        {
+          "episode_id": "ep_incident_investigation_19",
+          "task_type": "incident_investigation",
+          "outcome": "success",
+          "full_trace": "Full execution trace for incident_investigation/researcher with pattern network saturation. Attempt logs, tool calls, and resolution details. Full execution trace for incident_investigation/researcher with pattern network saturation. Attempt logs, tool calls, and resolution details. Full execution trace for incident_investigation/researcher with pattern network saturation. Attempt logs, tool calls, and resolution details. Full execution trace for incident_investigation/researcher with pattern network saturation. Attempt logs, tool calls, and resolution details. Full execution trace for incident_investigation/researcher with pattern network saturation. Attempt logs, tool calls, and resolution details. Full execution trace for incident_investigation/researcher with pattern network saturation. Attempt logs, tool calls, and resolution details. Full execution trace for incident_investigation/researcher with pattern network saturation. Attempt logs, tool calls, and resolution details. Full execution trace for incident_investigation/researcher with pattern network saturation. Attempt logs, tool calls, and resolution details. Full execution trace for incident_investigation/researcher with pattern network saturation. Attempt logs, tool calls, and resolution details. Full execution trace for incident_investigation/researcher with pattern network saturation. Attempt logs, tool calls, and resolution details. "
+        },
+        {
+          "episode_id": "ep_incident_investigation_15",
+          "task_type": "incident_investigation",
+          "outcome": "success",
+          "full_trace": "Full execution trace for incident_investigation/researcher with pattern error spike after deploy. Attempt logs, tool calls, and resolution details. Full execution trace for incident_investigation/researcher with pattern error spike after deploy. Attempt logs, tool calls, and resolution details. Full execution trace for incident_investigation/researcher with pattern error spike after deploy. Attempt logs, tool calls, and resolution details. Full execution trace for incident_investigation/researcher with pattern error spike after deploy. Attempt logs, tool calls, and resolution details. Full execution trace for incident_investigation/researcher with pattern error spike after deploy. Attempt logs, tool calls, and resolution details. Full execution trace for incident_investigation/researcher with pattern error spike after deploy. Attempt logs, tool calls, and resolution details. Full execution trace for incident_investigation/researcher with pattern error spike after deploy. Attempt logs, tool calls, and resolution details. Full execution trace for incident_investigation/researcher with pattern error spike after deploy. Attempt logs, tool calls, and resolution details. Full execution trace for incident_investigation/researcher with pattern error spike after deploy. Attempt logs, tool calls, and resolution details. Full execution trace for incident_investigation/researcher with pattern error spike after deploy. Attempt logs, tool calls, and resolution details. "
+        },
+        {
+          "episode_id": "ep_incident_investigation_16",
+          "task_type": "incident_investigation",
+          "outcome": "warning",
+          "full_trace": "Full execution trace for incident_investigation/researcher with pattern network saturation. Attempt logs, tool calls, and resolution details. Full execution trace for incident_investigation/researcher with pattern network saturation. Attempt logs, tool calls, and resolution details. Full execution trace for incident_investigation/researcher with pattern network saturation. Attempt logs, tool calls, and resolution details. Full execution trace for incident_investigation/researcher with pattern network saturation. Attempt logs, tool calls, and resolution details. Full execution trace for incident_investigation/researcher with pattern network saturation. Attempt logs, tool calls, and resolution details. Full execution trace for incident_investigation/researcher with pattern network saturation. Attempt logs, tool calls, and resolution details. Full execution trace for incident_investigation/researcher with pattern network saturation. Attempt logs, tool calls, and resolution details. Full execution trace for incident_investigation/researcher with pattern network saturation. Attempt logs, tool calls, and resolution details. Full execution trace for incident_investigation/researcher with pattern network saturation. Attempt logs, tool calls, and resolution details. Full execution trace for incident_investigation/researcher with pattern network saturation. Attempt logs, tool calls, and resolution details. "
+        },
+        {
+          "episode_id": "ep_incident_investigation_17",
+          "task_type": "incident_investigation",
+          "outcome": "success",
+          "full_trace": "Full execution trace for incident_investigation/researcher with pattern error spike after deploy. Attempt logs, tool calls, and resolution details. Full execution trace for incident_investigation/researcher with pattern error spike after deploy. Attempt logs, tool calls, and resolution details. Full execution trace for incident_investigation/researcher with pattern error spike after deploy. Attempt logs, tool calls, and resolution details. Full execution trace for incident_investigation/researcher with pattern error spike after deploy. Attempt logs, tool calls, and resolution details. Full execution trace for incident_investigation/researcher with pattern error spike after deploy. Attempt logs, tool calls, and resolution details. Full execution trace for incident_investigation/researcher with pattern error spike after deploy. Attempt logs, tool calls, and resolution details. Full execution trace for incident_investigation/researcher with pattern error spike after deploy. Attempt logs, tool calls, and resolution details. Full execution trace for incident_investigation/researcher with pattern error spike after deploy. Attempt logs, tool calls, and resolution details. Full execution trace for incident_investigation/researcher with pattern error spike after deploy. Attempt logs, tool calls, and resolution details. Full execution trace for incident_investigation/researcher with pattern error spike after deploy. Attempt logs, tool calls, and resolution details. "
+        },
+        {
+          "episode_id": "ep_incident_investigation_18",
+          "task_type": "incident_investigation",
+          "outcome": "success",
+          "full_trace": "Full execution trace for incident_investigation/researcher with pattern error spike after deploy. Attempt logs, tool calls, and resolution details. Full execution trace for incident_investigation/researcher with pattern error spike after deploy. Attempt logs, tool calls, and resolution details. Full execution trace for incident_investigation/researcher with pattern error spike after deploy. Attempt logs, tool calls, and resolution details. Full execution trace for incident_investigation/researcher with pattern error spike after deploy. Attempt logs, tool calls, and resolution details. Full execution trace for incident_investigation/researcher with pattern error spike after deploy. Attempt logs, tool calls, and resolution details. Full execution trace for incident_investigation/researcher with pattern error spike after deploy. Attempt logs, tool calls, and resolution details. Full execution trace for incident_investigation/researcher with pattern error spike after deploy. Attempt logs, tool calls, and resolution details. Full execution trace for incident_investigation/researcher with pattern error spike after deploy. Attempt logs, tool calls, and resolution details. Full execution trace for incident_investigation/researcher with pattern error spike after deploy. Attempt logs, tool calls, and resolution details. Full execution trace for incident_investigation/researcher with pattern error spike after deploy. Attempt logs, tool calls, and resolution details. "
+        }
+      ]
+    },
+    "planner": {
+      "L0_outcome_signals": [
+        {
+          "task_type": "db_query_debug",
+          "situation_hash": "eb429d728f720894a59052f3",
+          "success_count": 0,
+          "failure_count": 3,
+          "warning_count": 0,
+          "fail_rate": 1.0,
+          "last_outcome": "failure",
+          "last_episode": "ep_db_query_debug_4"
+        },
+        {
+          "task_type": "db_query_debug",
+          "situation_hash": "9bf4904897aaa9fda92bbfb7",
+          "success_count": 1,
+          "failure_count": 1,
+          "warning_count": 0,
+          "fail_rate": 0.5,
+          "last_outcome": "success",
+          "last_episode": "ep_db_query_debug_2"
+        }
+      ],
+      "L1_abstract_episodes": [
+        {
+          "episode_id": "ep_db_query_debug_4",
+          "task_type": "db_query_debug",
+          "outcome": "failure",
+          "abstract": "Task db_query_debug for role planner. Situation postgres timeout index. Cause-effect: decision path produced failure.",
+          "cost_tokens": 1669
+        },
+        {
+          "episode_id": "ep_db_query_debug_0",
+          "task_type": "db_query_debug",
+          "outcome": "failure",
+          "abstract": "Task db_query_debug for role planner. Situation high cardinality join. Cause-effect: decision path produced failure.",
+          "cost_tokens": 1608
+        },
+        {
+          "episode_id": "ep_db_query_debug_1",
+          "task_type": "db_query_debug",
+          "outcome": "failure",
+          "abstract": "Task db_query_debug for role planner. Situation postgres timeout index. Cause-effect: decision path produced failure.",
+          "cost_tokens": 1897
+        },
+        {
+          "episode_id": "ep_db_query_debug_2",
+          "task_type": "db_query_debug",
+          "outcome": "success",
+          "abstract": "Task db_query_debug for role planner. Situation high cardinality join. Cause-effect: decision path produced success.",
+          "cost_tokens": 1839
+        },
+        {
+          "episode_id": "ep_db_query_debug_3",
+          "task_type": "db_query_debug",
+          "outcome": "failure",
+          "abstract": "Task db_query_debug for role planner. Situation postgres timeout index. Cause-effect: decision path produced failure.",
+          "cost_tokens": 1656
+        }
+      ],
+      "L2_full_trace_episodes": [
+        {
+          "episode_id": "ep_db_query_debug_4",
+          "task_type": "db_query_debug",
+          "outcome": "failure",
+          "full_trace": "Full execution trace for db_query_debug/planner with pattern postgres timeout index. Attempt logs, tool calls, and resolution details. Full execution trace for db_query_debug/planner with pattern postgres timeout index. Attempt logs, tool calls, and resolution details. Full execution trace for db_query_debug/planner with pattern postgres timeout index. Attempt logs, tool calls, and resolution details. Full execution trace for db_query_debug/planner with pattern postgres timeout index. Attempt logs, tool calls, and resolution details. Full execution trace for db_query_debug/planner with pattern postgres timeout index. Attempt logs, tool calls, and resolution details. Full execution trace for db_query_debug/planner with pattern postgres timeout index. Attempt logs, tool calls, and resolution details. Full execution trace for db_query_debug/planner with pattern postgres timeout index. Attempt logs, tool calls, and resolution details. Full execution trace for db_query_debug/planner with pattern postgres timeout index. Attempt logs, tool calls, and resolution details. Full execution trace for db_query_debug/planner with pattern postgres timeout index. Attempt logs, tool calls, and resolution details. Full execution trace for db_query_debug/planner with pattern postgres timeout index. Attempt logs, tool calls, and resolution details. "
+        },
+        {
+          "episode_id": "ep_db_query_debug_0",
+          "task_type": "db_query_debug",
+          "outcome": "failure",
+          "full_trace": "Full execution trace for db_query_debug/planner with pattern high cardinality join. Attempt logs, tool calls, and resolution details. Full execution trace for db_query_debug/planner with pattern high cardinality join. Attempt logs, tool calls, and resolution details. Full execution trace for db_query_debug/planner with pattern high cardinality join. Attempt logs, tool calls, and resolution details. Full execution trace for db_query_debug/planner with pattern high cardinality join. Attempt logs, tool calls, and resolution details. Full execution trace for db_query_debug/planner with pattern high cardinality join. Attempt logs, tool calls, and resolution details. Full execution trace for db_query_debug/planner with pattern high cardinality join. Attempt logs, tool calls, and resolution details. Full execution trace for db_query_debug/planner with pattern high cardinality join. Attempt logs, tool calls, and resolution details. Full execution trace for db_query_debug/planner with pattern high cardinality join. Attempt logs, tool calls, and resolution details. Full execution trace for db_query_debug/planner with pattern high cardinality join. Attempt logs, tool calls, and resolution details. Full execution trace for db_query_debug/planner with pattern high cardinality join. Attempt logs, tool calls, and resolution details. "
+        },
+        {
+          "episode_id": "ep_db_query_debug_1",
+          "task_type": "db_query_debug",
+          "outcome": "failure",
+          "full_trace": "Full execution trace for db_query_debug/planner with pattern postgres timeout index. Attempt logs, tool calls, and resolution details. Full execution trace for db_query_debug/planner with pattern postgres timeout index. Attempt logs, tool calls, and resolution details. Full execution trace for db_query_debug/planner with pattern postgres timeout index. Attempt logs, tool calls, and resolution details. Full execution trace for db_query_debug/planner with pattern postgres timeout index. Attempt logs, tool calls, and resolution details. Full execution trace for db_query_debug/planner with pattern postgres timeout index. Attempt logs, tool calls, and resolution details. Full execution trace for db_query_debug/planner with pattern postgres timeout index. Attempt logs, tool calls, and resolution details. Full execution trace for db_query_debug/planner with pattern postgres timeout index. Attempt logs, tool calls, and resolution details. Full execution trace for db_query_debug/planner with pattern postgres timeout index. Attempt logs, tool calls, and resolution details. Full execution trace for db_query_debug/planner with pattern postgres timeout index. Attempt logs, tool calls, and resolution details. Full execution trace for db_query_debug/planner with pattern postgres timeout index. Attempt logs, tool calls, and resolution details. "
+        },
+        {
+          "episode_id": "ep_db_query_debug_2",
+          "task_type": "db_query_debug",
+          "outcome": "success",
+          "full_trace": "Full execution trace for db_query_debug/planner with pattern high cardinality join. Attempt logs, tool calls, and resolution details. Full execution trace for db_query_debug/planner with pattern high cardinality join. Attempt logs, tool calls, and resolution details. Full execution trace for db_query_debug/planner with pattern high cardinality join. Attempt logs, tool calls, and resolution details. Full execution trace for db_query_debug/planner with pattern high cardinality join. Attempt logs, tool calls, and resolution details. Full execution trace for db_query_debug/planner with pattern high cardinality join. Attempt logs, tool calls, and resolution details. Full execution trace for db_query_debug/planner with pattern high cardinality join. Attempt logs, tool calls, and resolution details. Full execution trace for db_query_debug/planner with pattern high cardinality join. Attempt logs, tool calls, and resolution details. Full execution trace for db_query_debug/planner with pattern high cardinality join. Attempt logs, tool calls, and resolution details. Full execution trace for db_query_debug/planner with pattern high cardinality join. Attempt logs, tool calls, and resolution details. Full execution trace for db_query_debug/planner with pattern high cardinality join. Attempt logs, tool calls, and resolution details. "
+        },
+        {
+          "episode_id": "ep_db_query_debug_3",
+          "task_type": "db_query_debug",
+          "outcome": "failure",
+          "full_trace": "Full execution trace for db_query_debug/planner with pattern postgres timeout index. Attempt logs, tool calls, and resolution details. Full execution trace for db_query_debug/planner with pattern postgres timeout index. Attempt logs, tool calls, and resolution details. Full execution trace for db_query_debug/planner with pattern postgres timeout index. Attempt logs, tool calls, and resolution details. Full execution trace for db_query_debug/planner with pattern postgres timeout index. Attempt logs, tool calls, and resolution details. Full execution trace for db_query_debug/planner with pattern postgres timeout index. Attempt logs, tool calls, and resolution details. Full execution trace for db_query_debug/planner with pattern postgres timeout index. Attempt logs, tool calls, and resolution details. Full execution trace for db_query_debug/planner with pattern postgres timeout index. Attempt logs, tool calls, and resolution details. Full execution trace for db_query_debug/planner with pattern postgres timeout index. Attempt logs, tool calls, and resolution details. Full execution trace for db_query_debug/planner with pattern postgres timeout index. Attempt logs, tool calls, and resolution details. Full execution trace for db_query_debug/planner with pattern postgres timeout index. Attempt logs, tool calls, and resolution details. "
+        }
+      ]
+    },
+    "reviewer": {
+      "L0_outcome_signals": [
+        {
+          "task_type": "code_review",
+          "situation_hash": "72b018ac2ba88b60a8054bc2",
+          "success_count": 0,
+          "failure_count": 0,
+          "warning_count": 1,
+          "fail_rate": 0.0,
+          "last_outcome": "warning",
+          "last_episode": "ep_code_review_14"
+        },
+        {
+          "task_type": "code_review",
+          "situation_hash": "5171db56010beabf53e4c5f0",
+          "success_count": 1,
+          "failure_count": 0,
+          "warning_count": 1,
+          "fail_rate": 0.0,
+          "last_outcome": "success",
+          "last_episode": "ep_code_review_11"
+        },
+        {
+          "task_type": "code_review",
+          "situation_hash": "c1fd4eb6a5f22e11931d1041",
+          "success_count": 0,
+          "failure_count": 2,
+          "warning_count": 0,
+          "fail_rate": 1.0,
+          "last_outcome": "failure",
+          "last_episode": "ep_code_review_13"
+        }
+      ],
+      "L1_abstract_episodes": [
+        {
+          "episode_id": "ep_code_review_11",
+          "task_type": "code_review",
+          "outcome": "success",
+          "abstract": "Task code_review for role reviewer. Situation missing test coverage. Cause-effect: decision path produced success.",
+          "cost_tokens": 1184
+        },
+        {
+          "episode_id": "ep_code_review_12",
+          "task_type": "code_review",
+          "outcome": "failure",
+          "abstract": "Task code_review for role reviewer. Situation race condition. Cause-effect: decision path produced failure.",
+          "cost_tokens": 928
+        },
+        {
+          "episode_id": "ep_code_review_13",
+          "task_type": "code_review",
+          "outcome": "failure",
+          "abstract": "Task code_review for role reviewer. Situation race condition. Cause-effect: decision path produced failure.",
+          "cost_tokens": 1816
+        },
+        {
+          "episode_id": "ep_code_review_14",
+          "task_type": "code_review",
+          "outcome": "warning",
+          "abstract": "Task code_review for role reviewer. Situation unsafe cast. Cause-effect: decision path produced warning.",
+          "cost_tokens": 1753
+        },
+        {
+          "episode_id": "ep_code_review_10",
+          "task_type": "code_review",
+          "outcome": "warning",
+          "abstract": "Task code_review for role reviewer. Situation missing test coverage. Cause-effect: decision path produced warning.",
+          "cost_tokens": 1170
+        }
+      ],
+      "L2_full_trace_episodes": [
+        {
+          "episode_id": "ep_code_review_11",
+          "task_type": "code_review",
+          "outcome": "success",
+          "full_trace": "Full execution trace for code_review/reviewer with pattern missing test coverage. Attempt logs, tool calls, and resolution details. Full execution trace for code_review/reviewer with pattern missing test coverage. Attempt logs, tool calls, and resolution details. Full execution trace for code_review/reviewer with pattern missing test coverage. Attempt logs, tool calls, and resolution details. Full execution trace for code_review/reviewer with pattern missing test coverage. Attempt logs, tool calls, and resolution details. Full execution trace for code_review/reviewer with pattern missing test coverage. Attempt logs, tool calls, and resolution details. Full execution trace for code_review/reviewer with pattern missing test coverage. Attempt logs, tool calls, and resolution details. Full execution trace for code_review/reviewer with pattern missing test coverage. Attempt logs, tool calls, and resolution details. Full execution trace for code_review/reviewer with pattern missing test coverage. Attempt logs, tool calls, and resolution details. Full execution trace for code_review/reviewer with pattern missing test coverage. Attempt logs, tool calls, and resolution details. Full execution trace for code_review/reviewer with pattern missing test coverage. Attempt logs, tool calls, and resolution details. "
+        },
+        {
+          "episode_id": "ep_code_review_12",
+          "task_type": "code_review",
+          "outcome": "failure",
+          "full_trace": "Full execution trace for code_review/reviewer with pattern race condition. Attempt logs, tool calls, and resolution details. Full execution trace for code_review/reviewer with pattern race condition. Attempt logs, tool calls, and resolution details. Full execution trace for code_review/reviewer with pattern race condition. Attempt logs, tool calls, and resolution details. Full execution trace for code_review/reviewer with pattern race condition. Attempt logs, tool calls, and resolution details. Full execution trace for code_review/reviewer with pattern race condition. Attempt logs, tool calls, and resolution details. Full execution trace for code_review/reviewer with pattern race condition. Attempt logs, tool calls, and resolution details. Full execution trace for code_review/reviewer with pattern race condition. Attempt logs, tool calls, and resolution details. Full execution trace for code_review/reviewer with pattern race condition. Attempt logs, tool calls, and resolution details. Full execution trace for code_review/reviewer with pattern race condition. Attempt logs, tool calls, and resolution details. Full execution trace for code_review/reviewer with pattern race condition. Attempt logs, tool calls, and resolution details. "
+        },
+        {
+          "episode_id": "ep_code_review_13",
+          "task_type": "code_review",
+          "outcome": "failure",
+          "full_trace": "Full execution trace for code_review/reviewer with pattern race condition. Attempt logs, tool calls, and resolution details. Full execution trace for code_review/reviewer with pattern race condition. Attempt logs, tool calls, and resolution details. Full execution trace for code_review/reviewer with pattern race condition. Attempt logs, tool calls, and resolution details. Full execution trace for code_review/reviewer with pattern race condition. Attempt logs, tool calls, and resolution details. Full execution trace for code_review/reviewer with pattern race condition. Attempt logs, tool calls, and resolution details. Full execution trace for code_review/reviewer with pattern race condition. Attempt logs, tool calls, and resolution details. Full execution trace for code_review/reviewer with pattern race condition. Attempt logs, tool calls, and resolution details. Full execution trace for code_review/reviewer with pattern race condition. Attempt logs, tool calls, and resolution details. Full execution trace for code_review/reviewer with pattern race condition. Attempt logs, tool calls, and resolution details. Full execution trace for code_review/reviewer with pattern race condition. Attempt logs, tool calls, and resolution details. "
+        },
+        {
+          "episode_id": "ep_code_review_14",
+          "task_type": "code_review",
+          "outcome": "warning",
+          "full_trace": "Full execution trace for code_review/reviewer with pattern unsafe cast. Attempt logs, tool calls, and resolution details. Full execution trace for code_review/reviewer with pattern unsafe cast. Attempt logs, tool calls, and resolution details. Full execution trace for code_review/reviewer with pattern unsafe cast. Attempt logs, tool calls, and resolution details. Full execution trace for code_review/reviewer with pattern unsafe cast. Attempt logs, tool calls, and resolution details. Full execution trace for code_review/reviewer with pattern unsafe cast. Attempt logs, tool calls, and resolution details. Full execution trace for code_review/reviewer with pattern unsafe cast. Attempt logs, tool calls, and resolution details. Full execution trace for code_review/reviewer with pattern unsafe cast. Attempt logs, tool calls, and resolution details. Full execution trace for code_review/reviewer with pattern unsafe cast. Attempt logs, tool calls, and resolution details. Full execution trace for code_review/reviewer with pattern unsafe cast. Attempt logs, tool calls, and resolution details. Full execution trace for code_review/reviewer with pattern unsafe cast. Attempt logs, tool calls, and resolution details. "
+        },
+        {
+          "episode_id": "ep_code_review_10",
+          "task_type": "code_review",
+          "outcome": "warning",
+          "full_trace": "Full execution trace for code_review/reviewer with pattern missing test coverage. Attempt logs, tool calls, and resolution details. Full execution trace for code_review/reviewer with pattern missing test coverage. Attempt logs, tool calls, and resolution details. Full execution trace for code_review/reviewer with pattern missing test coverage. Attempt logs, tool calls, and resolution details. Full execution trace for code_review/reviewer with pattern missing test coverage. Attempt logs, tool calls, and resolution details. Full execution trace for code_review/reviewer with pattern missing test coverage. Attempt logs, tool calls, and resolution details. Full execution trace for code_review/reviewer with pattern missing test coverage. Attempt logs, tool calls, and resolution details. Full execution trace for code_review/reviewer with pattern missing test coverage. Attempt logs, tool calls, and resolution details. Full execution trace for code_review/reviewer with pattern missing test coverage. Attempt logs, tool calls, and resolution details. Full execution trace for code_review/reviewer with pattern missing test coverage. Attempt logs, tool calls, and resolution details. Full execution trace for code_review/reviewer with pattern missing test coverage. Attempt logs, tool calls, and resolution details. "
+        }
+      ]
+    }
+  }
+}
