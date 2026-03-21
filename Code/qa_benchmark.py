@@ -1,16 +1,22 @@
 """
-qa_benchmark.py — HotpotQA and LOCOMO benchmark comparing 4 memory conditions.
+qa_benchmark.py — HotpotQA and LOCOMO benchmark comparing memory conditions.
 
 Tests whether the tiered memory system produces BETTER answers than competing
 approaches, using real public datasets with ground-truth answers.
 
-Conditions compared:
+Conditions compared (standard run):
   1. no_memory      — GPT answers the question with zero memory (pure baseline)
   2. buffer_memory  — Last K stored episodes regardless of relevance
                       (simulates LangChain ConversationBufferMemory)
   3. flat_memory    — Vector search across all agents, no role/task filter
                       (simulates a standard RAG/vector-DB approach)
   4. tiered_memory  — Your L0/L1/L2 tiered system (the system under test)
+
+Ablation conditions (--ablation flag):
+  1. full_tiered    — complete L0/L1/L2 system (reference)
+  2. no_l0          — L0 early-exit disabled (measures hash signal contribution)
+  3. no_l2          — L2 escalation disabled (measures full-trace contribution)
+  4. no_role        — flat search, no role partitioning (measures role filter contribution)
 
 Datasets:
   HotpotQA — multi-hop factual QA; GPT can partially answer from weights alone
@@ -24,8 +30,9 @@ Metrics:
   - Avg latency ms      : end-to-end time per query
 
 Install:  pip install datasets openai
-Run (HotpotQA):  python3 qa_benchmark.py --dataset hotpotqa --n-seed 100 --n-test 50
-Run (LOCOMO):    python3 qa_benchmark.py --dataset locomo --n-conversations 5
+Run (LOCOMO, full):     python3 qa_benchmark.py --dataset locomo --n-conversations 10
+Run (LOCOMO, ablation): python3 qa_benchmark.py --dataset locomo --ablation --n-conversations 10
+Run (HotpotQA):         python3 qa_benchmark.py --dataset hotpotqa --n-seed 100 --n-test 50
 """
 from __future__ import annotations
 
@@ -358,6 +365,11 @@ def _load_locomo(n_conversations: int) -> List[Dict]:
                 {"question": "When did Alice start at Veridian Biotech?", "answer": "April 14th", "evidence_type": "temporal"},
                 {"question": "What pet did Alice adopt after moving to Raleigh?", "answer": "Paprika, a tortoiseshell cat", "evidence_type": "temporal"},
                 {"question": "Based on Alice's conversations, what kind of researcher is she and what motivates her work?", "answer": "computational genomics researcher motivated by rare disease treatment", "evidence_type": "open_domain"},
+                {"question": "What dog park is near Alice's new apartment?", "answer": "Millbrook Commons", "evidence_type": "single_hop"},
+                {"question": "How many patient genomes are in the Batten disease dataset?", "answer": "40,000", "evidence_type": "single_hop"},
+                {"question": "What kind of cat did Alice adopt and what is its name?", "answer": "Paprika, a two-year-old tortoiseshell", "evidence_type": "single_hop"},
+                {"question": "What position will Alice hold on the Nature Computational Science paper?", "answer": "second author", "evidence_type": "single_hop"},
+                {"question": "What city did Alice move from and who is her manager at Veridian Biotech?", "answer": "Portland; Dr. Yusuf Tanaka", "evidence_type": "multi_hop"},
             ],
         },
         {
@@ -397,6 +409,11 @@ def _load_locomo(n_conversations: int) -> List[Dict]:
                 {"question": "When did Marcus finish his woodworking course?", "answer": "end of March", "evidence_type": "temporal"},
                 {"question": "When is Marcus's mom's birthday?", "answer": "May", "evidence_type": "temporal"},
                 {"question": "How would you describe Marcus's progression as a woodworker based on his conversations?", "answer": "beginner who overcame early mistakes and showed natural talent, progressing to advanced courses", "evidence_type": "open_domain"},
+                {"question": "How many weeks is Marcus's first woodworking course?", "answer": "12 weeks", "evidence_type": "single_hop"},
+                {"question": "What days and times does Marcus attend woodworking class?", "answer": "Tuesday and Thursday evenings, 6 to 9pm", "evidence_type": "single_hop"},
+                {"question": "How long has Ezra Kowalski been doing furniture restoration?", "answer": "30 years", "evidence_type": "single_hop"},
+                {"question": "What problem did Marcus encounter in week four of his course?", "answer": "messed up the mortise joints and had to restart the legs", "evidence_type": "single_hop"},
+                {"question": "How long is the Advanced Joinery and Wood Sculpture course Marcus registered for?", "answer": "8 weeks", "evidence_type": "single_hop"},
             ],
         },
         {
@@ -436,6 +453,11 @@ def _load_locomo(n_conversations: int) -> List[Dict]:
                 {"question": "How much does Valentina charge for weekly tutoring calls?", "answer": "$25 an hour", "evidence_type": "single_hop"},
                 {"question": "What are the two focus areas of the advanced program Jordan registered for?", "answer": "business Spanish and regional dialects", "evidence_type": "multi_hop"},
                 {"question": "Based on Jordan's conversations, how committed are they to learning Spanish?", "answer": "highly committed — attended immersion, continued weekly tutoring, returned for advanced program", "evidence_type": "open_domain"},
+                {"question": "How long was Jordan's first language immersion trip to Oaxaca?", "answer": "three weeks", "evidence_type": "single_hop"},
+                {"question": "What is the name of Jordan's host family in Oaxaca?", "answer": "the Guerrero-Pintados", "evidence_type": "single_hop"},
+                {"question": "What is Valentina Cruz's other profession besides teaching?", "answer": "archaeologist", "evidence_type": "single_hop"},
+                {"question": "What tourist site did Jordan visit with Valentina on a day trip?", "answer": "Monte Albán", "evidence_type": "single_hop"},
+                {"question": "How much does Jordan pay Valentina per hour for weekly tutoring calls?", "answer": "$25 an hour", "evidence_type": "single_hop"},
             ],
         },
         {
@@ -475,6 +497,11 @@ def _load_locomo(n_conversations: int) -> List[Dict]:
                 {"question": "When did the garden break ground?", "answer": "May", "evidence_type": "temporal"},
                 {"question": "When was the end of season harvest party?", "answer": "late September", "evidence_type": "temporal"},
                 {"question": "What does the garden plan to expand to next spring and how will it be funded?", "answer": "20 more beds funded by an $18,000 grant renewal", "evidence_type": "open_domain"},
+                {"question": "How many raised beds does the Sunridge Neighborhood Plot have?", "answer": "40", "evidence_type": "single_hop"},
+                {"question": "How many plots were claimed by July and how many people were on the waiting list?", "answer": "37 of 40 claimed, 12 on the waiting list", "evidence_type": "single_hop"},
+                {"question": "Where does Elena currently store garden tools?", "answer": "her garage on 44 Birchwood Lane", "evidence_type": "single_hop"},
+                {"question": "What did Kwame do before managing the composting program?", "answer": "worked in nonprofit development", "evidence_type": "single_hop"},
+                {"question": "Who identified the pest problem at the garden and what solution did they recommend?", "answer": "Dr. Lena Marsh identified squash vine borers and recommended companion planting with nasturtiums", "evidence_type": "multi_hop"},
             ],
         },
         {
@@ -514,6 +541,11 @@ def _load_locomo(n_conversations: int) -> List[Dict]:
                 {"question": "When did Nadia start training for the 50K?", "answer": "February", "evidence_type": "temporal"},
                 {"question": "When did Nadia run her longest training run?", "answer": "April", "evidence_type": "temporal"},
                 {"question": "What next race is being suggested to Nadia and who is more enthusiastic about it?", "answer": "Ridgeback 100K in October; Tamara is more enthusiastic than Nadia", "evidence_type": "open_domain"},
+                {"question": "What trail does Nadia use for altitude training sessions?", "answer": "Ridgeline Trail", "evidence_type": "single_hop"},
+                {"question": "What is Nadia's peak weekly mileage during training?", "answer": "55 miles", "evidence_type": "single_hop"},
+                {"question": "How far did Nadia run on the Westhaven Forest Loop and how long did it take?", "answer": "32 miles in 6 hours 14 minutes", "evidence_type": "single_hop"},
+                {"question": "How many total runners finished the Cascade Endurance 50K?", "answer": "187 finishers", "evidence_type": "single_hop"},
+                {"question": "What nutrition plan did Tamara Hollis put Nadia on?", "answer": "carb periodization plan", "evidence_type": "single_hop"},
             ],
         },
         {
@@ -553,6 +585,11 @@ def _load_locomo(n_conversations: int) -> List[Dict]:
                 {"question": "When did Omar first mention Leila's program acceptance?", "answer": "August", "evidence_type": "temporal"},
                 {"question": "When did Leila submit her paper?", "answer": "January 29th", "evidence_type": "temporal"},
                 {"question": "Based on the conversations, what does Leila's trajectory suggest about her future career?", "answer": "a strong future in atmospheric or climate science research", "evidence_type": "open_domain"},
+                {"question": "How old was Leila when she built her first weather station?", "answer": "eleven", "evidence_type": "single_hop"},
+                {"question": "How many spots are available nationally in the Westbrook Young Scientists Program?", "answer": "18", "evidence_type": "single_hop"},
+                {"question": "What was the topic of Leila's first research presentation?", "answer": "permafrost degradation in Siberia", "evidence_type": "single_hop"},
+                {"question": "What is Leila's next research focus after submitting her paper?", "answer": "Arctic sea ice", "evidence_type": "single_hop"},
+                {"question": "What city does Leila live in and how long is her commute to Ferncliff University?", "answer": "Greystone Heights, 40 minutes", "evidence_type": "multi_hop"},
             ],
         },
         {
@@ -592,6 +629,11 @@ def _load_locomo(n_conversations: int) -> List[Dict]:
                 {"question": "How long had Sofia been dreaming about opening the studio?", "answer": "eight years", "evidence_type": "temporal"},
                 {"question": "What kiln problem occurred and who fixed it?", "answer": "gas kiln pressure issue, fixed by Remy Okafor", "evidence_type": "single_hop"},
                 {"question": "What does the demand for Sofia's classes suggest about the business?", "answer": "strong demand exceeding capacity, expanding with new classes and staff", "evidence_type": "open_domain"},
+                {"question": "How large is Saltfire Clay's studio space in square feet?", "answer": "1,400 square feet", "evidence_type": "single_hop"},
+                {"question": "How many pottery wheels does Saltfire Clay have?", "answer": "four", "evidence_type": "single_hop"},
+                {"question": "How many people attended Saltfire Clay's soft open?", "answer": "47", "evidence_type": "single_hop"},
+                {"question": "How quickly did the beginner Saturday class sell out online?", "answer": "9 minutes", "evidence_type": "single_hop"},
+                {"question": "Where did Sofia's studio assistant Ingrid Pallister graduate from?", "answer": "the Ceramic Arts Institute", "evidence_type": "single_hop"},
             ],
         },
         {
@@ -630,6 +672,11 @@ def _load_locomo(n_conversations: int) -> List[Dict]:
                 {"question": "When was the restoration completed?", "answer": "February, delivered February 9th", "evidence_type": "temporal"},
                 {"question": "When did Theo's grandfather drive the car on his honeymoon?", "answer": "1963", "evidence_type": "temporal"},
                 {"question": "Why won't Theo sell the car despite its high value?", "answer": "his grandfather drove it on his honeymoon in 1963, sentimental value", "evidence_type": "open_domain"},
+                {"question": "What garage is restoring Theo's car and where is it located?", "answer": "Vintage Motorworks on Cypress Road", "evidence_type": "single_hop"},
+                {"question": "What four types of work does the TR4 restoration include?", "answer": "engine rebuild, new wiring harness, brake overhaul, and a respray", "evidence_type": "single_hop"},
+                {"question": "Where is Theo planning to take the car for its first drive after restoration?", "answer": "Route 9 coastal highway", "evidence_type": "single_hop"},
+                {"question": "What year did Theo's grandfather drive the car on his honeymoon?", "answer": "1963", "evidence_type": "temporal"},
+                {"question": "What was Hugo's original quote range and what was the final cost?", "answer": "$22,000 to $27,000 quoted, $24,800 final cost", "evidence_type": "multi_hop"},
             ],
         },
         {
@@ -669,6 +716,11 @@ def _load_locomo(n_conversations: int) -> List[Dict]:
                 {"question": "When does Iris's residency start?", "answer": "July", "evidence_type": "temporal"},
                 {"question": "What is Iris's novel about?", "answer": "a 19th century woman who secretly completes her missing father's Arctic maps", "evidence_type": "single_hop"},
                 {"question": "What is Claudette's plan after her editorial pass?", "answer": "go on submission to publishers in January", "evidence_type": "open_domain"},
+                {"question": "How long is Iris's writing residency in the Faroe Islands?", "answer": "10 weeks", "evidence_type": "single_hop"},
+                {"question": "Who does Iris do morning critique sessions with at the residency?", "answer": "Bjorn Sigurdsson", "evidence_type": "single_hop"},
+                {"question": "What does Bjorn Sigurdsson work on?", "answer": "translating medieval Icelandic sagas", "evidence_type": "single_hop"},
+                {"question": "How many words did Iris write during the residency by week four?", "answer": "22,000 words", "evidence_type": "single_hop"},
+                {"question": "What did Claudette say about the manuscript in her first read notes?", "answer": "quietly devastating", "evidence_type": "single_hop"},
             ],
         },
         {
@@ -708,6 +760,11 @@ def _load_locomo(n_conversations: int) -> List[Dict]:
                 {"question": "When was Clara diagnosed?", "answer": "October", "evidence_type": "temporal"},
                 {"question": "How long does Dr. Varma say full gut healing takes?", "answer": "6 to 12 months", "evidence_type": "single_hop"},
                 {"question": "Based on Clara's progress, what does her health trajectory look like?", "answer": "strong recovery — antibody levels normalizing, energy restored, near full gut healing", "evidence_type": "open_domain"},
+                {"question": "What clinic does Dr. Preethi Varma practice at?", "answer": "Northgate Digestive Health", "evidence_type": "single_hop"},
+                {"question": "What caused Clara to get sick after her diagnosis?", "answer": "accidental cross-contamination at a restaurant", "evidence_type": "single_hop"},
+                {"question": "What GF pasta brand does Clara love?", "answer": "Ferndale Mills GF pasta", "evidence_type": "single_hop"},
+                {"question": "How long had Clara been experiencing mystery symptoms before her diagnosis?", "answer": "15 years", "evidence_type": "single_hop"},
+                {"question": "What tool did Margaux create to help Clara eat out safely?", "answer": "a dining card to show servers", "evidence_type": "single_hop"},
             ],
         },
     ]
@@ -804,14 +861,22 @@ def _seed_locomo_memory(system: MultiAgentSystem, conversations: List[Dict]) -> 
     """
     Seed agent memory with LOCOMO dialogue turns.
     Each turn becomes an episode. Returns total turns stored.
+
+    All turns are stored under the 'conversational_agent' role and the
+    'conversational_memory' task type. This ensures that role-filtered L1
+    retrieval finds hits without falling back to flat search — previously,
+    keyword-based role classification caused a mismatch between the role used
+    at seed time and the role used at query time, triggering the cross-role
+    fallback on every query.
     """
+    LOCOMO_ROLE = "conversational_agent"
+    LOCOMO_TASK = "conversational_memory"
     total = 0
     for conv_idx, conv in enumerate(conversations):
         turns = _extract_locomo_turns(conv, conv_idx)
         print(f"  [conv {conv_idx}] {len(turns)} turns to seed...")
 
         for t in turns:
-            task_type, role = _classify_turn_content(t["text"])
             conv_id = t["conv_id"]
 
             # Front-load the fact so vector search finds it reliably
@@ -826,12 +891,12 @@ def _seed_locomo_memory(system: MultiAgentSystem, conversations: List[Dict]) -> 
                 f"[SESSION] {t['session_idx']} | [DATE] {t['date']}\n"
                 f"[SPEAKER] {t['speaker']}\n"
                 f"[TEXT] {t['text']}\n"
-                f"[TASK_TYPE] {task_type} | [ROLE] {role}\n"
+                f"[TASK_TYPE] {LOCOMO_TASK} | [ROLE] {LOCOMO_ROLE}\n"
             )
             system.finalize_episode(
-                role=role,
+                role=LOCOMO_ROLE,
                 episode_id=t["turn_id"],
-                task_type=task_type,
+                task_type=LOCOMO_TASK,
                 outcome="success",
                 abstract=abstract,
                 full_trace=full_trace,
@@ -846,11 +911,15 @@ def _seed_locomo_memory(system: MultiAgentSystem, conversations: List[Dict]) -> 
 
 
 def _classify_locomo_q(qa: Dict) -> Tuple[str, str, str]:
-    """Map LOCOMO evidence_type to (task_type, agent_role, situation_sig)."""
+    """
+    Map LOCOMO QA to (task_type, agent_role, situation_sig).
+    All queries are routed to 'conversational_agent' to match the role
+    used at seed time, ensuring role-filtered L1 retrieval finds hits.
+    """
+    conv_id = qa.get("conv_id", "unknown")
     evidence_type = qa.get("evidence_type", "single_hop").lower()
-    task_type, role = _LOCOMO_QTYPE_MAP.get(evidence_type, ("fact_retrieval", "executor"))
-    situation_sig = f"{qa['conv_id']}_{evidence_type}"
-    return task_type, role, situation_sig
+    situation_sig = f"{conv_id}_{evidence_type}"
+    return "conversational_memory", "conversational_agent", situation_sig
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -998,6 +1067,155 @@ def _condition_tiered_memory(
                     latency_budget_ms=latency_budget_ms,
                     token_budget=token_budget,
                 )
+                flat_result = flat_policy.retrieve(ctx)
+                flat_hits = flat_result.get("abstract_hits", [])
+                if len(flat_hits) > len(hits):
+                    hits = flat_hits
+                    tier_counts["fallback"] = tier_counts.get("fallback", 0) + 1
+            except Exception as e:
+                print(f"         [fallback warning] {type(e).__name__}: {str(e)[:80]}")
+
+        memory_context = _format_hits(hits)
+        answer, tokens, latency = _call_gpt(q["question"], memory_context, client, model)
+        retrieval_tokens = tiered["debug"].get("retrieval_tokens", 0)
+        retrieval_ms = tiered["debug"].get("latency_ms", 0)
+        results.append({
+            "question": q["question"],
+            "gold": q["answer"],
+            "predicted": answer,
+            "em": exact_match(answer, q["answer"]),
+            "f1": f1_score(answer, q["answer"]),
+            "tokens": tokens + retrieval_tokens,
+            "latency_ms": latency + retrieval_ms,
+            "tier_used": tier,
+            "hits_returned": len(hits),
+        })
+
+    print(f"         Tier breakdown: {tier_counts}")
+    return results
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# ABLATION CONDITIONS
+# ══════════════════════════════════════════════════════════════════════════════
+
+def _condition_ablation_no_l0(
+    test_qs: List[Dict],
+    system: MultiAgentSystem,
+    store: MemoryStore,
+    embedder: Any,
+    client: Any,
+    model: str,
+    classify_fn: Any,
+    token_budget: int = 2000,
+    latency_budget_ms: int = 500,
+) -> List[Dict]:
+    """
+    Ablation: disable L0 early-exit signal.
+    Uses TieredRetrievalPolicy with l0_fail_threshold=2.0 so L0 never
+    short-circuits. Measures the contribution of outcome-aware hash signals.
+    """
+    from TieredRetrievalPolicy import TieredRetrievalPolicy as TRP
+    ablation_policy = TRP(store, embedder, l0_fail_threshold=2.0)
+    flat_policy = FlatRetrievalPolicy(store, embedder, topk=5)
+    results = []
+    tier_counts: Dict[str, int] = {}
+
+    for q in test_qs:
+        task_type, role, situation_sig = classify_fn(q)
+        clean_query = _safe_embed_text(q["question"])
+        ctx = RetrievalContext(
+            task_type=task_type,
+            agent_role=role,
+            situation=situation_sig,
+            query_text=clean_query,
+            confidence=0.4,
+            retry_count=0,
+            latency_budget_ms=latency_budget_ms,
+            token_budget=token_budget,
+        )
+        tiered = ablation_policy.retrieve(ctx)
+        tier = tiered.get("tier", "L1")
+        tier_counts[tier] = tier_counts.get(tier, 0) + 1
+        hits = tiered.get("abstract_hits", []) + tiered.get("full_hits", [])
+
+        if len(hits) < 2:
+            try:
+                flat_result = flat_policy.retrieve(ctx)
+                flat_hits = flat_result.get("abstract_hits", [])
+                if len(flat_hits) > len(hits):
+                    hits = flat_hits
+                    tier_counts["fallback"] = tier_counts.get("fallback", 0) + 1
+            except Exception as e:
+                print(f"         [fallback warning] {type(e).__name__}: {str(e)[:80]}")
+
+        memory_context = _format_hits(hits)
+        answer, tokens, latency = _call_gpt(q["question"], memory_context, client, model)
+        retrieval_tokens = tiered["debug"].get("retrieval_tokens", 0)
+        retrieval_ms = tiered["debug"].get("latency_ms", 0)
+        results.append({
+            "question": q["question"],
+            "gold": q["answer"],
+            "predicted": answer,
+            "em": exact_match(answer, q["answer"]),
+            "f1": f1_score(answer, q["answer"]),
+            "tokens": tokens + retrieval_tokens,
+            "latency_ms": latency + retrieval_ms,
+            "tier_used": tier,
+            "hits_returned": len(hits),
+        })
+
+    print(f"         Tier breakdown: {tier_counts}")
+    return results
+
+
+def _condition_ablation_no_l2(
+    test_qs: List[Dict],
+    system: MultiAgentSystem,
+    store: MemoryStore,
+    embedder: Any,
+    client: Any,
+    model: str,
+    classify_fn: Any,
+    token_budget: int = 2000,
+    latency_budget_ms: int = 500,
+) -> List[Dict]:
+    """
+    Ablation: disable L2 escalation.
+    Sets min_confidence_for_l1_only=0.0 and retry_escalate_to_l2=999 so
+    the system never escalates to full traces. Measures the contribution
+    of L2 on multi-hop and complex queries.
+    """
+    from TieredRetrievalPolicy import TieredRetrievalPolicy as TRP
+    ablation_policy = TRP(
+        store, embedder,
+        min_confidence_for_l1_only=0.0,
+        retry_escalate_to_l2=999,
+    )
+    flat_policy = FlatRetrievalPolicy(store, embedder, topk=5)
+    results = []
+    tier_counts: Dict[str, int] = {}
+
+    for q in test_qs:
+        task_type, role, situation_sig = classify_fn(q)
+        clean_query = _safe_embed_text(q["question"])
+        ctx = RetrievalContext(
+            task_type=task_type,
+            agent_role=role,
+            situation=situation_sig,
+            query_text=clean_query,
+            confidence=0.4,
+            retry_count=0,
+            latency_budget_ms=latency_budget_ms,
+            token_budget=token_budget,
+        )
+        tiered = ablation_policy.retrieve(ctx)
+        tier = tiered.get("tier", "L1")
+        tier_counts[tier] = tier_counts.get(tier, 0) + 1
+        hits = tiered.get("abstract_hits", []) + tiered.get("full_hits", [])
+
+        if len(hits) < 2:
+            try:
                 flat_result = flat_policy.retrieve(ctx)
                 flat_hits = flat_result.get("abstract_hits", [])
                 if len(flat_hits) > len(hits):
@@ -1205,9 +1423,9 @@ def run_locomo_benchmark(
     conversations = _load_locomo(n_conversations)
     print(f"[dataset] {len(conversations)} LOCOMO conversations loaded")
 
-    # Build system with all task types (turns + questions)
-    all_task_role_map = {**_LOCOMO_TASK_ROLE_MAP}
-    roles = ["planner", "coder", "reviewer", "researcher", "executor"]
+    # All LOCOMO turns and queries use the conversational_agent role
+    all_task_role_map = {**_LOCOMO_TASK_ROLE_MAP, "conversational_memory": "conversational_agent"}
+    roles = ["planner", "coder", "reviewer", "researcher", "executor", "conversational_agent"]
     system = MultiAgentSystem(
         roles=roles,
         task_role_map=all_task_role_map,
@@ -1282,6 +1500,135 @@ def run_locomo_benchmark(
         )
 
 
+def run_locomo_ablation(
+    n_conversations: int,
+    client: Any,
+    embedder: Any,
+    model: str,
+    output: Optional[str],
+    db_path: str,
+) -> None:
+    """
+    Ablation study: runs 3 ablated variants alongside the full tiered system
+    to isolate the contribution of each architectural component.
+
+    Conditions:
+      full_tiered     — complete L0/L1/L2 system (baseline)
+      no_l0           — L0 early-exit disabled; measures contribution of hash signals
+      no_l2           — L2 escalation disabled; measures contribution of full-trace retrieval
+      no_role         — flat search (no role partitioning); measures contribution of role filtering
+    """
+    for suffix in ("", "-wal", "-shm"):
+        p = db_path + suffix
+        if os.path.exists(p):
+            os.remove(p)
+
+    conversations = _load_locomo(n_conversations)
+    print(f"[ablation] {len(conversations)} conversations loaded")
+
+    all_task_role_map = {**_LOCOMO_TASK_ROLE_MAP, "conversational_memory": "conversational_agent"}
+    roles = ["planner", "coder", "reviewer", "researcher", "executor", "conversational_agent"]
+    system = MultiAgentSystem(
+        roles=roles,
+        task_role_map=all_task_role_map,
+        db_path=db_path,
+        embedder=embedder,
+    )
+    store = MemoryStore(db_path)
+    total_turns = _seed_locomo_memory(system, conversations)
+
+    all_test_qs: List[Dict] = []
+    for conv_idx, conv in enumerate(conversations):
+        qa_items = _extract_locomo_qa(conv, conv_idx)
+        for qa in qa_items:
+            qa["evidence_type"] = qa.get("evidence_type", "single_hop")
+        all_test_qs.extend(qa_items)
+
+    print(f"[ablation] {total_turns} turns seeded | {len(all_test_qs)} test questions")
+    print(f"[ablation] Running 4 conditions (full + 3 ablations)...\n")
+
+    print("[1/4] full_tiered     — complete L0/L1/L2 system")
+    r_full = _condition_tiered_memory(
+        all_test_qs, system, store, embedder, client, model,
+        _classify_locomo_q, token_budget=3000, latency_budget_ms=800,
+    )
+    for r, q in zip(r_full, all_test_qs):
+        r["evidence_type"] = q.get("evidence_type", "unknown")
+
+    print("[2/4] no_l0           — L0 early-exit disabled")
+    r_no_l0 = _condition_ablation_no_l0(
+        all_test_qs, system, store, embedder, client, model,
+        _classify_locomo_q, token_budget=3000, latency_budget_ms=800,
+    )
+    for r, q in zip(r_no_l0, all_test_qs):
+        r["evidence_type"] = q.get("evidence_type", "unknown")
+
+    print("[3/4] no_l2           — L2 escalation disabled")
+    r_no_l2 = _condition_ablation_no_l2(
+        all_test_qs, system, store, embedder, client, model,
+        _classify_locomo_q, token_budget=3000, latency_budget_ms=800,
+    )
+    for r, q in zip(r_no_l2, all_test_qs):
+        r["evidence_type"] = q.get("evidence_type", "unknown")
+
+    print("[4/4] no_role         — flat search, no role partitioning")
+    r_no_role = _condition_flat_memory(
+        all_test_qs, store, embedder, client, model, _classify_locomo_q
+    )
+    for r, q in zip(r_no_role, all_test_qs):
+        r["evidence_type"] = q.get("evidence_type", "unknown")
+
+    summaries = [
+        _summarize("full_tiered", r_full),
+        _summarize("no_l0",       r_no_l0),
+        _summarize("no_l2",       r_no_l2),
+        _summarize("no_role",     r_no_role),
+    ]
+
+    print(f"\n{'='*70}")
+    print(f"  ABLATION STUDY — Component Contribution Analysis")
+    print(f"{'='*70}")
+    print(f"  {'Condition':<22} {'EM %':>7} {'F1 %':>7} {'Tokens':>9} {'Latency':>11}")
+    print(f"  {'-'*60}")
+    for s in summaries:
+        print(
+            f"  {s['condition']:<22} {s['exact_match_pct']:>7} {s['f1_pct']:>7} "
+            f"{s['avg_tokens']:>9} {s['avg_latency_ms']:>10}ms"
+        )
+
+    full_s = summaries[0]
+    print(f"\n  Drop from full_tiered when component removed:")
+    print(f"  {'-'*60}")
+    labels = {
+        "no_l0":   "remove L0 hash signals",
+        "no_l2":   "remove L2 escalation",
+        "no_role": "remove role partitioning",
+    }
+    for s in summaries[1:]:
+        em_drop = round(full_s["exact_match_pct"] - s["exact_match_pct"], 1)
+        f1_drop = round(full_s["f1_pct"] - s["f1_pct"], 1)
+        label = labels.get(s["condition"], s["condition"])
+        sign_em = "-" if em_drop >= 0 else "+"
+        sign_f1 = "-" if f1_drop >= 0 else "+"
+        print(
+            f"  {label:<30}  EM: {sign_em}{abs(em_drop)}%   F1: {sign_f1}{abs(f1_drop)}%"
+        )
+
+    print(f"\n  Per-type breakdown:")
+    _print_locomo_breakdown(r_full, r_no_role, r_no_l2)
+    print(f"{'='*70}\n")
+
+    if output:
+        _save_results(
+            output, "locomo_ablation",
+            {"n_conversations": len(conversations), "n_turns": total_turns,
+             "n_test": len(all_test_qs)},
+            embedder, model, summaries,
+            {"full_tiered": r_full, "no_l0": r_no_l0,
+             "no_l2": r_no_l2, "no_role": r_no_role},
+        )
+
+
 def _save_results(
     output: str,
     dataset: str,
@@ -1337,8 +1684,10 @@ def main() -> None:
     parser.add_argument("--n-test", type=int, default=50,
                         help="[hotpotqa] Questions to test on (default 50)")
     # LOCOMO args
-    parser.add_argument("--n-conversations", type=int, default=5,
-                        help="[locomo] Number of conversations to load (max 10, default 5)")
+    parser.add_argument("--n-conversations", type=int, default=10,
+                        help="[locomo] Number of conversations to load (max 10, default 10)")
+    parser.add_argument("--ablation", action="store_true",
+                        help="[locomo] Run ablation study instead of standard 4-condition benchmark")
     # Shared args
     parser.add_argument("--model", default="gpt-4o-mini",
                         help="OpenAI model for answer generation (default gpt-4o-mini)")
@@ -1358,14 +1707,24 @@ def main() -> None:
     print(f"[embedder] {embedder.model} (dim={embedder.dim})")
 
     if args.dataset == "locomo":
-        run_locomo_benchmark(
-            n_conversations=min(args.n_conversations, 10),
-            client=client,
-            embedder=embedder,
-            model=args.model,
-            output=args.output,
-            db_path=args.db_path,
-        )
+        if args.ablation:
+            run_locomo_ablation(
+                n_conversations=min(args.n_conversations, 10),
+                client=client,
+                embedder=embedder,
+                model=args.model,
+                output=args.output,
+                db_path=args.db_path,
+            )
+        else:
+            run_locomo_benchmark(
+                n_conversations=min(args.n_conversations, 10),
+                client=client,
+                embedder=embedder,
+                model=args.model,
+                output=args.output,
+                db_path=args.db_path,
+            )
     else:
         run_hotpotqa_benchmark(
             n_seed=args.n_seed,
