@@ -73,6 +73,7 @@ class MultiAgentSystem:
         role: Optional[str] = None,
         latency_budget_ms: int = 40,
         token_budget: int = 600,
+        query_type: str = "",
     ) -> Dict[str, Any]:
         agent = self._resolve_role(task_type, role)
         out = agent.step(
@@ -83,6 +84,7 @@ class MultiAgentSystem:
             retry_count=retry_count,
             latency_budget_ms=latency_budget_ms,
             token_budget=token_budget,
+            query_type=query_type,
         )
         out["agent_role"] = agent.role
         return out

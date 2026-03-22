@@ -81,12 +81,20 @@ def f1_score(pred: str, gold: str) -> float:
 # ── Shared context formatting ─────────────────────────────────────────────────
 # Increased from 300→600 chars and 3→5 hits to avoid truncating answers
 
-def _format_hits(hits: List[Dict], max_chars: int = 600) -> str:
+def _format_hits(hits: List[Dict], max_chars: int = 600, max_hits: int = 5) -> str:
     lines = []
-    for i, h in enumerate(hits[:5], 1):
+    for i, h in enumerate(hits[:max_hits], 1):
         text = h.get("abstract", h.get("full_trace", ""))[:max_chars]
         lines.append(f"[Memory {i}]: {text}")
     return "\n\n".join(lines)
+
+
+def _format_hits_open_domain(hits: List[Dict]) -> str:
+    """
+    Wider retrieval format for open-domain questions.
+    Returns up to 10 hits at 800 chars each to support cross-episode synthesis.
+    """
+    return _format_hits(hits, max_chars=800, max_hits=10)
 
 
 def _safe_embed_text(text: str) -> str:
@@ -1039,15 +1047,19 @@ def _condition_tiered_memory(
     for q in test_qs:
         task_type, role, situation_sig = classify_fn(q)
         clean_query = _safe_embed_text(q["question"])
+
+        evidence_type = q.get("evidence_type", "")
+
         tiered = system.step(
             task_type=task_type,
             role=role,
             situation=situation_sig,
             user_query=clean_query,
-            confidence=0.4,          # lower confidence → encourages L2 escalation
+            confidence=0.4,
             retry_count=0,
             latency_budget_ms=latency_budget_ms,
             token_budget=token_budget,
+            query_type=evidence_type,
         )
         tier = tiered.get("tier", "L1")
         tier_counts[tier] = tier_counts.get(tier, 0) + 1
@@ -1066,6 +1078,7 @@ def _condition_tiered_memory(
                     retry_count=0,
                     latency_budget_ms=latency_budget_ms,
                     token_budget=token_budget,
+                    query_type=evidence_type,
                 )
                 flat_result = flat_policy.retrieve(ctx)
                 flat_hits = flat_result.get("abstract_hits", [])
@@ -1075,8 +1088,14 @@ def _condition_tiered_memory(
             except Exception as e:
                 print(f"         [fallback warning] {type(e).__name__}: {str(e)[:80]}")
 
-        memory_context = _format_hits(hits)
-        answer, tokens, latency = _call_gpt(q["question"], memory_context, client, model)
+        is_open_domain = evidence_type == "open_domain"
+        memory_context = (
+            _format_hits_open_domain(hits) if is_open_domain
+            else _format_hits(hits)
+        )
+        max_ans_tokens = 120 if is_open_domain else 50
+        answer, tokens, latency = _call_gpt(q["question"], memory_context, client, model,
+                                            max_tokens=max_ans_tokens)
         retrieval_tokens = tiered["debug"].get("retrieval_tokens", 0)
         retrieval_ms = tiered["debug"].get("latency_ms", 0)
         results.append({

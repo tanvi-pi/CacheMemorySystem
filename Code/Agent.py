@@ -30,6 +30,7 @@ class Agent:
         retry_count: int,
         latency_budget_ms: int = 40,
         token_budget: int = 600,
+        query_type: str = "",
     ) -> Dict[str, Any]:
         ctx = RetrievalContext(
             task_type=task_type,
@@ -40,6 +41,7 @@ class Agent:
             retry_count=retry_count,
             latency_budget_ms=latency_budget_ms,
             token_budget=token_budget,
+            query_type=query_type,
         )
         return self.policy.retrieve(ctx)
 

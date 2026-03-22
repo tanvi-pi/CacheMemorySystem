@@ -25,6 +25,14 @@ class MemoryStore:
     def _init_schema(self) -> None:
         self.conn.execute(
             """
+            CREATE TABLE IF NOT EXISTS _meta (
+                key TEXT PRIMARY KEY,
+                value TEXT NOT NULL
+            );
+            """
+        )
+        self.conn.execute(
+            """
             CREATE TABLE IF NOT EXISTS episodes (
                 episode_id TEXT PRIMARY KEY,
                 task_type TEXT NOT NULL,
@@ -71,6 +79,27 @@ class MemoryStore:
         )
         self.conn.commit()
 
+    def check_embedder_compat(self, model_id: str) -> None:
+        """Verify the embedder matches what was used to populate this database.
+
+        On first call for a fresh database, records the model_id.
+        On subsequent calls, raises ValueError if the model_id differs.
+        This prevents silent corruption when switching embedders.
+        """
+        cur = self.conn.execute("SELECT value FROM _meta WHERE key = 'embedder_model'")
+        row = cur.fetchone()
+        if row is None:
+            self.conn.execute(
+                "INSERT INTO _meta (key, value) VALUES ('embedder_model', ?)", (model_id,)
+            )
+            self.conn.commit()
+        elif row[0] != model_id:
+            raise ValueError(
+                f"Embedder mismatch: this database was built with '{row[0]}' but "
+                f"you are using '{model_id}'. Embeddings are incompatible — "
+                f"create a new database or reseed with the correct embedder."
+            )
+
     def upsert_episode(self, ep: Episode, abstract_embedding: List[float], situation_signature: Optional[str] = None) -> None:
         self.conn.execute(
             """
@@ -110,6 +139,39 @@ class MemoryStore:
             ),
         )
         self.conn.commit()
+
+    def find_duplicate(
+        self,
+        agent_role: str,
+        task_type: str,
+        situation_signature: str,
+        abstract_embedding: List[float],
+        sim_threshold: float = 0.92,
+        max_candidates: int = 50,
+    ) -> Optional[str]:
+        """
+        Check if a near-identical episode already exists before inserting.
+        Returns the existing episode_id if a duplicate is found, else None.
+
+        Deduplication criteria: same role + task_type + situation_signature,
+        and abstract cosine similarity >= sim_threshold. This mirrors Mem0's
+        NOOP operation — if the fact is already stored, skip the write.
+        """
+        cur = self.conn.execute(
+            """
+            SELECT episode_id, abstract_embedding_json
+            FROM episodes
+            WHERE agent_role = ? AND task_type = ? AND situation_signature = ?
+            ORDER BY created_at_ms DESC
+            LIMIT ?
+            """,
+            (agent_role, task_type, situation_signature, max_candidates),
+        )
+        for (episode_id, emb_json) in cur.fetchall():
+            emb = json.loads(emb_json)
+            if cosine(abstract_embedding, emb) >= sim_threshold:
+                return episode_id
+        return None
 
     def search_l1(
         self,

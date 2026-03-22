@@ -11,6 +11,7 @@ class Embedder:
 
     def __init__(self, dim: int = 512):
         self.dim = dim
+        self.model_id = f"hash-{dim}"
 
     def embed(self, text: str) -> List[float]:
         vec = [0.0] * self.dim
@@ -52,6 +53,7 @@ class OpenAIEmbedder:
             raise ImportError("openai package required: pip install openai")
         self.client = openai.OpenAI(api_key=api_key or os.environ.get("OPENAI_API_KEY"))
         self.model = model
+        self.model_id = model
         self.dim = self.DIM
 
     def embed(self, text: str) -> List[float]:

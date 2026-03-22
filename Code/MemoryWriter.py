@@ -67,7 +67,22 @@ class MemoryWriter:
         self.abstract_generator = abstract_generator
         self.always_generate = always_generate
 
-    def store_episode(self, ep: Episode, situation_signature: str) -> None:
+    def store_episode(
+        self,
+        ep: Episode,
+        situation_signature: str,
+        deduplicate: bool = True,
+    ) -> Optional[str]:
+        """
+        Write an episode to memory. Returns the episode_id that was written,
+        or the id of an existing duplicate if deduplication fired (NOOP).
+
+        deduplicate=True mirrors Mem0's NOOP operation: if an episode with
+        the same role, task_type, situation_signature, and near-identical
+        abstract already exists (cosine sim >= 0.92), the write is skipped
+        and the existing episode_id is returned.
+        """
+        self.store.check_embedder_compat(self.embedder.model_id)
         abstract = ep.abstract
         if self.abstract_generator and (self.always_generate or not abstract.strip()):
             abstract = self.abstract_generator.generate(
@@ -78,6 +93,18 @@ class MemoryWriter:
             )
             ep = dataclasses.replace(ep, abstract=abstract)
         embedding = self.embedder.embed(abstract)
+
+        if deduplicate:
+            existing_id = self.store.find_duplicate(
+                agent_role=ep.agent_role,
+                task_type=ep.task_type,
+                situation_signature=situation_signature,
+                abstract_embedding=embedding,
+            )
+            if existing_id is not None:
+                return existing_id  # NOOP — duplicate already stored
+
         self.store.upsert_episode(ep, embedding, situation_signature=situation_signature)
         key = stable_hash_key(ep.task_type, ep.agent_role, situation_signature)
         self.store.upsert_l0_signal(key, ep.task_type, ep.agent_role, ep.outcome, ep.episode_id)
+        return ep.episode_id

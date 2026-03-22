@@ -13,3 +13,4 @@ class RetrievalContext:
     retry_count: int
     latency_budget_ms: int
     token_budget: int = 600
+    query_type: str = ""  # e.g. "open_domain" — policy uses this to adjust retrieval strategy

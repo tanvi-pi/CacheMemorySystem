@@ -1,0 +1,2012 @@
+{
+  "config": {
+    "dataset": "hotpotqa",
+    "model": "gpt-4o-mini",
+    "embedder": "text-embedding-3-small",
+    "generated_at": "2026-03-21T19:41:17",
+    "n_seed": 100,
+    "n_test": 50
+  },
+  "summary": [
+    {
+      "condition": "no_memory",
+      "n_questions": 50,
+      "exact_match_pct": 52.0,
+      "f1_pct": 64.6,
+      "avg_tokens": 79.8,
+      "avg_latency_ms": 452.1
+    },
+    {
+      "condition": "buffer_memory",
+      "n_questions": 50,
+      "exact_match_pct": 40.0,
+      "f1_pct": 49.4,
+      "avg_tokens": 533.2,
+      "avg_latency_ms": 508.2
+    },
+    {
+      "condition": "flat_memory",
+      "n_questions": 50,
+      "exact_match_pct": 46.0,
+      "f1_pct": 58.1,
+      "avg_tokens": 952.1,
+      "avg_latency_ms": 791.1
+    },
+    {
+      "condition": "tiered_memory",
+      "n_questions": 50,
+      "exact_match_pct": 46.0,
+      "f1_pct": 58.1,
+      "avg_tokens": 671.7,
+      "avg_latency_ms": 733.7
+    }
+  ],
+  "mem0_published_baselines": {
+    "single_hop_f1": 38.72,
+    "multi_hop_f1": 28.64,
+    "temporal_f1": 48.93,
+    "open_domain_f1": 47.65,
+    "vs_openai_improvement": "+26% J-score",
+    "source": "Mem0 paper (arXiv 2504.19413)"
+  },
+  "per_question": {
+    "no_memory": [
+      {
+        "question": "What kind of music do The Stone Roses and The Lemonheads play?",
+        "gold": "rock band",
+        "predicted": "Alternative rock",
+        "em": 0.0,
+        "f1": 0.5,
+        "tokens": 76,
+        "latency_ms": 1031
+      },
+      {
+        "question": "Which will be higher Time Warner Center or One Manhattan Square ?",
+        "gold": "One Manhattan Square",
+        "predicted": "One Manhattan Square.",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 76,
+        "latency_ms": 351
+      },
+      {
+        "question": "Which dog breed, the Schapendoes or the Bull Terrier, has its origins in a greater number of other dog breeds?",
+        "gold": "Bull Terrier",
+        "predicted": "Bull Terrier",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 88,
+        "latency_ms": 776
+      },
+      {
+        "question": "Which was Disney's 2nd animated production, Pinocchio or Home on the Range?",
+        "gold": "Pinocchio",
+        "predicted": "Pinocchio",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 82,
+        "latency_ms": 510
+      },
+      {
+        "question": "In between Thomas Anders and Micky Dolenz, who was the a vocalist of the Monkees?",
+        "gold": "George Michael Dolenz",
+        "predicted": "Micky Dolenz",
+        "em": 0.0,
+        "f1": 0.4,
+        "tokens": 85,
+        "latency_ms": 707
+      },
+      {
+        "question": "Are Pago Pago International Airport and Hoonah Airport both on American territory?",
+        "gold": "yes",
+        "predicted": "Yes.",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 77,
+        "latency_ms": 622
+      },
+      {
+        "question": "Which pizza chain has locations in more cities, Round Table Pizza or Marion's Piazza?",
+        "gold": "Round Table Pizza",
+        "predicted": "Round Table Pizza",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 80,
+        "latency_ms": 718
+      },
+      {
+        "question": "Which is a formal name of a species of tree, Bee tree or Microcachrys?",
+        "gold": "Microcachrys",
+        "predicted": "Microcachrys",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 83,
+        "latency_ms": 630
+      },
+      {
+        "question": "Is the Metropolitan Tower or 750 7th Avenue Skyscaper taller?",
+        "gold": "The Metropolitan Tower is a 68-story, 716 ft (218 m)",
+        "predicted": "Metropolitan Tower.",
+        "em": 0.0,
+        "f1": 0.4,
+        "tokens": 81,
+        "latency_ms": 394
+      },
+      {
+        "question": " Among Kele Okereke and Jon Hume who made the New Zealand band Evermore?",
+        "gold": "Jon Hume",
+        "predicted": "Jon Hume",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 82,
+        "latency_ms": 613
+      },
+      {
+        "question": "Are Couroupita and Graptopetalum plants both native to central America?",
+        "gold": "yes",
+        "predicted": "No.",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 78,
+        "latency_ms": 636
+      },
+      {
+        "question": "Which has more species in Asia, Disporum or Boltonia?",
+        "gold": "Disporum",
+        "predicted": "Disporum.",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 78,
+        "latency_ms": 452
+      },
+      {
+        "question": "Are Xinxiang and Qionglai City both county-level cities?",
+        "gold": "no",
+        "predicted": "Yes.",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 76,
+        "latency_ms": 389
+      },
+      {
+        "question": "What is older, Downfall or Dark Tower?",
+        "gold": "Downfall",
+        "predicted": "Downfall.",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 73,
+        "latency_ms": 363
+      },
+      {
+        "question": "Which film was released first, The Watercolor or Pok\u00e9mon: Arceus and the Jewel of Life?",
+        "gold": "Pok\u00e9mon: Arceus and the Jewel of Life",
+        "predicted": "The Watercolor.",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 85,
+        "latency_ms": 411
+      },
+      {
+        "question": "Havelock Ellis and Arnold Bennett were both what?",
+        "gold": "writer",
+        "predicted": "Writers.",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 74,
+        "latency_ms": 339
+      },
+      {
+        "question": "Which genus has more species, Quesnelia or Honeysuckle?",
+        "gold": "Honeysuckle",
+        "predicted": "Honeysuckle.",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 80,
+        "latency_ms": 478
+      },
+      {
+        "question": "Which is a type of herb, Brassia or Achimenes?",
+        "gold": "Achimenes",
+        "predicted": "Achimenes",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 77,
+        "latency_ms": 409
+      },
+      {
+        "question": "Dahlia and Aruncus are both examples of what type of plant catagorization?",
+        "gold": "genus",
+        "predicted": "Perennials",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 81,
+        "latency_ms": 410
+      },
+      {
+        "question": "What kind of group does Josey Scott and Kurt Cobain have in common?",
+        "gold": "band",
+        "predicted": "Rock band",
+        "em": 0.0,
+        "f1": 0.6666666666666666,
+        "tokens": 78,
+        "latency_ms": 283
+      },
+      {
+        "question": "Which magazine comes out more often, Out or Soap Opera Digest?",
+        "gold": "Soap Opera Digest",
+        "predicted": "Soap Opera Digest",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 76,
+        "latency_ms": 447
+      },
+      {
+        "question": "What has Henry Winkler worked as that Norman Foster has not?",
+        "gold": "comedian",
+        "predicted": "Actor",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 74,
+        "latency_ms": 303
+      },
+      {
+        "question": "are Pete Mangurian and Kirk Kerkorian both Americans ?",
+        "gold": "yes",
+        "predicted": "Yes.",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 74,
+        "latency_ms": 400
+      },
+      {
+        "question": "Is The Joy Formidable or Sixpence None the Richer a christian rock band?",
+        "gold": "Sixpence None the Richer",
+        "predicted": "Sixpence None the Richer.",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 86,
+        "latency_ms": 454
+      },
+      {
+        "question": "Who was born first, Ana Kasparian or Andre Agassi?",
+        "gold": "Andre Kirk Agassi",
+        "predicted": "Andre Agassi.",
+        "em": 0.0,
+        "f1": 0.8,
+        "tokens": 78,
+        "latency_ms": 462
+      },
+      {
+        "question": "Which of the following magazines covers cultural events in Greater Boston: The Arts Fuse or Visionaire?",
+        "gold": "The Arts Fuse",
+        "predicted": "The Arts Fuse",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 82,
+        "latency_ms": 510
+      },
+      {
+        "question": "IN what year were both Franz Ferdinand and Sunrise Avenue formed?",
+        "gold": "2002",
+        "predicted": "2002",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 74,
+        "latency_ms": 514
+      },
+      {
+        "question": "Whose given first name is longer, Theo Angelopoulos and Budd Boetticher (nicknames)?",
+        "gold": "Theodoros \"Theo\" Angelopoulos",
+        "predicted": "Theo Angelopoulos",
+        "em": 0.0,
+        "f1": 0.8,
+        "tokens": 86,
+        "latency_ms": 498
+      },
+      {
+        "question": "Was Steve Sekely and Willian King Baggot known by multiple names or nicknames?",
+        "gold": "yes",
+        "predicted": "Yes.",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 81,
+        "latency_ms": 303
+      },
+      {
+        "question": "Is The Stuff of Legend and Babes in Toyland both entertainment? ",
+        "gold": "by",
+        "predicted": "Yes.",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 77,
+        "latency_ms": 329
+      },
+      {
+        "question": "Are both Ixia and Rhexia a plant genus?",
+        "gold": "yes",
+        "predicted": "Yes.",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 74,
+        "latency_ms": 504
+      },
+      {
+        "question": "Which cocktail's name describes how the drink looks, Blue Hawaii or Baby Guinness?",
+        "gold": "Baby Guinness",
+        "predicted": "Blue Hawaii",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 78,
+        "latency_ms": 335
+      },
+      {
+        "question": "Are both  Bright Eyes and Disturbed rock bands from America?",
+        "gold": "yes",
+        "predicted": "Yes.",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 75,
+        "latency_ms": 403
+      },
+      {
+        "question": "Are the Kabata\u015f Erkek Lisesi school and the K\u00fc\u00e7\u00fcksu Palace located in the same city?",
+        "gold": "yes",
+        "predicted": "Yes.",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 86,
+        "latency_ms": 385
+      },
+      {
+        "question": "Eleventh Dream Day and The Shins are both rock bands from where?",
+        "gold": "United States",
+        "predicted": "United States",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 77,
+        "latency_ms": 371
+      },
+      {
+        "question": "Which breed was bred first, the English Water Spaniel or the Estonian Hound?",
+        "gold": "The English Water Spaniel",
+        "predicted": "English Water Spaniel.",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 83,
+        "latency_ms": 512
+      },
+      {
+        "question": " Who was born first Burton Cummings or Sharleen Spiteri?",
+        "gold": "Burton Lorne Cummings",
+        "predicted": "Burton Cummings.",
+        "em": 0.0,
+        "f1": 0.8,
+        "tokens": 80,
+        "latency_ms": 527
+      },
+      {
+        "question": "Were both Pam Shriver and Am\u00e9lie Mauresmo alive in the 1960s?",
+        "gold": "no",
+        "predicted": "No.",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 82,
+        "latency_ms": 335
+      },
+      {
+        "question": "Did Qionghai or Suining  have a population of 658,798 in 2002? ",
+        "gold": "In 2002, Suining had a population of 658,798.",
+        "predicted": "Suining",
+        "em": 0.0,
+        "f1": 0.25,
+        "tokens": 85,
+        "latency_ms": 339
+      },
+      {
+        "question": "Who has a wider scope of profession, Pete Dexter or Elie Wiesel?",
+        "gold": "Eliezer \"Elie\" Wiesel KBE",
+        "predicted": "Elie Wiesel.",
+        "em": 0.0,
+        "f1": 0.6666666666666666,
+        "tokens": 81,
+        "latency_ms": 369
+      },
+      {
+        "question": "Are both, Boise State University and Syracuse University, public colleges?",
+        "gold": "no",
+        "predicted": "No.",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 75,
+        "latency_ms": 412
+      },
+      {
+        "question": "Which composer was born earlier, Paul Hindemith or B\u00e9la Bart\u00f3k?",
+        "gold": "B\u00e9la Viktor J\u00e1nos Bart\u00f3k",
+        "predicted": "B\u00e9la Bart\u00f3k",
+        "em": 0.0,
+        "f1": 0.6666666666666666,
+        "tokens": 81,
+        "latency_ms": 472
+      },
+      {
+        "question": "Was the 2007 documentary 'Zoo' more successful than the 1998 documentary 'Divine Trash'?",
+        "gold": "yes",
+        "predicted": "No.",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 84,
+        "latency_ms": 336
+      },
+      {
+        "question": "Which is farther west, Sheridan County, Montana or Chandra Taal?",
+        "gold": "Sheridan County",
+        "predicted": "Chandra Taal.",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 80,
+        "latency_ms": 385
+      },
+      {
+        "question": "In between Ana\u00efs Nin and Odysseas Elytis who was awarded the Nobel Prize in Literature?",
+        "gold": "Odysseas Elytis",
+        "predicted": "Odysseas Elytis.",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 88,
+        "latency_ms": 488
+      },
+      {
+        "question": "Who was a higher ranked tennis player: Paola Su\u00e1rez or Michael Venus?",
+        "gold": "Paola Su\u00e1rez",
+        "predicted": "Michael Venus.",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 79,
+        "latency_ms": 346
+      },
+      {
+        "question": "What is common between Matt Vasgersian and Michael Casey?",
+        "gold": "American",
+        "predicted": "Sports broadcasting.",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 75,
+        "latency_ms": 399
+      },
+      {
+        "question": "Which Company published a magazine that was a hybrid video game/film, Red Herring or GameFan?",
+        "gold": "GameFan",
+        "predicted": "GameFan",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 83,
+        "latency_ms": 302
+      },
+      {
+        "question": "Is Chicago Rockford International Airport or McClellan\u2013Palomar Airport closer to their nearest cities?",
+        "gold": "McClellan\u2013Palomar Airport",
+        "predicted": "Chicago Rockford International Airport.",
+        "em": 0.0,
+        "f1": 0.3333333333333333,
+        "tokens": 87,
+        "latency_ms": 345
+      },
+      {
+        "question": "Which magazine is published more in a year, Essence or Alt for Damerne?",
+        "gold": "ALT for Damerne",
+        "predicted": "Essence",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 78,
+        "latency_ms": 297
+      }
+    ],
+    "buffer_memory": [
+      {
+        "question": "What kind of music do The Stone Roses and The Lemonheads play?",
+        "gold": "rock band",
+        "predicted": "Alternative rock",
+        "em": 0.0,
+        "f1": 0.5,
+        "tokens": 530,
+        "latency_ms": 512
+      },
+      {
+        "question": "Which will be higher Time Warner Center or One Manhattan Square ?",
+        "gold": "One Manhattan Square",
+        "predicted": "One Manhattan Square",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 529,
+        "latency_ms": 429
+      },
+      {
+        "question": "Which dog breed, the Schapendoes or the Bull Terrier, has its origins in a greater number of other dog breeds?",
+        "gold": "Bull Terrier",
+        "predicted": "Bull Terrier",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 542,
+        "latency_ms": 372
+      },
+      {
+        "question": "Which was Disney's 2nd animated production, Pinocchio or Home on the Range?",
+        "gold": "Pinocchio",
+        "predicted": "Pinocchio",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 536,
+        "latency_ms": 425
+      },
+      {
+        "question": "In between Thomas Anders and Micky Dolenz, who was the a vocalist of the Monkees?",
+        "gold": "George Michael Dolenz",
+        "predicted": "Micky Dolenz",
+        "em": 0.0,
+        "f1": 0.4,
+        "tokens": 539,
+        "latency_ms": 770
+      },
+      {
+        "question": "Are Pago Pago International Airport and Hoonah Airport both on American territory?",
+        "gold": "yes",
+        "predicted": "Yes",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 530,
+        "latency_ms": 558
+      },
+      {
+        "question": "Which pizza chain has locations in more cities, Round Table Pizza or Marion's Piazza?",
+        "gold": "Round Table Pizza",
+        "predicted": "Round Table Pizza",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 534,
+        "latency_ms": 513
+      },
+      {
+        "question": "Which is a formal name of a species of tree, Bee tree or Microcachrys?",
+        "gold": "Microcachrys",
+        "predicted": "Microcachrys",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 537,
+        "latency_ms": 1009
+      },
+      {
+        "question": "Is the Metropolitan Tower or 750 7th Avenue Skyscaper taller?",
+        "gold": "The Metropolitan Tower is a 68-story, 716 ft (218 m)",
+        "predicted": "Metropolitan Tower",
+        "em": 0.0,
+        "f1": 0.4,
+        "tokens": 534,
+        "latency_ms": 415
+      },
+      {
+        "question": " Among Kele Okereke and Jon Hume who made the New Zealand band Evermore?",
+        "gold": "Jon Hume",
+        "predicted": "Jon Hume",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 536,
+        "latency_ms": 724
+      },
+      {
+        "question": "Are Couroupita and Graptopetalum plants both native to central America?",
+        "gold": "yes",
+        "predicted": "no",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 531,
+        "latency_ms": 433
+      },
+      {
+        "question": "Which has more species in Asia, Disporum or Boltonia?",
+        "gold": "Disporum",
+        "predicted": "Disporum",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 531,
+        "latency_ms": 588
+      },
+      {
+        "question": "Are Xinxiang and Qionglai City both county-level cities?",
+        "gold": "no",
+        "predicted": "Yes.",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 530,
+        "latency_ms": 513
+      },
+      {
+        "question": "What is older, Downfall or Dark Tower?",
+        "gold": "Downfall",
+        "predicted": "Downfall",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 526,
+        "latency_ms": 467
+      },
+      {
+        "question": "Which film was released first, The Watercolor or Pok\u00e9mon: Arceus and the Jewel of Life?",
+        "gold": "Pok\u00e9mon: Arceus and the Jewel of Life",
+        "predicted": "The Watercolor",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 538,
+        "latency_ms": 403
+      },
+      {
+        "question": "Havelock Ellis and Arnold Bennett were both what?",
+        "gold": "writer",
+        "predicted": "authors",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 526,
+        "latency_ms": 458
+      },
+      {
+        "question": "Which genus has more species, Quesnelia or Honeysuckle?",
+        "gold": "Honeysuckle",
+        "predicted": "Quesnelia",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 533,
+        "latency_ms": 409
+      },
+      {
+        "question": "Which is a type of herb, Brassia or Achimenes?",
+        "gold": "Achimenes",
+        "predicted": "Achimenes",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 531,
+        "latency_ms": 405
+      },
+      {
+        "question": "Dahlia and Aruncus are both examples of what type of plant catagorization?",
+        "gold": "genus",
+        "predicted": "perennials",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 535,
+        "latency_ms": 516
+      },
+      {
+        "question": "What kind of group does Josey Scott and Kurt Cobain have in common?",
+        "gold": "band",
+        "predicted": "rock",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 531,
+        "latency_ms": 511
+      },
+      {
+        "question": "Which magazine comes out more often, Out or Soap Opera Digest?",
+        "gold": "Soap Opera Digest",
+        "predicted": "Out",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 528,
+        "latency_ms": 715
+      },
+      {
+        "question": "What has Henry Winkler worked as that Norman Foster has not?",
+        "gold": "comedian",
+        "predicted": "Actor",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 528,
+        "latency_ms": 409
+      },
+      {
+        "question": "are Pete Mangurian and Kirk Kerkorian both Americans ?",
+        "gold": "yes",
+        "predicted": "yes",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 527,
+        "latency_ms": 371
+      },
+      {
+        "question": "Is The Joy Formidable or Sixpence None the Richer a christian rock band?",
+        "gold": "Sixpence None the Richer",
+        "predicted": "no",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 533,
+        "latency_ms": 551
+      },
+      {
+        "question": "Who was born first, Ana Kasparian or Andre Agassi?",
+        "gold": "Andre Kirk Agassi",
+        "predicted": "Andre Agassi",
+        "em": 0.0,
+        "f1": 0.8,
+        "tokens": 531,
+        "latency_ms": 511
+      },
+      {
+        "question": "Which of the following magazines covers cultural events in Greater Boston: The Arts Fuse or Visionaire?",
+        "gold": "The Arts Fuse",
+        "predicted": "The Arts Fuse",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 536,
+        "latency_ms": 817
+      },
+      {
+        "question": "IN what year were both Franz Ferdinand and Sunrise Avenue formed?",
+        "gold": "2002",
+        "predicted": "2001",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 528,
+        "latency_ms": 393
+      },
+      {
+        "question": "Whose given first name is longer, Theo Angelopoulos and Budd Boetticher (nicknames)?",
+        "gold": "Theodoros \"Theo\" Angelopoulos",
+        "predicted": "Theo Angelopoulos",
+        "em": 0.0,
+        "f1": 0.8,
+        "tokens": 540,
+        "latency_ms": 401
+      },
+      {
+        "question": "Was Steve Sekely and Willian King Baggot known by multiple names or nicknames?",
+        "gold": "yes",
+        "predicted": "Unknown",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 534,
+        "latency_ms": 461
+      },
+      {
+        "question": "Is The Stuff of Legend and Babes in Toyland both entertainment? ",
+        "gold": "by",
+        "predicted": "Yes",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 530,
+        "latency_ms": 523
+      },
+      {
+        "question": "Are both Ixia and Rhexia a plant genus?",
+        "gold": "yes",
+        "predicted": "Yes.",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 528,
+        "latency_ms": 372
+      },
+      {
+        "question": "Which cocktail's name describes how the drink looks, Blue Hawaii or Baby Guinness?",
+        "gold": "Baby Guinness",
+        "predicted": "Blue Hawaii",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 532,
+        "latency_ms": 410
+      },
+      {
+        "question": "Are both  Bright Eyes and Disturbed rock bands from America?",
+        "gold": "yes",
+        "predicted": "Yes.",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 529,
+        "latency_ms": 402
+      },
+      {
+        "question": "Are the Kabata\u015f Erkek Lisesi school and the K\u00fc\u00e7\u00fcksu Palace located in the same city?",
+        "gold": "yes",
+        "predicted": "no",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 539,
+        "latency_ms": 414
+      },
+      {
+        "question": "Eleventh Dream Day and The Shins are both rock bands from where?",
+        "gold": "United States",
+        "predicted": "United States",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 531,
+        "latency_ms": 498
+      },
+      {
+        "question": "Which breed was bred first, the English Water Spaniel or the Estonian Hound?",
+        "gold": "The English Water Spaniel",
+        "predicted": "English Water Spaniel",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 536,
+        "latency_ms": 401
+      },
+      {
+        "question": " Who was born first Burton Cummings or Sharleen Spiteri?",
+        "gold": "Burton Lorne Cummings",
+        "predicted": "Burton Cummings",
+        "em": 0.0,
+        "f1": 0.8,
+        "tokens": 533,
+        "latency_ms": 909
+      },
+      {
+        "question": "Were both Pam Shriver and Am\u00e9lie Mauresmo alive in the 1960s?",
+        "gold": "no",
+        "predicted": "No.",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 536,
+        "latency_ms": 640
+      },
+      {
+        "question": "Did Qionghai or Suining  have a population of 658,798 in 2002? ",
+        "gold": "In 2002, Suining had a population of 658,798.",
+        "predicted": "Qionghai",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 541,
+        "latency_ms": 417
+      },
+      {
+        "question": "Who has a wider scope of profession, Pete Dexter or Elie Wiesel?",
+        "gold": "Eliezer \"Elie\" Wiesel KBE",
+        "predicted": "Elie Wiesel",
+        "em": 0.0,
+        "f1": 0.6666666666666666,
+        "tokens": 534,
+        "latency_ms": 416
+      },
+      {
+        "question": "Are both, Boise State University and Syracuse University, public colleges?",
+        "gold": "no",
+        "predicted": "Yes.",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 529,
+        "latency_ms": 408
+      },
+      {
+        "question": "Which composer was born earlier, Paul Hindemith or B\u00e9la Bart\u00f3k?",
+        "gold": "B\u00e9la Viktor J\u00e1nos Bart\u00f3k",
+        "predicted": "Paul Hindemith",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 534,
+        "latency_ms": 476
+      },
+      {
+        "question": "Was the 2007 documentary 'Zoo' more successful than the 1998 documentary 'Divine Trash'?",
+        "gold": "yes",
+        "predicted": "Insufficient information.",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 540,
+        "latency_ms": 424
+      },
+      {
+        "question": "Which is farther west, Sheridan County, Montana or Chandra Taal?",
+        "gold": "Sheridan County",
+        "predicted": "Chandra Taal",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 533,
+        "latency_ms": 630
+      },
+      {
+        "question": "In between Ana\u00efs Nin and Odysseas Elytis who was awarded the Nobel Prize in Literature?",
+        "gold": "Odysseas Elytis",
+        "predicted": "Odysseas Elytis",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 541,
+        "latency_ms": 519
+      },
+      {
+        "question": "Who was a higher ranked tennis player: Paola Su\u00e1rez or Michael Venus?",
+        "gold": "Paola Su\u00e1rez",
+        "predicted": "Paola Su\u00e1rez",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 534,
+        "latency_ms": 709
+      },
+      {
+        "question": "What is common between Matt Vasgersian and Michael Casey?",
+        "gold": "American",
+        "predicted": "Sports broadcasting",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 528,
+        "latency_ms": 407
+      },
+      {
+        "question": "Which Company published a magazine that was a hybrid video game/film, Red Herring or GameFan?",
+        "gold": "GameFan",
+        "predicted": "GameFan",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 537,
+        "latency_ms": 514
+      },
+      {
+        "question": "Is Chicago Rockford International Airport or McClellan\u2013Palomar Airport closer to their nearest cities?",
+        "gold": "McClellan\u2013Palomar Airport",
+        "predicted": "Chicago Rockford International Airport",
+        "em": 0.0,
+        "f1": 0.3333333333333333,
+        "tokens": 540,
+        "latency_ms": 463
+      },
+      {
+        "question": "Which magazine is published more in a year, Essence or Alt for Damerne?",
+        "gold": "ALT for Damerne",
+        "predicted": "Essence",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 532,
+        "latency_ms": 400
+      }
+    ],
+    "flat_memory": [
+      {
+        "question": "What kind of music do The Stone Roses and The Lemonheads play?",
+        "gold": "rock band",
+        "predicted": "Alternative rock",
+        "em": 0.0,
+        "f1": 0.5,
+        "tokens": 875,
+        "latency_ms": 1282,
+        "hits_returned": 5
+      },
+      {
+        "question": "Which will be higher Time Warner Center or One Manhattan Square ?",
+        "gold": "One Manhattan Square",
+        "predicted": "Time Warner Center",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 999,
+        "latency_ms": 802,
+        "hits_returned": 5
+      },
+      {
+        "question": "Which dog breed, the Schapendoes or the Bull Terrier, has its origins in a greater number of other dog breeds?",
+        "gold": "Bull Terrier",
+        "predicted": "Bull Terrier",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 990,
+        "latency_ms": 729,
+        "hits_returned": 5
+      },
+      {
+        "question": "Which was Disney's 2nd animated production, Pinocchio or Home on the Range?",
+        "gold": "Pinocchio",
+        "predicted": "Pinocchio",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 1103,
+        "latency_ms": 602,
+        "hits_returned": 5
+      },
+      {
+        "question": "In between Thomas Anders and Micky Dolenz, who was the a vocalist of the Monkees?",
+        "gold": "George Michael Dolenz",
+        "predicted": "Micky Dolenz",
+        "em": 0.0,
+        "f1": 0.4,
+        "tokens": 886,
+        "latency_ms": 1012,
+        "hits_returned": 5
+      },
+      {
+        "question": "Are Pago Pago International Airport and Hoonah Airport both on American territory?",
+        "gold": "yes",
+        "predicted": "yes",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 992,
+        "latency_ms": 497,
+        "hits_returned": 5
+      },
+      {
+        "question": "Which pizza chain has locations in more cities, Round Table Pizza or Marion's Piazza?",
+        "gold": "Round Table Pizza",
+        "predicted": "Round Table Pizza",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 999,
+        "latency_ms": 653,
+        "hits_returned": 5
+      },
+      {
+        "question": "Which is a formal name of a species of tree, Bee tree or Microcachrys?",
+        "gold": "Microcachrys",
+        "predicted": "Microcachrys",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 889,
+        "latency_ms": 531,
+        "hits_returned": 5
+      },
+      {
+        "question": "Is the Metropolitan Tower or 750 7th Avenue Skyscaper taller?",
+        "gold": "The Metropolitan Tower is a 68-story, 716 ft (218 m)",
+        "predicted": "Metropolitan Tower",
+        "em": 0.0,
+        "f1": 0.4,
+        "tokens": 1049,
+        "latency_ms": 630,
+        "hits_returned": 5
+      },
+      {
+        "question": " Among Kele Okereke and Jon Hume who made the New Zealand band Evermore?",
+        "gold": "Jon Hume",
+        "predicted": "Jon Hume",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 893,
+        "latency_ms": 717,
+        "hits_returned": 5
+      },
+      {
+        "question": "Are Couroupita and Graptopetalum plants both native to central America?",
+        "gold": "yes",
+        "predicted": "no",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 836,
+        "latency_ms": 587,
+        "hits_returned": 5
+      },
+      {
+        "question": "Which has more species in Asia, Disporum or Boltonia?",
+        "gold": "Disporum",
+        "predicted": "Disporum",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 865,
+        "latency_ms": 581,
+        "hits_returned": 5
+      },
+      {
+        "question": "Are Xinxiang and Qionglai City both county-level cities?",
+        "gold": "no",
+        "predicted": "no",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 859,
+        "latency_ms": 926,
+        "hits_returned": 5
+      },
+      {
+        "question": "What is older, Downfall or Dark Tower?",
+        "gold": "Downfall",
+        "predicted": "Downfall",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 992,
+        "latency_ms": 631,
+        "hits_returned": 5
+      },
+      {
+        "question": "Which film was released first, The Watercolor or Pok\u00e9mon: Arceus and the Jewel of Life?",
+        "gold": "Pok\u00e9mon: Arceus and the Jewel of Life",
+        "predicted": "The Watercolor",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 1034,
+        "latency_ms": 610,
+        "hits_returned": 5
+      },
+      {
+        "question": "Havelock Ellis and Arnold Bennett were both what?",
+        "gold": "writer",
+        "predicted": "'authors'",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 975,
+        "latency_ms": 717,
+        "hits_returned": 5
+      },
+      {
+        "question": "Which genus has more species, Quesnelia or Honeysuckle?",
+        "gold": "Honeysuckle",
+        "predicted": "no",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 869,
+        "latency_ms": 716,
+        "hits_returned": 5
+      },
+      {
+        "question": "Which is a type of herb, Brassia or Achimenes?",
+        "gold": "Achimenes",
+        "predicted": "Achimenes",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 837,
+        "latency_ms": 581,
+        "hits_returned": 5
+      },
+      {
+        "question": "Dahlia and Aruncus are both examples of what type of plant catagorization?",
+        "gold": "genus",
+        "predicted": "Genus",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 856,
+        "latency_ms": 464,
+        "hits_returned": 5
+      },
+      {
+        "question": "What kind of group does Josey Scott and Kurt Cobain have in common?",
+        "gold": "band",
+        "predicted": "Rock band",
+        "em": 0.0,
+        "f1": 0.6666666666666666,
+        "tokens": 1030,
+        "latency_ms": 741,
+        "hits_returned": 5
+      },
+      {
+        "question": "Which magazine comes out more often, Out or Soap Opera Digest?",
+        "gold": "Soap Opera Digest",
+        "predicted": "Soap Opera Digest",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 987,
+        "latency_ms": 1078,
+        "hits_returned": 5
+      },
+      {
+        "question": "What has Henry Winkler worked as that Norman Foster has not?",
+        "gold": "comedian",
+        "predicted": "Actor",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 932,
+        "latency_ms": 785,
+        "hits_returned": 5
+      },
+      {
+        "question": "are Pete Mangurian and Kirk Kerkorian both Americans ?",
+        "gold": "yes",
+        "predicted": "yes",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 893,
+        "latency_ms": 486,
+        "hits_returned": 5
+      },
+      {
+        "question": "Is The Joy Formidable or Sixpence None the Richer a christian rock band?",
+        "gold": "Sixpence None the Richer",
+        "predicted": "Sixpence None the Richer",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 1081,
+        "latency_ms": 771,
+        "hits_returned": 5
+      },
+      {
+        "question": "Who was born first, Ana Kasparian or Andre Agassi?",
+        "gold": "Andre Kirk Agassi",
+        "predicted": "Andre Agassi",
+        "em": 0.0,
+        "f1": 0.8,
+        "tokens": 991,
+        "latency_ms": 1318,
+        "hits_returned": 5
+      },
+      {
+        "question": "Which of the following magazines covers cultural events in Greater Boston: The Arts Fuse or Visionaire?",
+        "gold": "The Arts Fuse",
+        "predicted": "The Arts Fuse",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 983,
+        "latency_ms": 950,
+        "hits_returned": 5
+      },
+      {
+        "question": "IN what year were both Franz Ferdinand and Sunrise Avenue formed?",
+        "gold": "2002",
+        "predicted": "2002",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 924,
+        "latency_ms": 1143,
+        "hits_returned": 5
+      },
+      {
+        "question": "Whose given first name is longer, Theo Angelopoulos and Budd Boetticher (nicknames)?",
+        "gold": "Theodoros \"Theo\" Angelopoulos",
+        "predicted": "Theo Angelopoulos",
+        "em": 0.0,
+        "f1": 0.8,
+        "tokens": 1026,
+        "latency_ms": 933,
+        "hits_returned": 5
+      },
+      {
+        "question": "Was Steve Sekely and Willian King Baggot known by multiple names or nicknames?",
+        "gold": "yes",
+        "predicted": "Unknown.",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 956,
+        "latency_ms": 982,
+        "hits_returned": 5
+      },
+      {
+        "question": "Is The Stuff of Legend and Babes in Toyland both entertainment? ",
+        "gold": "by",
+        "predicted": "yes",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 1019,
+        "latency_ms": 521,
+        "hits_returned": 5
+      },
+      {
+        "question": "Are both Ixia and Rhexia a plant genus?",
+        "gold": "yes",
+        "predicted": "yes",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 846,
+        "latency_ms": 731,
+        "hits_returned": 5
+      },
+      {
+        "question": "Which cocktail's name describes how the drink looks, Blue Hawaii or Baby Guinness?",
+        "gold": "Baby Guinness",
+        "predicted": "Blue Hawaii",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 959,
+        "latency_ms": 568,
+        "hits_returned": 5
+      },
+      {
+        "question": "Are both  Bright Eyes and Disturbed rock bands from America?",
+        "gold": "yes",
+        "predicted": "yes",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 863,
+        "latency_ms": 575,
+        "hits_returned": 5
+      },
+      {
+        "question": "Are the Kabata\u015f Erkek Lisesi school and the K\u00fc\u00e7\u00fcksu Palace located in the same city?",
+        "gold": "yes",
+        "predicted": "no",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 941,
+        "latency_ms": 1164,
+        "hits_returned": 5
+      },
+      {
+        "question": "Eleventh Dream Day and The Shins are both rock bands from where?",
+        "gold": "United States",
+        "predicted": "United States",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 906,
+        "latency_ms": 1856,
+        "hits_returned": 5
+      },
+      {
+        "question": "Which breed was bred first, the English Water Spaniel or the Estonian Hound?",
+        "gold": "The English Water Spaniel",
+        "predicted": "Unknown.",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 997,
+        "latency_ms": 1624,
+        "hits_returned": 5
+      },
+      {
+        "question": " Who was born first Burton Cummings or Sharleen Spiteri?",
+        "gold": "Burton Lorne Cummings",
+        "predicted": "Burton Cummings",
+        "em": 0.0,
+        "f1": 0.8,
+        "tokens": 921,
+        "latency_ms": 784,
+        "hits_returned": 5
+      },
+      {
+        "question": "Were both Pam Shriver and Am\u00e9lie Mauresmo alive in the 1960s?",
+        "gold": "no",
+        "predicted": "No.",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 943,
+        "latency_ms": 607,
+        "hits_returned": 5
+      },
+      {
+        "question": "Did Qionghai or Suining  have a population of 658,798 in 2002? ",
+        "gold": "In 2002, Suining had a population of 658,798.",
+        "predicted": "Qionghai",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 871,
+        "latency_ms": 531,
+        "hits_returned": 5
+      },
+      {
+        "question": "Who has a wider scope of profession, Pete Dexter or Elie Wiesel?",
+        "gold": "Eliezer \"Elie\" Wiesel KBE",
+        "predicted": "Elie Wiesel",
+        "em": 0.0,
+        "f1": 0.6666666666666666,
+        "tokens": 988,
+        "latency_ms": 748,
+        "hits_returned": 5
+      },
+      {
+        "question": "Are both, Boise State University and Syracuse University, public colleges?",
+        "gold": "no",
+        "predicted": "yes",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 976,
+        "latency_ms": 760,
+        "hits_returned": 5
+      },
+      {
+        "question": "Which composer was born earlier, Paul Hindemith or B\u00e9la Bart\u00f3k?",
+        "gold": "B\u00e9la Viktor J\u00e1nos Bart\u00f3k",
+        "predicted": "B\u00e9la Bart\u00f3k",
+        "em": 0.0,
+        "f1": 0.6666666666666666,
+        "tokens": 919,
+        "latency_ms": 707,
+        "hits_returned": 5
+      },
+      {
+        "question": "Was the 2007 documentary 'Zoo' more successful than the 1998 documentary 'Divine Trash'?",
+        "gold": "yes",
+        "predicted": "no",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 981,
+        "latency_ms": 660,
+        "hits_returned": 5
+      },
+      {
+        "question": "Which is farther west, Sheridan County, Montana or Chandra Taal?",
+        "gold": "Sheridan County",
+        "predicted": "Chandra Taal",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 963,
+        "latency_ms": 734,
+        "hits_returned": 5
+      },
+      {
+        "question": "In between Ana\u00efs Nin and Odysseas Elytis who was awarded the Nobel Prize in Literature?",
+        "gold": "Odysseas Elytis",
+        "predicted": "Odysseas Elytis",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 1000,
+        "latency_ms": 697,
+        "hits_returned": 5
+      },
+      {
+        "question": "Who was a higher ranked tennis player: Paola Su\u00e1rez or Michael Venus?",
+        "gold": "Paola Su\u00e1rez",
+        "predicted": "Paola Su\u00e1rez",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 1015,
+        "latency_ms": 586,
+        "hits_returned": 5
+      },
+      {
+        "question": "What is common between Matt Vasgersian and Michael Casey?",
+        "gold": "American",
+        "predicted": "Both are broadcasters.",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 921,
+        "latency_ms": 1141,
+        "hits_returned": 5
+      },
+      {
+        "question": "Which Company published a magazine that was a hybrid video game/film, Red Herring or GameFan?",
+        "gold": "GameFan",
+        "predicted": "GameFan",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 984,
+        "latency_ms": 935,
+        "hits_returned": 5
+      },
+      {
+        "question": "Is Chicago Rockford International Airport or McClellan\u2013Palomar Airport closer to their nearest cities?",
+        "gold": "McClellan\u2013Palomar Airport",
+        "predicted": "Chicago Rockford International Airport",
+        "em": 0.0,
+        "f1": 0.3333333333333333,
+        "tokens": 1001,
+        "latency_ms": 600,
+        "hits_returned": 5
+      },
+      {
+        "question": "Which magazine is published more in a year, Essence or Alt for Damerne?",
+        "gold": "ALT for Damerne",
+        "predicted": "Essence",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 989,
+        "latency_ms": 569,
+        "hits_returned": 5
+      }
+    ],
+    "tiered_memory": [
+      {
+        "question": "What kind of music do The Stone Roses and The Lemonheads play?",
+        "gold": "rock band",
+        "predicted": "Alternative rock",
+        "em": 0.0,
+        "f1": 0.5,
+        "tokens": 617,
+        "latency_ms": 652,
+        "tier_used": "L1",
+        "hits_returned": 8
+      },
+      {
+        "question": "Which will be higher Time Warner Center or One Manhattan Square ?",
+        "gold": "One Manhattan Square",
+        "predicted": "Time Warner Center",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 692,
+        "latency_ms": 751,
+        "tier_used": "L1",
+        "hits_returned": 8
+      },
+      {
+        "question": "Which dog breed, the Schapendoes or the Bull Terrier, has its origins in a greater number of other dog breeds?",
+        "gold": "Bull Terrier",
+        "predicted": "Bull Terrier",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 718,
+        "latency_ms": 687,
+        "tier_used": "L1",
+        "hits_returned": 8
+      },
+      {
+        "question": "Which was Disney's 2nd animated production, Pinocchio or Home on the Range?",
+        "gold": "Pinocchio",
+        "predicted": "Pinocchio",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 794,
+        "latency_ms": 639,
+        "tier_used": "L1",
+        "hits_returned": 8
+      },
+      {
+        "question": "In between Thomas Anders and Micky Dolenz, who was the a vocalist of the Monkees?",
+        "gold": "George Michael Dolenz",
+        "predicted": "Micky Dolenz",
+        "em": 0.0,
+        "f1": 0.4,
+        "tokens": 636,
+        "latency_ms": 859,
+        "tier_used": "L1",
+        "hits_returned": 8
+      },
+      {
+        "question": "Are Pago Pago International Airport and Hoonah Airport both on American territory?",
+        "gold": "yes",
+        "predicted": "yes",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 671,
+        "latency_ms": 465,
+        "tier_used": "L1",
+        "hits_returned": 8
+      },
+      {
+        "question": "Which pizza chain has locations in more cities, Round Table Pizza or Marion's Piazza?",
+        "gold": "Round Table Pizza",
+        "predicted": "Round Table Pizza",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 696,
+        "latency_ms": 704,
+        "tier_used": "L1",
+        "hits_returned": 8
+      },
+      {
+        "question": "Which is a formal name of a species of tree, Bee tree or Microcachrys?",
+        "gold": "Microcachrys",
+        "predicted": "Microcachrys",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 620,
+        "latency_ms": 732,
+        "tier_used": "L1",
+        "hits_returned": 8
+      },
+      {
+        "question": "Is the Metropolitan Tower or 750 7th Avenue Skyscaper taller?",
+        "gold": "The Metropolitan Tower is a 68-story, 716 ft (218 m)",
+        "predicted": "Metropolitan Tower",
+        "em": 0.0,
+        "f1": 0.4,
+        "tokens": 724,
+        "latency_ms": 675,
+        "tier_used": "L1",
+        "hits_returned": 8
+      },
+      {
+        "question": " Among Kele Okereke and Jon Hume who made the New Zealand band Evermore?",
+        "gold": "Jon Hume",
+        "predicted": "Jon Hume",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 665,
+        "latency_ms": 589,
+        "tier_used": "L1",
+        "hits_returned": 8
+      },
+      {
+        "question": "Are Couroupita and Graptopetalum plants both native to central America?",
+        "gold": "yes",
+        "predicted": "no",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 587,
+        "latency_ms": 691,
+        "tier_used": "L1",
+        "hits_returned": 8
+      },
+      {
+        "question": "Which has more species in Asia, Disporum or Boltonia?",
+        "gold": "Disporum",
+        "predicted": "Disporum",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 617,
+        "latency_ms": 764,
+        "tier_used": "L1",
+        "hits_returned": 8
+      },
+      {
+        "question": "Are Xinxiang and Qionglai City both county-level cities?",
+        "gold": "no",
+        "predicted": "no",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 621,
+        "latency_ms": 649,
+        "tier_used": "L1",
+        "hits_returned": 8
+      },
+      {
+        "question": "What is older, Downfall or Dark Tower?",
+        "gold": "Downfall",
+        "predicted": "Downfall",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 684,
+        "latency_ms": 570,
+        "tier_used": "L1",
+        "hits_returned": 8
+      },
+      {
+        "question": "Which film was released first, The Watercolor or Pok\u00e9mon: Arceus and the Jewel of Life?",
+        "gold": "Pok\u00e9mon: Arceus and the Jewel of Life",
+        "predicted": "The Watercolor",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 705,
+        "latency_ms": 698,
+        "tier_used": "L1",
+        "hits_returned": 8
+      },
+      {
+        "question": "Havelock Ellis and Arnold Bennett were both what?",
+        "gold": "writer",
+        "predicted": "'authors'",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 682,
+        "latency_ms": 699,
+        "tier_used": "L1",
+        "hits_returned": 8
+      },
+      {
+        "question": "Which genus has more species, Quesnelia or Honeysuckle?",
+        "gold": "Honeysuckle",
+        "predicted": "no",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 607,
+        "latency_ms": 563,
+        "tier_used": "L1",
+        "hits_returned": 8
+      },
+      {
+        "question": "Which is a type of herb, Brassia or Achimenes?",
+        "gold": "Achimenes",
+        "predicted": "Achimenes",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 594,
+        "latency_ms": 531,
+        "tier_used": "L1",
+        "hits_returned": 8
+      },
+      {
+        "question": "Dahlia and Aruncus are both examples of what type of plant catagorization?",
+        "gold": "genus",
+        "predicted": "Genus",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 601,
+        "latency_ms": 827,
+        "tier_used": "L1",
+        "hits_returned": 8
+      },
+      {
+        "question": "What kind of group does Josey Scott and Kurt Cobain have in common?",
+        "gold": "band",
+        "predicted": "Rock band",
+        "em": 0.0,
+        "f1": 0.6666666666666666,
+        "tokens": 689,
+        "latency_ms": 820,
+        "tier_used": "L1",
+        "hits_returned": 8
+      },
+      {
+        "question": "Which magazine comes out more often, Out or Soap Opera Digest?",
+        "gold": "Soap Opera Digest",
+        "predicted": "Soap Opera Digest",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 680,
+        "latency_ms": 2131,
+        "tier_used": "L1",
+        "hits_returned": 8
+      },
+      {
+        "question": "What has Henry Winkler worked as that Norman Foster has not?",
+        "gold": "comedian",
+        "predicted": "Actor",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 643,
+        "latency_ms": 572,
+        "tier_used": "L1",
+        "hits_returned": 8
+      },
+      {
+        "question": "are Pete Mangurian and Kirk Kerkorian both Americans ?",
+        "gold": "yes",
+        "predicted": "yes",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 632,
+        "latency_ms": 688,
+        "tier_used": "L1",
+        "hits_returned": 8
+      },
+      {
+        "question": "Is The Joy Formidable or Sixpence None the Richer a christian rock band?",
+        "gold": "Sixpence None the Richer",
+        "predicted": "Sixpence None the Richer",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 723,
+        "latency_ms": 717,
+        "tier_used": "L1",
+        "hits_returned": 8
+      },
+      {
+        "question": "Who was born first, Ana Kasparian or Andre Agassi?",
+        "gold": "Andre Kirk Agassi",
+        "predicted": "Andre Agassi",
+        "em": 0.0,
+        "f1": 0.8,
+        "tokens": 709,
+        "latency_ms": 1112,
+        "tier_used": "L1",
+        "hits_returned": 8
+      },
+      {
+        "question": "Which of the following magazines covers cultural events in Greater Boston: The Arts Fuse or Visionaire?",
+        "gold": "The Arts Fuse",
+        "predicted": "The Arts Fuse",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 678,
+        "latency_ms": 807,
+        "tier_used": "L1",
+        "hits_returned": 8
+      },
+      {
+        "question": "IN what year were both Franz Ferdinand and Sunrise Avenue formed?",
+        "gold": "2002",
+        "predicted": "2002",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 651,
+        "latency_ms": 689,
+        "tier_used": "L1",
+        "hits_returned": 8
+      },
+      {
+        "question": "Whose given first name is longer, Theo Angelopoulos and Budd Boetticher (nicknames)?",
+        "gold": "Theodoros \"Theo\" Angelopoulos",
+        "predicted": "Theo Angelopoulos",
+        "em": 0.0,
+        "f1": 0.8,
+        "tokens": 722,
+        "latency_ms": 526,
+        "tier_used": "L1",
+        "hits_returned": 8
+      },
+      {
+        "question": "Was Steve Sekely and Willian King Baggot known by multiple names or nicknames?",
+        "gold": "yes",
+        "predicted": "Not known.",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 815,
+        "latency_ms": 1010,
+        "tier_used": "L2",
+        "hits_returned": 10
+      },
+      {
+        "question": "Is The Stuff of Legend and Babes in Toyland both entertainment? ",
+        "gold": "by",
+        "predicted": "yes",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 720,
+        "latency_ms": 571,
+        "tier_used": "L1",
+        "hits_returned": 8
+      },
+      {
+        "question": "Are both Ixia and Rhexia a plant genus?",
+        "gold": "yes",
+        "predicted": "yes",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 594,
+        "latency_ms": 652,
+        "tier_used": "L1",
+        "hits_returned": 8
+      },
+      {
+        "question": "Which cocktail's name describes how the drink looks, Blue Hawaii or Baby Guinness?",
+        "gold": "Baby Guinness",
+        "predicted": "Blue Hawaii",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 669,
+        "latency_ms": 702,
+        "tier_used": "L1",
+        "hits_returned": 8
+      },
+      {
+        "question": "Are both  Bright Eyes and Disturbed rock bands from America?",
+        "gold": "yes",
+        "predicted": "yes",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 656,
+        "latency_ms": 693,
+        "tier_used": "L1",
+        "hits_returned": 8
+      },
+      {
+        "question": "Are the Kabata\u015f Erkek Lisesi school and the K\u00fc\u00e7\u00fcksu Palace located in the same city?",
+        "gold": "yes",
+        "predicted": "no",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 663,
+        "latency_ms": 787,
+        "tier_used": "L1",
+        "hits_returned": 8
+      },
+      {
+        "question": "Eleventh Dream Day and The Shins are both rock bands from where?",
+        "gold": "United States",
+        "predicted": "United States",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 675,
+        "latency_ms": 784,
+        "tier_used": "L1",
+        "hits_returned": 8
+      },
+      {
+        "question": "Which breed was bred first, the English Water Spaniel or the Estonian Hound?",
+        "gold": "The English Water Spaniel",
+        "predicted": "Unknown.",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 673,
+        "latency_ms": 682,
+        "tier_used": "L1",
+        "hits_returned": 8
+      },
+      {
+        "question": " Who was born first Burton Cummings or Sharleen Spiteri?",
+        "gold": "Burton Lorne Cummings",
+        "predicted": "Burton Cummings",
+        "em": 0.0,
+        "f1": 0.8,
+        "tokens": 642,
+        "latency_ms": 689,
+        "tier_used": "L1",
+        "hits_returned": 8
+      },
+      {
+        "question": "Were both Pam Shriver and Am\u00e9lie Mauresmo alive in the 1960s?",
+        "gold": "no",
+        "predicted": "No.",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 656,
+        "latency_ms": 604,
+        "tier_used": "L1",
+        "hits_returned": 8
+      },
+      {
+        "question": "Did Qionghai or Suining  have a population of 658,798 in 2002? ",
+        "gold": "In 2002, Suining had a population of 658,798.",
+        "predicted": "Qionghai",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 625,
+        "latency_ms": 716,
+        "tier_used": "L1",
+        "hits_returned": 8
+      },
+      {
+        "question": "Who has a wider scope of profession, Pete Dexter or Elie Wiesel?",
+        "gold": "Eliezer \"Elie\" Wiesel KBE",
+        "predicted": "Elie Wiesel",
+        "em": 0.0,
+        "f1": 0.6666666666666666,
+        "tokens": 692,
+        "latency_ms": 714,
+        "tier_used": "L1",
+        "hits_returned": 8
+      },
+      {
+        "question": "Are both, Boise State University and Syracuse University, public colleges?",
+        "gold": "no",
+        "predicted": "yes",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 674,
+        "latency_ms": 614,
+        "tier_used": "L1",
+        "hits_returned": 8
+      },
+      {
+        "question": "Which composer was born earlier, Paul Hindemith or B\u00e9la Bart\u00f3k?",
+        "gold": "B\u00e9la Viktor J\u00e1nos Bart\u00f3k",
+        "predicted": "B\u00e9la Bart\u00f3k",
+        "em": 0.0,
+        "f1": 0.6666666666666666,
+        "tokens": 682,
+        "latency_ms": 690,
+        "tier_used": "L1",
+        "hits_returned": 8
+      },
+      {
+        "question": "Was the 2007 documentary 'Zoo' more successful than the 1998 documentary 'Divine Trash'?",
+        "gold": "yes",
+        "predicted": "no",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 673,
+        "latency_ms": 621,
+        "tier_used": "L1",
+        "hits_returned": 8
+      },
+      {
+        "question": "Which is farther west, Sheridan County, Montana or Chandra Taal?",
+        "gold": "Sheridan County",
+        "predicted": "Chandra Taal",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 689,
+        "latency_ms": 735,
+        "tier_used": "L1",
+        "hits_returned": 8
+      },
+      {
+        "question": "In between Ana\u00efs Nin and Odysseas Elytis who was awarded the Nobel Prize in Literature?",
+        "gold": "Odysseas Elytis",
+        "predicted": "Odysseas Elytis",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 708,
+        "latency_ms": 736,
+        "tier_used": "L1",
+        "hits_returned": 8
+      },
+      {
+        "question": "Who was a higher ranked tennis player: Paola Su\u00e1rez or Michael Venus?",
+        "gold": "Paola Su\u00e1rez",
+        "predicted": "Paola Su\u00e1rez",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 736,
+        "latency_ms": 584,
+        "tier_used": "L1",
+        "hits_returned": 8
+      },
+      {
+        "question": "What is common between Matt Vasgersian and Michael Casey?",
+        "gold": "American",
+        "predicted": "Both are broadcasters.",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 639,
+        "latency_ms": 1033,
+        "tier_used": "L1",
+        "hits_returned": 8
+      },
+      {
+        "question": "Which Company published a magazine that was a hybrid video game/film, Red Herring or GameFan?",
+        "gold": "GameFan",
+        "predicted": "GameFan",
+        "em": 1.0,
+        "f1": 1.0,
+        "tokens": 685,
+        "latency_ms": 638,
+        "tier_used": "L1",
+        "hits_returned": 8
+      },
+      {
+        "question": "Is Chicago Rockford International Airport or McClellan\u2013Palomar Airport closer to their nearest cities?",
+        "gold": "McClellan\u2013Palomar Airport",
+        "predicted": "Chicago Rockford International Airport",
+        "em": 0.0,
+        "f1": 0.3333333333333333,
+        "tokens": 689,
+        "latency_ms": 582,
+        "tier_used": "L1",
+        "hits_returned": 8
+      },
+      {
+        "question": "Which magazine is published more in a year, Essence or Alt for Damerne?",
+        "gold": "ALT for Damerne",
+        "predicted": "Essence",
+        "em": 0.0,
+        "f1": 0.0,
+        "tokens": 670,
+        "latency_ms": 1040,
+        "tier_used": "L1",
+        "hits_returned": 8
+      }
+    ]
+  }
+}
