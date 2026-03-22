@@ -353,6 +353,20 @@ class MemoryStore:
         }
 
 
+def _normalize_situation(text: str) -> str:
+    """Normalize situation text before hashing.
+
+    Handles the most common surface variations that should map to the same
+    L0 signal: case differences, extra whitespace, and leading/trailing
+    whitespace. Does not handle true paraphrases (e.g. 'rate limit error'
+    vs 'HTTP 429 Too Many Requests') — those require embedding-based fuzzy
+    matching, which is a planned future extension.
+    """
+    import re
+    return re.sub(r"\s+", " ", text.lower().strip())
+
+
 def stable_hash_key(task_type: str, agent_role: str, situation: str) -> str:
-    raw = f"{task_type}||{agent_role}||{situation}".encode("utf-8")
+    normalized = _normalize_situation(situation)
+    raw = f"{task_type}||{agent_role}||{normalized}".encode("utf-8")
     return hashlib.sha256(raw).hexdigest()[:24]

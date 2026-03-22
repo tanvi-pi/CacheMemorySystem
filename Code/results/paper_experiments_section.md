@@ -40,7 +40,7 @@ Table 1 presents overall results across all four conditions.
 | Flat memory | 52.1 | 76.4 | 784 | 848ms |
 | **Tiered memory (ours)** | **52.1** | **77.4** | **619** | **875ms** |
 
-The tiered system matches flat memory on EM (52.1%) while outperforming it on F1 (+1.0 point: 77.4% vs 76.4%) and injecting 21% fewer tokens per query (619 vs 784). The EM parity reflects that EM rewards only exact string matches; the +1.0 F1 advantage shows that the tiered system retrieves more relevant partial information, particularly on open-domain and temporal questions where it injects full-trace context via L2 escalation. Buffer memory scores lower than no memory on F1 (4.6% vs 8.6%) because recency-biased injection introduces irrelevant recent context that misleads the model — confirming that indiscriminate context injection is worse than no context. The 0.0% exact match for the no-memory condition confirms that our benchmark facts cannot be answered from model weights, cleanly isolating memory as the performance driver.
+The tiered system matches flat memory on EM (52.1%) while outperforming it on F1 (+1.0 point: 77.4% vs 76.4%) and injecting 21% fewer tokens per query (619 vs 784). The EM parity reflects that EM rewards only exact string matches; the +1.0 F1 advantage shows that the tiered system retrieves more relevant partial information, particularly on open-domain and temporal questions where it injects full-trace context via L2 escalation. End-to-end latency is marginally higher for the tiered system (875ms vs 848ms) because open-domain queries always trigger a second database fetch for full traces; on non-open-domain queries the tiered system is faster than flat due to the smaller role-partitioned search index. Buffer memory scores lower than no memory on F1 (4.6% vs 8.6%) because recency-biased injection introduces irrelevant recent context that misleads the model — confirming that indiscriminate context injection is worse than no context. The 0.0% exact match for the no-memory condition confirms that our benchmark facts cannot be answered from model weights, cleanly isolating memory as the performance driver.
 
 Table 2 breaks down F1 by question type and compares against Mem0's published results on LOCOMO (Chhikara et al., 2025).
 
@@ -58,7 +58,7 @@ Table 2 breaks down F1 by question type and compares against Mem0's published re
 
 The tiered system exceeds Mem0 on three of four question types. The largest margins are on single-hop (+51.2 points) and multi-hop (+34.1 points) — the two types most commonly encountered in factual agent memory workloads. Temporal reasoning shows a +13.3-point advantage over Mem0, reflecting L2 escalation: full execution traces provide surrounding context needed to reason about when facts occurred across sessions.
 
-On open-domain questions, the tiered system scores 38.6% F1 against Mem0's 47.65% — a gap of 9.1 points. This is partially addressed by a query-type-specific strategy: open-domain queries are issued with lower confidence (forcing L2 escalation), a higher token budget (5,000 tokens), and a wider hit window (10 episodes at 800 characters each), enabling synthesis across more episodes. The remaining gap reflects a structural advantage of Mem0's entity-relationship graph (Mem0^g) on inference queries requiring distantly related facts — a direction we discuss in Section 6.
+On open-domain questions, the tiered system scores 38.6% F1 against Mem0's 47.65% — a gap of 9.1 points. This is partially addressed by a query-type-specific strategy: open-domain queries are issued with lower confidence (forcing L2 escalation), a higher token budget (5,000 tokens), and a wider hit window (10 episodes at 800 characters each), enabling synthesis across more episodes. The remaining gap reflects a structural advantage of Mem0's entity-relationship graph (Mem0^g) on inference queries requiring distantly related facts — extending the system with a graph layer over episodic memory is a direction for future work.
 
 The comparison is not direct — the tiered system was evaluated on our synthetic benchmark while Mem0 was evaluated on the original LOCOMO dataset — but both benchmarks are built to the same specification and use the same four question types, making the per-type F1 comparison meaningful.
 
@@ -92,6 +92,9 @@ Table 3 presents retrieval accuracy for the tiered system and flat baseline.
 | Paraphrased | **90.9%** | **0.933** | 83.6% | 0.861 | 55 |
 | Confusor | **78.6%** | **0.821** | 21.4% | 0.214 | 14 |
 | Verbatim | 75.0% | 0.785 | 75.0% | 0.750 | 12 |
+| Novel‡ | — | — | — | — | 19 |
+
+‡Novel queries have no single ground-truth episode (they test whether the system surfaces a useful analogue), so per-query top-k accuracy and MRR are not directly measurable. Novel queries are included in the any-hit accuracy reported in Table 3 (100% tiered, 75.3% flat).
 
 The confusor results are the most diagnostic. Flat search scores 21.4% top-1 on confusor queries — it retrieves the wrong-role episode in 78.6% of cases because the surface text is similar and there is no mechanism to distinguish roles. The tiered system scores 78.6% top-1, a 57.2-percentage-point improvement. This result directly validates the role partitioning design: by scoping cosine similarity search to the querying agent's partition, the confusor episode from the wrong role is never in the candidate set.
 
