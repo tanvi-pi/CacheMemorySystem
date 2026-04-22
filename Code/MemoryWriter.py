@@ -105,6 +105,11 @@ class MemoryWriter:
                 return existing_id  # NOOP — duplicate already stored
 
         self.store.upsert_episode(ep, embedding, situation_signature=situation_signature)
-        key = stable_hash_key(ep.task_type, ep.agent_role, situation_signature)
+        # Resolve to canonical situation before hashing so the L0 key is stable
+        # across surface variations of the same situation.
+        sit_embedding = self.embedder.embed(situation_signature)
+        canonical = self.store.resolve_situation(ep.task_type, ep.agent_role, sit_embedding)
+        situation_for_key = canonical if canonical is not None else situation_signature
+        key = stable_hash_key(ep.task_type, ep.agent_role, situation_for_key)
         self.store.upsert_l0_signal(key, ep.task_type, ep.agent_role, ep.outcome, ep.episode_id)
         return ep.episode_id

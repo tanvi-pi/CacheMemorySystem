@@ -227,6 +227,41 @@ SEED_ABSTRACTS: Dict[str, str] = {
     ),
 }
 
+# Situation paraphrases: alternative free-text descriptions of the same situation.
+# Used to test semantic L0 canonical resolution — a paraphrased situation should
+# resolve to the same canonical label as the exact pattern string.
+SITUATION_PARAPHRASES: Dict[str, List[str]] = {
+    "postgres timeout index":        ["database read hanging on unindexed column", "slow query on high-traffic table"],
+    "high cardinality join":         ["massive cross-table join producing slow plans", "nested loop on large result set"],
+    "missing analyze stats":         ["planner using stale row estimates", "bad execution plan after bulk load"],
+    "deadlock on concurrent writes": ["circular lock wait between transactions", "transactions blocking each other on write"],
+    "bloated table vacuum needed":   ["dead row accumulation slowing queries", "table disk usage far exceeds live rows"],
+    "connection pool exhaustion":    ["no available DB connections under load", "pool slots all occupied, new requests hang"],
+    "oauth refresh token":           ["credential expiring mid-session", "token renewal not triggered after expiry"],
+    "rate limit handling":           ["quota errors from upstream API", "external service rejecting bursts of requests"],
+    "schema mismatch":               ["API response structure changed unexpectedly", "vendor contract update broke parsing"],
+    "webhook signature validation":  ["incoming payloads accepted without auth check", "forged callbacks not being rejected"],
+    "pagination cursor drift":       ["duplicate results across page fetches", "listing inconsistent when data changes mid-page"],
+    "ssl certificate pinning failure": ["TLS handshake failing after cert rotation", "pinned fingerprint outdated after renewal"],
+    "race condition":                ["shared state accessed without synchronization", "flaky test under concurrent load"],
+    "unsafe cast":                   ["narrowing type coercion without bounds check", "type assertion panicking at runtime"],
+    "missing test coverage":         ["error branches never exercised by tests", "retry logic has no automated validation"],
+    "sql injection vector":          ["unsanitized user input passed to query", "string concatenation into SQL statement"],
+    "memory leak in event listener": ["listener not removed causing heap growth", "event callbacks accumulating over time"],
+    "unhandled promise rejection":   ["async error silently swallowed", "rejected promise with no catch handler"],
+    "service flapping alerts":       ["service repeatedly cycling up and down", "health check oscillating between pass and fail"],
+    "error spike after deploy":      ["errors increased immediately after release", "rollout correlated with failure rate jump"],
+    "network saturation":            ["bandwidth exhausted causing packet loss", "all services slow due to link congestion"],
+    "disk iops throttling":          ["storage throughput capped causing latency", "disk ops hitting provider rate limit"],
+    "pod oom killed in cluster":     ["container killed due to memory limit", "OOM event in kubernetes workload"],
+    "dns resolution failures":       ["hostname lookup failing intermittently", "service discovery broken due to DNS"],
+    "failed smoke test":             ["post-deploy validation failing", "basic health check not passing after release"],
+    "rollback triggered":            ["release reverted due to errors", "deployment rolled back after failure detection"],
+    "canary rollback needed":        ["canary showing elevated error rate", "new version performing worse than baseline"],
+    "config drift in staging":       ["staging environment diverged from production", "env var mismatch between environments"],
+    "dependency version conflict":   ["package version incompatibility blocking deploy", "conflicting library versions in release"],
+}
+
 # Paraphrases: 3 phrasings per pattern that share NO keywords with the pattern phrase.
 # This is the core of the hard test — the system must match on semantics alone.
 PARAPHRASES: Dict[str, List[str]] = {
@@ -460,6 +495,21 @@ def _build_system(
     )
 
 
+def _seed_canonical_situations(store: MemoryStore, embedder: Any) -> None:
+    """Register each PATTERN as a canonical situation for semantic L0 matching.
+
+    This allows surface variations of a known situation (e.g. 'postgres read
+    timeout under load') to resolve to the canonical label ('postgres timeout
+    index') and share the same L0 signal rather than creating a new key each
+    time.
+    """
+    for task_type, role in TASKS.items():
+        for pattern in PATTERNS[task_type]:
+            emb = embedder.embed(pattern)
+            store.register_canonical_situation(task_type, role, pattern, emb)
+    print(f"[canonicals] Registered {sum(len(v) for v in PATTERNS.values())} canonical situations.")
+
+
 def _seed_episodes(system: MultiAgentSystem, episodes_per_task: int, rng: random.Random) -> None:
     idx = 0
     for task_type, role in TASKS.items():
@@ -517,15 +567,20 @@ def _generate_queries(num_queries: int, rng: random.Random) -> List[Dict[str, ob
 
         if roll < 0.50:
             # Paraphrased known — hard
+            # Use a paraphrased situation string (not the exact pattern) so that
+            # semantic canonical resolution is exercised on the L0 path.
             task_type = rng.choice(tasks)
             role = TASKS[task_type]
             situation = rng.choice(PATTERNS[task_type])
+            sit_paraphrases = SITUATION_PARAPHRASES.get(situation, [])
+            situation_text = rng.choice(sit_paraphrases) if sit_paraphrases else situation
             paraphrases = PARAPHRASES.get(situation, [])
             query = rng.choice(paraphrases) if paraphrases else f"I'm dealing with a variant of {situation}"
             queries.append({
                 "task_type": task_type,
                 "role": role,
-                "situation": situation,
+                "situation": situation_text,   # paraphrased — canonical resolution needed
+                "ground_truth_situation": situation,  # canonical label for scoring
                 "query": query,
                 "confidence": rng.uniform(0.25, 0.9),
                 "retry_count": rng.choice([0, 0, 1, 2, 3]),
@@ -709,8 +764,11 @@ def _build_trace(idx: int, q: Dict[str, Any], tiered: Dict[str, Any], flat: Dict
     t_hits = tiered.get("abstract_hits", [])
     f_hits = flat.get("abstract_hits", [])
 
-    t_acc = _score_accuracy(str(q["situation"]), t_hits, known, str(q["task_type"]))
-    f_acc = _score_accuracy(str(q["situation"]), f_hits, known, str(q["task_type"]))
+    # Use ground_truth_situation for scoring when available (paraphrased queries
+    # have a paraphrased situation string but the stored episode uses the canonical).
+    score_situation = str(q.get("ground_truth_situation", q["situation"]))
+    t_acc = _score_accuracy(score_situation, t_hits, known, str(q["task_type"]))
+    f_acc = _score_accuracy(score_situation, f_hits, known, str(q["task_type"]))
 
     tiered_correct = t_acc["top1_correct"] if t_acc["evaluable"] else None
     flat_correct = f_acc["top1_correct"] if f_acc["evaluable"] else None
@@ -906,6 +964,7 @@ def run_benchmark(
     print("[seeding] done\n")
 
     store = MemoryStore(db_path)
+    _seed_canonical_situations(store, active_embedder)
     flat = FlatRetrievalPolicy(store, active_embedder, topk=3)
 
     queries = _generate_queries(num_queries, rng)
@@ -915,27 +974,33 @@ def run_benchmark(
     execution_traces: List[Dict[str, Any]] = []
 
     for idx, q in enumerate(queries):
+        # Pass the raw (possibly paraphrased) situation to the tiered system so
+        # L0's embedding-based canonical resolution is exercised. Scoring uses
+        # ground_truth_situation (the canonical label) to check correctness.
+        raw_situation = str(q["situation"])
+        canonical_situation = str(q.get("ground_truth_situation", raw_situation))
+
         tiered = system.step(
             task_type=str(q["task_type"]),
             role=str(q["role"]),
-            situation=str(q["situation"]),
+            situation=raw_situation,
             user_query=str(q["query"]),
             confidence=float(q["confidence"]),
             retry_count=int(q["retry_count"]),
             latency_budget_ms=40,
-            token_budget=700,
+            token_budget=2000,
         )
         tiered_results.append(tiered)
 
         flat_ctx = RetrievalContext(
             task_type=str(q["task_type"]),
             agent_role=str(q["role"]),
-            situation=str(q["situation"]),
+            situation=canonical_situation,
             query_text=str(q["query"]),
             confidence=float(q["confidence"]),
             retry_count=int(q["retry_count"]),
             latency_budget_ms=40,
-            token_budget=700,
+            token_budget=2000,
         )
         flat_result = flat.retrieve(flat_ctx)
         flat_results.append(flat_result)

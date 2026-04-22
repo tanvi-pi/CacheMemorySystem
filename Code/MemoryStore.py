@@ -67,6 +67,23 @@ class MemoryStore:
         )
         self.conn.execute(
             """
+            CREATE TABLE IF NOT EXISTS canonical_situations (
+                id TEXT PRIMARY KEY,
+                task_type TEXT NOT NULL,
+                agent_role TEXT NOT NULL,
+                label TEXT NOT NULL,
+                embedding_json TEXT NOT NULL
+            );
+            """
+        )
+        self.conn.execute(
+            """
+            CREATE INDEX IF NOT EXISTS idx_canonical_task_role
+            ON canonical_situations(task_type, agent_role);
+            """
+        )
+        self.conn.execute(
+            """
             CREATE INDEX IF NOT EXISTS idx_episodes_task_role_time
             ON episodes(task_type, agent_role, created_at_ms DESC);
             """
@@ -290,6 +307,100 @@ class MemoryStore:
                 }
             )
         return out
+
+    def register_canonical_situation(
+        self,
+        task_type: str,
+        agent_role: str,
+        label: str,
+        embedding: List[float],
+    ) -> str:
+        """Register a canonical situation for semantic L0 matching.
+
+        The label becomes the stable string used in the L0 hash key when a
+        query situation is resolved to this canonical. Multiple surface forms
+        (e.g. 'postgres timeout on replica', 'DB read timeout under load') will
+        all map to the same label and accumulate signal together.
+
+        Returns the canonical id (stable_hash_key of task_type/role/label).
+        """
+        cid = stable_hash_key(task_type, agent_role, label)
+        self.conn.execute(
+            """
+            INSERT OR REPLACE INTO canonical_situations
+                (id, task_type, agent_role, label, embedding_json)
+            VALUES (?, ?, ?, ?, ?)
+            """,
+            (cid, task_type, agent_role, label, json.dumps(embedding)),
+        )
+        self.conn.commit()
+        return cid
+
+    def resolve_situation(
+        self,
+        task_type: str,
+        agent_role: str,
+        situation_embedding: List[float],
+        threshold: float = 0.55,
+    ) -> Optional[str]:
+        """Find the nearest canonical situation label for a given embedding.
+
+        Returns the canonical label if the best cosine similarity exceeds
+        threshold, otherwise returns None (caller falls back to raw situation).
+        """
+        cur = self.conn.execute(
+            "SELECT label, embedding_json FROM canonical_situations WHERE task_type = ? AND agent_role = ?",
+            (task_type, agent_role),
+        )
+        rows = cur.fetchall()
+        if not rows:
+            return None
+
+        best_label, best_sim = None, -1.0
+        for label, emb_json in rows:
+            sim = cosine(situation_embedding, json.loads(emb_json))
+            if sim > best_sim:
+                best_sim = sim
+                best_label = label
+
+        return best_label if best_sim >= threshold else None
+
+    def get_best_episode_for_situation(
+        self,
+        task_type: str,
+        agent_role: str,
+        situation_label: str,
+        prefer_outcome: str = "success",
+    ) -> Optional[Dict[str, Any]]:
+        """Return the best past episode for a canonical situation label.
+
+        Prefers the most recent episode with prefer_outcome; falls back to
+        any outcome if none exists.
+        """
+        cur = self.conn.execute(
+            """
+            SELECT episode_id, task_type, agent_role, outcome, abstract, created_at_ms, situation_signature
+            FROM episodes
+            WHERE task_type = ? AND agent_role = ? AND situation_signature = ?
+            ORDER BY
+                CASE WHEN outcome = ? THEN 0 ELSE 1 END,
+                created_at_ms DESC
+            LIMIT 1
+            """,
+            (task_type, agent_role, situation_label, prefer_outcome),
+        )
+        row = cur.fetchone()
+        if not row:
+            return None
+        return {
+            "episode_id": row[0],
+            "task_type": row[1],
+            "agent_role": row[2],
+            "outcome": row[3],
+            "abstract": row[4],
+            "created_at_ms": row[5],
+            "situation_signature": row[6],
+        }
 
     def upsert_l0_signal(self, key: str, task_type: str, agent_role: str, outcome: str, episode_id: str) -> None:
         now = int(time.time() * 1000)

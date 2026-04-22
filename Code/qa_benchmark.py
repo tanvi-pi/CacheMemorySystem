@@ -1494,7 +1494,7 @@ def run_locomo_benchmark(
         all_test_qs, system, store, embedder, client, model,
         _classify_locomo_q,
         token_budget=3000,
-        latency_budget_ms=5000,
+        latency_budget_ms=800,
     )
     for r, q in zip(r_tiered, all_test_qs):
         r["evidence_type"] = q.get("evidence_type", "unknown")
