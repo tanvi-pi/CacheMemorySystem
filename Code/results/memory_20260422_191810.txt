@@ -1,0 +1,604 @@
+======================================================================
+  AGENT MEMORY SNAPSHOT
+  Generated : 2026-04-22T19:18:10
+  Episodes  : 20 per task
+  OpenAI    : embeddings=True  llm_abstracts=True
+======================================================================
+
+======================================================================
+  CANONICAL SITUATION EVOLUTION
+  Total events: 37  (added=26  merged=11)
+======================================================================
+
+  Agent: PLANNER
+  + New situations added (5):
+    • [db_query_debug] "high cardinality join"
+      raw: "high cardinality join"  (ep ep_db_query_debug_4)
+    • [db_query_debug] "table maintenance required"
+      raw: "bloated table vacuum needed"  (ep ep_db_query_debug_5)
+    • [db_query_debug] "connection pool limit reached"
+      raw: "connection pool exhaustion"  (ep ep_db_query_debug_6)
+    • [db_query_debug] "missing data analysis"
+      raw: "missing analyze stats"  (ep ep_db_query_debug_18)
+    • [db_query_debug] "table vacuum required"
+      raw: "bloated table vacuum needed"  (ep ep_db_query_debug_19)
+  ~ Embeddings merged into existing canonicals (1):
+    • [db_query_debug] "connection pool exhaustion" → "connection pool limit reached"
+
+  Agent: CODER
+  + New situations added (5):
+    • [api_integration] "ssl certificate pinning error"
+      raw: "ssl certificate pinning failure"  (ep ep_api_integration_21)
+    • [api_integration] "schema inconsistency"
+      raw: "schema mismatch"  (ep ep_api_integration_22)
+    • [api_integration] "webhook signature verification"
+      raw: "webhook signature validation"  (ep ep_api_integration_23)
+    • [api_integration] "oauth token renewal"
+      raw: "oauth refresh token"  (ep ep_api_integration_25)
+    • [api_integration] "cursor drift issue"
+      raw: "pagination cursor drift"  (ep ep_api_integration_29)
+  ~ Embeddings merged into existing canonicals (2):
+    • [api_integration] "schema mismatch" → "schema inconsistency"
+    • [api_integration] "webhook signature validation" → "webhook signature verification"
+
+  Agent: REVIEWER
+  + New situations added (5):
+    • [code_review] "memory leak event listener"
+      raw: "memory leak in event listener"  (ep ep_code_review_40)
+    • [code_review] "sql injection attack"
+      raw: "sql injection vector"  (ep ep_code_review_42)
+    • [code_review] "race condition"
+      raw: "race condition"  (ep ep_code_review_44)
+    • [code_review] "incomplete test coverage"
+      raw: "missing test coverage"  (ep ep_code_review_47)
+    • [code_review] "promise rejection error"
+      raw: "unhandled promise rejection"  (ep ep_code_review_52)
+  ~ Embeddings merged into existing canonicals (4):
+    • [code_review] "race condition" → "race condition"
+    • [code_review] "race condition" → "race condition"
+    • [code_review] "memory leak in event listener" → "memory leak event listener"
+    • [code_review] "missing test coverage" → "incomplete test coverage"
+
+  Agent: RESEARCHER
+  + New situations added (5):
+    • [incident_investigation] "deployment error spike"
+      raw: "error spike after deploy"  (ep ep_incident_investigation_61)
+    • [incident_investigation] "dns resolution issue"
+      raw: "dns resolution failures"  (ep ep_incident_investigation_64)
+    • [incident_investigation] "network congestion"
+      raw: "network saturation"  (ep ep_incident_investigation_66)
+    • [incident_investigation] "service disruption alerts"
+      raw: "service flapping alerts"  (ep ep_incident_investigation_67)
+    • [incident_investigation] "disk performance limitation"
+      raw: "disk iops throttling"  (ep ep_incident_investigation_72)
+  ~ Embeddings merged into existing canonicals (3):
+    • [incident_investigation] "error spike after deploy" → "deployment error spike"
+    • [incident_investigation] "dns resolution failures" → "dns resolution issue"
+    • [incident_investigation] "error spike after deploy" → "deployment error spike"
+
+  Agent: EXECUTOR
+  + New situations added (6):
+    • [release_validation] "migration status pending"
+      raw: "migration checks pending"  (ep ep_release_validation_80)
+    • [release_validation] "rollout failure threshold"
+      raw: "rollout stuck at threshold"  (ep ep_release_validation_81)
+    • [release_validation] "smoke failure detection"
+      raw: "e2e smoke failures"  (ep ep_release_validation_82)
+    • [release_validation] "feature flag error"
+      raw: "feature flag misconfiguration"  (ep ep_release_validation_83)
+    • [release_validation] "canary rollback required"
+      raw: "canary rollback needed"  (ep ep_release_validation_98)
+    • [release_validation] "health check failure"
+      raw: "health check endpoint down"  (ep ep_release_validation_99)
+  ~ Embeddings merged into existing canonicals (1):
+    • [release_validation] "e2e smoke failures" → "smoke failure detection"
+
+======================================================================
+
+──────────────────────────────────────────────────────────────────────
+  AGENT: PLANNER
+──────────────────────────────────────────────────────────────────────
+
+  [L0] WHAT I WATCH OUT FOR
+  ─────────────────────────
+  Task: db_query_debug
+  Outcomes seen: 2 success, 0 failure, 1 warning  (fail rate: 0%)  →  ✓ Generally safe
+  Last experience: success (episode ep_db_query_debug_19)
+
+  Task: db_query_debug
+  Outcomes seen: 1 success, 1 failure, 0 warning  (fail rate: 50%)  →  ~ UNRELIABLE — proceed with caution
+  Last experience: success (episode ep_db_query_debug_18)
+
+  Task: db_query_debug
+  Outcomes seen: 0 success, 0 failure, 1 warning  (fail rate: 0%)  →  ✓ Generally safe
+  Last experience: warning (episode ep_db_query_debug_16)
+
+  Task: db_query_debug
+  Outcomes seen: 0 success, 1 failure, 0 warning  (fail rate: 100%)  →  ⚠ HIGH FAILURE — avoid this approach
+  Last experience: failure (episode ep_db_query_debug_14)
+
+  Task: db_query_debug
+  Outcomes seen: 1 success, 0 failure, 0 warning  (fail rate: 0%)  →  ✓ Generally safe
+  Last experience: success (episode ep_db_query_debug_6)
+
+  Task: db_query_debug
+  Outcomes seen: 1 success, 0 failure, 0 warning  (fail rate: 0%)  →  ✓ Generally safe
+  Last experience: success (episode ep_db_query_debug_4)
+
+  Task: db_query_debug
+  Outcomes seen: 0 success, 2 failure, 0 warning  (fail rate: 100%)  →  ⚠ HIGH FAILURE — avoid this approach
+  Last experience: failure (episode ep_db_query_debug_3)
+
+  [L1] WHAT I REMEMBER  (cause-effect abstracts)
+  ───────────────────────────────────────────────
+  ✓ [SUCCESS]  db_query_debug  (ep_db_query_debug_19)
+  "The outcome of successfully debugging the database query was caused by the accumulation of dead tuples due to frequent deletes, which led to significant table bloat. The key action taken was running diagnostics to identify the root cause and applying a vacuuming strategy to resolve the issue. For similar future situations, it is essential to monitor table size and perform regular maintenance to prevent excessive bloat and ensure optimal query performance."
+
+  ✓ [SUCCESS]  db_query_debug  (ep_db_query_debug_18)
+  "The outcome of successfully debugging the database query was caused by the optimizer's poor index choices due to missing statistics after a bulk data load. The key action taken was running diagnostics to identify the root cause and applying a resolution strategy to rectify the issue. For similar future situations, it is crucial to ensure that statistics are updated post-bulk data loads to prevent inaccurate row-count estimates and optimize query performance."
+
+  ~ [WARNING]  db_query_debug  (ep_db_query_debug_16)
+  "The outcome of a warning was caused by connection pool exhaustion due to all available slots being occupied by long-running transactions. The planner's key action involved running diagnostics and applying a resolution strategy to address the issue. For future situations, it is crucial to monitor transaction durations and optimize connection management to prevent pool exhaustion."
+
+  ✗ [FAILURE]  db_query_debug  (ep_db_query_debug_14)
+  "The outcome of failure was caused by a deadlock situation where two transactions blocked each other indefinitely by acquiring row locks in opposite order during concurrent writes. The planner's key action was to run diagnostics and apply a resolution strategy, but despite these efforts, the deadlock persisted. For future situations, it is crucial to implement a locking strategy that prevents deadlocks, such as consistent lock ordering or timeout mechanisms for transactions."
+
+  ~ [WARNING]  db_query_debug  (ep_db_query_debug_8)
+  "The outcome of a warning was caused by a significant increase in table size on disk due to the accumulation of dead tuples from frequent deletes, despite a stable live row count. The planner took the key action of running diagnostics and applying a resolution strategy to address the bloated table. For similar future situations, it is crucial to monitor table size and perform regular maintenance to prevent performance degradation from dead tuples."
+
+  ✓ [SUCCESS]  db_query_debug  (ep_db_query_debug_6)
+  "The successful outcome of the db_query_debug task was caused by the identification of connection pool exhaustion due to long-running transactions holding all available slots. The key action taken was running diagnostics and applying a resolution strategy to address the issue. For future situations, it is essential to monitor transaction durations and manage connection pool usage proactively to prevent similar exhaustion scenarios."
+
+  ✓ [SUCCESS]  db_query_debug  (ep_db_query_debug_5)
+  "The outcome of successfully addressing the bloated table issue was caused by the accumulation of dead tuples from frequent deletes, which led to significant disk space growth without an increase in live row count. The key action taken was running diagnostics to identify the root cause and applying a vacuum strategy to resolve the issue. For similar future situations, it is crucial to monitor table size and dead tuple accumulation regularly to preemptively address potential performance slowdowns."
+
+  ✓ [SUCCESS]  db_query_debug  (ep_db_query_debug_4)
+  "The successful outcome of the db_query_debug task was caused by the initial choice of a nested loop join due to stale statistics, which led to a statement timeout. The key action taken was running diagnostics to identify the root cause and applying a resolution strategy to optimize the query execution. For similar future situations, it is crucial to regularly update statistics and consider alternative join strategies to prevent performance issues in high cardinality joins."
+
+  ✗ [FAILURE]  db_query_debug  (ep_db_query_debug_3)
+  "The outcome of failure was caused by a full sequential scan on a heavily queried column due to the absence of an appropriate index, which led to timeouts during high traffic. The planner's key action was to apply a resolution strategy after identifying the root cause through diagnostics and log reviews. For future situations, it is crucial to ensure that appropriate indexing is in place for high-traffic read endpoints to prevent performance degradation."
+
+  ✗ [FAILURE]  db_query_debug  (ep_db_query_debug_1)
+  "The outcome of failure in the db_query_debug task was caused by a full sequential scan on a heavily queried column, which was exacerbated by a traffic spike. The planner's key action was to apply a resolution strategy after diagnosing the issue, but it ultimately did not resolve the timeout problem. For future situations, it is crucial to ensure that appropriate indexing is in place before high-traffic events to prevent performance degradation."
+
+  ✗ [FAILURE]  db_query_debug  (ep_db_query_debug_0)
+  "The outcome of failure in the db_query_debug task was caused by missing analyze statistics, which led to poor index choices and inaccurate row-count estimates after a bulk data load. The planner's key action was to run diagnostics and apply a resolution strategy, but despite these efforts, the issue persisted. For future situations, it is crucial to ensure that analyze statistics are updated post-bulk data loads to prevent optimizer-related performance issues."
+
+  [L2] MY DETAILED EXPERIENCES  (full traces)
+  ────────────────────────────────────────────
+  ✓ [SUCCESS]  db_query_debug  (ep_db_query_debug_19)
+  [PLANNER] Task: db_query_debug | Situation: bloated table vacuum needed | Outcome: success Step 1: Received task. Context: Table size on disk grew 8x while live row count stayed flat, causing query slowdowns. Dead tuples from frequent deletes accumulated faster than the ba Step 2: Ran diagnostics, r...
+
+  ✓ [SUCCESS]  db_query_debug  (ep_db_query_debug_18)
+  [PLANNER] Task: db_query_debug | Situation: missing analyze stats | Outcome: success Step 1: Received task. Context: After a bulk data load the optimizer made poor index choices, causing major slowdowns. Table row-count estimates were wildly off because statistics ha Step 2: Ran diagnostics, reviewe...
+
+  ~ [WARNING]  db_query_debug  (ep_db_query_debug_16)
+  [PLANNER] Task: db_query_debug | Situation: connection pool exhaustion | Outcome: warning Step 1: Received task. Context: Service deployments started failing as the database refused new connection attempts. All available pool slots were held by long-running transactions t Step 2: Ran diagnostics, re...
+
+  ✗ [FAILURE]  db_query_debug  (ep_db_query_debug_14)
+  [PLANNER] Task: db_query_debug | Situation: deadlock on concurrent writes | Outcome: failure Step 1: Received task. Context: Write throughput dropped to zero as two transactions blocked each other indefinitely. Both were acquiring row locks in opposite order under concurrent Step 2: Ran diagnostics,...
+
+  ~ [WARNING]  db_query_debug  (ep_db_query_debug_8)
+  [PLANNER] Task: db_query_debug | Situation: bloated table vacuum needed | Outcome: warning Step 1: Received task. Context: Table size on disk grew 8x while live row count stayed flat, causing query slowdowns. Dead tuples from frequent deletes accumulated faster than the ba Step 2: Ran diagnostics, r...
+
+  ✓ [SUCCESS]  db_query_debug  (ep_db_query_debug_6)
+  [PLANNER] Task: db_query_debug | Situation: connection pool exhaustion | Outcome: success Step 1: Received task. Context: Service deployments started failing as the database refused new connection attempts. All available pool slots were held by long-running transactions t Step 2: Ran diagnostics, re...
+
+  ✓ [SUCCESS]  db_query_debug  (ep_db_query_debug_5)
+  [PLANNER] Task: db_query_debug | Situation: bloated table vacuum needed | Outcome: success Step 1: Received task. Context: Table size on disk grew 8x while live row count stayed flat, causing query slowdowns. Dead tuples from frequent deletes accumulated faster than the ba Step 2: Ran diagnostics, r...
+
+  ✓ [SUCCESS]  db_query_debug  (ep_db_query_debug_4)
+  [PLANNER] Task: db_query_debug | Situation: high cardinality join | Outcome: success Step 1: Received task. Context: A reporting query joining two multi-million-row tables exceeded the statement timeout. The query planner chose a nested loop due to stale statistics.  Step 2: Ran diagnostics, reviewe...
+
+  ✗ [FAILURE]  db_query_debug  (ep_db_query_debug_3)
+  [PLANNER] Task: db_query_debug | Situation: postgres timeout index | Outcome: failure Step 1: Received task. Context: A high-traffic read endpoint began timing out after a traffic spike. Investigation revealed a full sequential scan on a heavily queried column with no Step 2: Ran diagnostics, review...
+
+  ✗ [FAILURE]  db_query_debug  (ep_db_query_debug_1)
+  [PLANNER] Task: db_query_debug | Situation: postgres timeout index | Outcome: failure Step 1: Received task. Context: A high-traffic read endpoint began timing out after a traffic spike. Investigation revealed a full sequential scan on a heavily queried column with no Step 2: Ran diagnostics, review...
+
+  ✗ [FAILURE]  db_query_debug  (ep_db_query_debug_0)
+  [PLANNER] Task: db_query_debug | Situation: missing analyze stats | Outcome: failure Step 1: Received task. Context: After a bulk data load the optimizer made poor index choices, causing major slowdowns. Table row-count estimates were wildly off because statistics ha Step 2: Ran diagnostics, reviewe...
+
+
+──────────────────────────────────────────────────────────────────────
+  AGENT: REVIEWER
+──────────────────────────────────────────────────────────────────────
+
+  [L0] WHAT I WATCH OUT FOR
+  ─────────────────────────
+  Task: code_review
+  Outcomes seen: 0 success, 1 failure, 0 warning  (fail rate: 100%)  →  ⚠ HIGH FAILURE — avoid this approach
+  Last experience: failure (episode ep_code_review_57)
+
+  Task: code_review
+  Outcomes seen: 1 success, 0 failure, 0 warning  (fail rate: 0%)  →  ✓ Generally safe
+  Last experience: success (episode ep_code_review_54)
+
+  Task: code_review
+  Outcomes seen: 1 success, 0 failure, 0 warning  (fail rate: 0%)  →  ✓ Generally safe
+  Last experience: success (episode ep_code_review_52)
+
+  Task: code_review
+  Outcomes seen: 1 success, 1 failure, 1 warning  (fail rate: 33%)  →  ✓ Generally safe
+  Last experience: warning (episode ep_code_review_50)
+
+  Task: code_review
+  Outcomes seen: 1 success, 0 failure, 0 warning  (fail rate: 0%)  →  ✓ Generally safe
+  Last experience: success (episode ep_code_review_47)
+
+  Task: code_review
+  Outcomes seen: 1 success, 0 failure, 1 warning  (fail rate: 0%)  →  ✓ Generally safe
+  Last experience: success (episode ep_code_review_42)
+
+  Task: code_review
+  Outcomes seen: 1 success, 0 failure, 0 warning  (fail rate: 0%)  →  ✓ Generally safe
+  Last experience: success (episode ep_code_review_40)
+
+  [L1] WHAT I REMEMBER  (cause-effect abstracts)
+  ───────────────────────────────────────────────
+  ✗ [FAILURE]  code_review  (ep_code_review_57)
+  "The outcome of failure in the code review was caused by insufficient test coverage, specifically the absence of tests for failure branches in the error handling code. The reviewer identified the root cause through diagnostics and attempted to apply a resolution strategy but ultimately could not rectify the issue. For future situations, it is crucial to ensure comprehensive test coverage that includes both happy paths and all potential failure scenarios to prevent regressions."
+
+  ✓ [SUCCESS]  code_review  (ep_code_review_54)
+  "The outcome of the code review was successful due to the identification and resolution of a memory leak caused by event handlers that were added during component initialization but not removed upon unmounting. The key action taken was running diagnostics to pinpoint the root cause and applying a resolution strategy to ensure proper cleanup of event listeners. For future situations, it is crucial to implement proper cleanup mechanisms for event listeners to prevent memory leaks, especially in components that mount and unmount frequently."
+
+  ✓ [SUCCESS]  code_review  (ep_code_review_52)
+  "The outcome of success was achieved by identifying and addressing unhandled promise rejections that resulted in silent errors and partial state writes. The key action taken was running diagnostics to pinpoint the root cause and applying a resolution strategy to ensure proper error handling. For future situations, it is crucial to implement comprehensive error handling for asynchronous operations to prevent similar issues from propagating unnoticed."
+
+  ~ [WARNING]  code_review  (ep_code_review_50)
+  "The outcome of issuing a warning was caused by a data race between two concurrent goroutines, leading to intermittent failures due to concurrent reads and writes of shared mutable state. The reviewer diagnosed the issue by reviewing logs and identified the root cause, subsequently applying a resolution strategy and monitoring the results. For similar future situations, it is crucial to ensure proper synchronization mechanisms are in place to prevent race conditions in concurrent programming."
+
+  ✓ [SUCCESS]  code_review  (ep_code_review_47)
+  "The successful outcome was achieved by identifying a regression in the error handling code that lacked test coverage for failure branches, despite having adequate coverage for the happy path. The reviewer took decisive action by running diagnostics and applying a resolution strategy to address the uncovered scenarios. For future situations, it is crucial to ensure comprehensive test coverage that includes both happy paths and all potential failure branches to prevent regressions."
+
+  ✗ [FAILURE]  code_review  (ep_code_review_45)
+  "The outcome of failure was caused by a data race between two concurrent goroutines, leading to intermittent failures due to concurrent reads and writes of shared mutable state. The reviewer ran diagnostics, identified the root cause, and applied a resolution strategy but ultimately did not achieve a successful outcome. For future situations, it is crucial to implement proper synchronization mechanisms to prevent race conditions in concurrent programming."
+
+  ✓ [SUCCESS]  code_review  (ep_code_review_44)
+  "The successful outcome of the code review was achieved by identifying and resolving a data race between concurrent goroutines that caused intermittent failures due to shared mutable state being accessed simultaneously. The key action taken was running diagnostics and applying a resolution strategy to ensure proper synchronization. For future situations, it is crucial to thoroughly analyze concurrent access patterns and implement appropriate locking mechanisms to prevent race conditions."
+
+  ✓ [SUCCESS]  code_review  (ep_code_review_42)
+  "The successful outcome was achieved by identifying and addressing a SQL injection vulnerability caused by the lack of parameterization in user input handling. The key action taken was implementing a resolution strategy that involved parameterizing queries to prevent string-context escape by attackers. For future situations, it is crucial to always use parameterized queries when handling user input to mitigate security risks."
+
+  ~ [WARNING]  code_review  (ep_code_review_41)
+  "The outcome of issuing a warning was caused by the use of string-formatting for user input in SQL queries without parameterization, creating a vulnerability to SQL injection attacks. The reviewer identified this root cause through diagnostics and documented the findings after applying a resolution strategy. For future situations, it is crucial to always use parameterized queries to prevent SQL injection vulnerabilities."
+
+  ✓ [SUCCESS]  code_review  (ep_code_review_40)
+  "The successful outcome was achieved by identifying that event handlers added during component initialization were not being removed upon unmounting, leading to a memory leak. The key action taken was running diagnostics to pinpoint the root cause and applying a resolution strategy to ensure proper cleanup of event listeners. For future situations, it is crucial to implement and verify the removal of event listeners to prevent memory leaks during component lifecycle events."
+
+  [L2] MY DETAILED EXPERIENCES  (full traces)
+  ────────────────────────────────────────────
+  ✗ [FAILURE]  code_review  (ep_code_review_57)
+  [REVIEWER] Task: code_review | Situation: missing test coverage | Outcome: failure Step 1: Received task. Context: A regression was introduced in error handling code that had never been exercised by tests. The happy path was well covered but all failure branches we Step 2: Ran diagnostics, reviewed ...
+
+  ✓ [SUCCESS]  code_review  (ep_code_review_54)
+  [REVIEWER] Task: code_review | Situation: memory leak in event listener | Outcome: success Step 1: Received task. Context: Heap memory grew without bound as a component mounted and unmounted repeatedly in tests. Event handlers added on initialization were never removed on  Step 2: Ran diagnostics, r...
+
+  ✓ [SUCCESS]  code_review  (ep_code_review_52)
+  [REVIEWER] Task: code_review | Situation: unhandled promise rejection | Outcome: success Step 1: Received task. Context: An async error was silently swallowed because the returned promise had no error handler. The failure propagated nowhere, leaving partial state written Step 2: Ran diagnostics, rev...
+
+  ~ [WARNING]  code_review  (ep_code_review_50)
+  [REVIEWER] Task: code_review | Situation: race condition | Outcome: warning Step 1: Received task. Context: A data race between two concurrent goroutines caused intermittent failures under load. Shared mutable state was being read and written concurrently wi Step 2: Ran diagnostics, reviewed logs, i...
+
+  ✓ [SUCCESS]  code_review  (ep_code_review_47)
+  [REVIEWER] Task: code_review | Situation: missing test coverage | Outcome: success Step 1: Received task. Context: A regression was introduced in error handling code that had never been exercised by tests. The happy path was well covered but all failure branches we Step 2: Ran diagnostics, reviewed ...
+
+  ✗ [FAILURE]  code_review  (ep_code_review_45)
+  [REVIEWER] Task: code_review | Situation: race condition | Outcome: failure Step 1: Received task. Context: A data race between two concurrent goroutines caused intermittent failures under load. Shared mutable state was being read and written concurrently wi Step 2: Ran diagnostics, reviewed logs, i...
+
+  ✓ [SUCCESS]  code_review  (ep_code_review_44)
+  [REVIEWER] Task: code_review | Situation: race condition | Outcome: success Step 1: Received task. Context: A data race between two concurrent goroutines caused intermittent failures under load. Shared mutable state was being read and written concurrently wi Step 2: Ran diagnostics, reviewed logs, i...
+
+  ✓ [SUCCESS]  code_review  (ep_code_review_42)
+  [REVIEWER] Task: code_review | Situation: sql injection vector | Outcome: success Step 1: Received task. Context: A search endpoint constructed queries by string-formatting user input without parameterization. An attacker could escape the string context and execut Step 2: Ran diagnostics, reviewed l...
+
+  ~ [WARNING]  code_review  (ep_code_review_41)
+  [REVIEWER] Task: code_review | Situation: sql injection vector | Outcome: warning Step 1: Received task. Context: A search endpoint constructed queries by string-formatting user input without parameterization. An attacker could escape the string context and execut Step 2: Ran diagnostics, reviewed l...
+
+  ✓ [SUCCESS]  code_review  (ep_code_review_40)
+  [REVIEWER] Task: code_review | Situation: memory leak in event listener | Outcome: success Step 1: Received task. Context: Heap memory grew without bound as a component mounted and unmounted repeatedly in tests. Event handlers added on initialization were never removed on  Step 2: Ran diagnostics, r...
+
+
+──────────────────────────────────────────────────────────────────────
+  AGENT: CODER
+──────────────────────────────────────────────────────────────────────
+
+  [L0] WHAT I WATCH OUT FOR
+  ─────────────────────────
+  Task: api_integration
+  Outcomes seen: 0 success, 1 failure, 1 warning  (fail rate: 50%)  →  ~ UNRELIABLE — proceed with caution
+  Last experience: failure (episode ep_api_integration_32)
+
+  Task: api_integration
+  Outcomes seen: 0 success, 1 failure, 0 warning  (fail rate: 100%)  →  ⚠ HIGH FAILURE — avoid this approach
+  Last experience: failure (episode ep_api_integration_31)
+
+  Task: api_integration
+  Outcomes seen: 1 success, 0 failure, 0 warning  (fail rate: 0%)  →  ✓ Generally safe
+  Last experience: success (episode ep_api_integration_29)
+
+  Task: api_integration
+  Outcomes seen: 0 success, 0 failure, 1 warning  (fail rate: 0%)  →  ✓ Generally safe
+  Last experience: warning (episode ep_api_integration_27)
+
+  Task: api_integration
+  Outcomes seen: 1 success, 1 failure, 0 warning  (fail rate: 50%)  →  ~ UNRELIABLE — proceed with caution
+  Last experience: success (episode ep_api_integration_25)
+
+  Task: api_integration
+  Outcomes seen: 1 success, 0 failure, 0 warning  (fail rate: 0%)  →  ✓ Generally safe
+  Last experience: success (episode ep_api_integration_23)
+
+  Task: api_integration
+  Outcomes seen: 1 success, 0 failure, 0 warning  (fail rate: 0%)  →  ✓ Generally safe
+  Last experience: success (episode ep_api_integration_22)
+
+  Task: api_integration
+  Outcomes seen: 1 success, 0 failure, 0 warning  (fail rate: 0%)  →  ✓ Generally safe
+  Last experience: success (episode ep_api_integration_21)
+
+  [L1] WHAT I REMEMBER  (cause-effect abstracts)
+  ───────────────────────────────────────────────
+  ✗ [FAILURE]  api_integration  (ep_api_integration_32)
+  "The outcome of the API integration task failed due to the absence of backoff logic in the client, leading to immediate rejection responses from the external service during bursts of upstream calls. The coder's key action was to run diagnostics and apply a resolution strategy, but it ultimately did not resolve the issue. For future situations, it is crucial to implement backoff logic to handle rate limits effectively and prevent immediate failures."
+
+  ✗ [FAILURE]  api_integration  (ep_api_integration_31)
+  "The outcome of failure in the API integration task was caused by the lack of verification for the authenticity of incoming event notifications, allowing potential payload forgery. The key action taken was running diagnostics to identify the root cause, followed by applying a resolution strategy, which ultimately did not succeed. For future situations, it is crucial to implement robust webhook signature validation to ensure the integrity and authenticity of incoming data."
+
+  ✓ [SUCCESS]  api_integration  (ep_api_integration_29)
+  "The successful outcome of the API integration was achieved by diagnosing and identifying the root cause of pagination cursor drift, which led to duplicate and skipped items in resource listings. The key action taken was the application of a targeted resolution strategy to address the inconsistencies in offset-based pagination. For future situations, it is crucial to conduct thorough diagnostics and log reviews to quickly identify and resolve similar pagination issues."
+
+  ~ [WARNING]  api_integration  (ep_api_integration_27)
+  "The outcome of warnings was caused by a schema mismatch due to an upstream vendor's API contract update, which led to renamed field names and data being silently dropped. The coder's key action was to run diagnostics, identify the root cause, and apply a resolution strategy while monitoring the results. For future situations, it is crucial to regularly review API contracts and implement robust error handling to prevent data loss from schema changes."
+
+  ✓ [SUCCESS]  api_integration  (ep_api_integration_25)
+  "The successful outcome was achieved by diagnosing and identifying the root cause of users being silently logged out due to the failure of the credential renewal flow when access tokens expired. The key action taken was implementing a resolution strategy to ensure the automatic triggering of the renewal process. For future situations, it is crucial to monitor token expiration behaviors and ensure that renewal mechanisms are properly integrated and tested to prevent user disruptions."
+
+  ✗ [FAILURE]  api_integration  (ep_api_integration_24)
+  "The outcome of failure in the API integration task was caused by the credential renewal flow not being triggered automatically when access tokens expired, leading to users being silently logged out. The key action taken was running diagnostics and reviewing logs to identify the root cause, followed by applying a resolution strategy. For similar future situations, it is crucial to ensure that the credential renewal flow is properly implemented and tested to prevent user disruptions."
+
+  ✓ [SUCCESS]  api_integration  (ep_api_integration_23)
+  "The successful outcome of the API integration task was achieved by identifying and addressing the lack of webhook signature validation, which allowed unauthorized payloads to trigger internal processes. The key action taken was implementing a resolution strategy that included diagnostics and monitoring to ensure the integrity of incoming event notifications. For future situations, it is crucial to prioritize sender authentication to prevent potential security vulnerabilities."
+
+  ✓ [SUCCESS]  api_integration  (ep_api_integration_22)
+  "The successful outcome of the API integration was caused by identifying a schema mismatch due to renamed field names in the upstream vendor's updated API contract, which had led to data being silently dropped. The key action taken was running diagnostics to pinpoint the root cause and applying a resolution strategy to address the issue. For future situations, it is crucial to monitor upstream API changes closely and ensure that integration parsers are adaptable to schema modifications to prevent data loss."
+
+  ✓ [SUCCESS]  api_integration  (ep_api_integration_21)
+  "The successful outcome of the API integration task was caused by the vendor's rotation of their SSL certificate, which rendered the hardcoded fingerprint invalid. The key action taken was running diagnostics to identify the root cause and applying a resolution strategy to update the certificate information. For future situations, it is crucial to implement a dynamic certificate validation approach rather than relying on hardcoded fingerprints to prevent similar connection failures."
+
+  ~ [WARNING]  api_integration  (ep_api_integration_20)
+  "The outcome of warnings during API integration was caused by bursts of upstream calls leading to rejection responses from the external service due to the client's lack of backoff logic. The coder diagnosed the issue, identified the root cause, and applied a resolution strategy to mitigate the problem. For future situations, it is crucial to implement backoff logic to handle rate limits effectively and prevent immediate failures on quota errors."
+
+  [L2] MY DETAILED EXPERIENCES  (full traces)
+  ────────────────────────────────────────────
+  ✗ [FAILURE]  api_integration  (ep_api_integration_32)
+  [CODER] Task: api_integration | Situation: rate limit handling | Outcome: failure Step 1: Received task. Context: Bursts of upstream calls resulted in rejection responses from the external service. The client had no backoff logic and failed immediately on quota er Step 2: Ran diagnostics, reviewed l...
+
+  ✗ [FAILURE]  api_integration  (ep_api_integration_31)
+  [CODER] Task: api_integration | Situation: webhook signature validation | Outcome: failure Step 1: Received task. Context: Incoming event notifications were accepted without verifying the sender's authenticity. Any caller could forge payloads and trigger internal business  Step 2: Ran diagnostics, r...
+
+  ✓ [SUCCESS]  api_integration  (ep_api_integration_29)
+  [CODER] Task: api_integration | Situation: pagination cursor drift | Outcome: success Step 1: Received task. Context: Resource listings across pages returned duplicate items and skipped others intermittently. Offset-based pagination became inconsistent when items were Step 2: Ran diagnostics, review...
+
+  ~ [WARNING]  api_integration  (ep_api_integration_27)
+  [CODER] Task: api_integration | Situation: schema mismatch | Outcome: warning Step 1: Received task. Context: The integration silently dropped data after the upstream vendor updated their API contract. Field names were renamed and the parser discarded all unre Step 2: Ran diagnostics, reviewed logs,...
+
+  ✓ [SUCCESS]  api_integration  (ep_api_integration_25)
+  [CODER] Task: api_integration | Situation: oauth refresh token | Outcome: success Step 1: Received task. Context: Users were silently logged out after one hour when their access tokens expired. The credential renewal flow was not being triggered automatically befo Step 2: Ran diagnostics, reviewed l...
+
+  ✗ [FAILURE]  api_integration  (ep_api_integration_24)
+  [CODER] Task: api_integration | Situation: oauth refresh token | Outcome: failure Step 1: Received task. Context: Users were silently logged out after one hour when their access tokens expired. The credential renewal flow was not being triggered automatically befo Step 2: Ran diagnostics, reviewed l...
+
+  ✓ [SUCCESS]  api_integration  (ep_api_integration_23)
+  [CODER] Task: api_integration | Situation: webhook signature validation | Outcome: success Step 1: Received task. Context: Incoming event notifications were accepted without verifying the sender's authenticity. Any caller could forge payloads and trigger internal business  Step 2: Ran diagnostics, r...
+
+  ✓ [SUCCESS]  api_integration  (ep_api_integration_22)
+  [CODER] Task: api_integration | Situation: schema mismatch | Outcome: success Step 1: Received task. Context: The integration silently dropped data after the upstream vendor updated their API contract. Field names were renamed and the parser discarded all unre Step 2: Ran diagnostics, reviewed logs,...
+
+  ✓ [SUCCESS]  api_integration  (ep_api_integration_21)
+  [CODER] Task: api_integration | Situation: ssl certificate pinning failure | Outcome: success Step 1: Received task. Context: HTTPS connections to the external service failed after the vendor rotated their certificate. The hardcoded fingerprint no longer matched and connectio Step 2: Ran diagnostics...
+
+  ~ [WARNING]  api_integration  (ep_api_integration_20)
+  [CODER] Task: api_integration | Situation: rate limit handling | Outcome: warning Step 1: Received task. Context: Bursts of upstream calls resulted in rejection responses from the external service. The client had no backoff logic and failed immediately on quota er Step 2: Ran diagnostics, reviewed l...
+
+
+──────────────────────────────────────────────────────────────────────
+  AGENT: RESEARCHER
+──────────────────────────────────────────────────────────────────────
+
+  [L0] WHAT I WATCH OUT FOR
+  ─────────────────────────
+  Task: incident_investigation
+  Outcomes seen: 0 success, 0 failure, 1 warning  (fail rate: 0%)  →  ✓ Generally safe
+  Last experience: warning (episode ep_incident_investigation_74)
+
+  Task: incident_investigation
+  Outcomes seen: 1 success, 1 failure, 0 warning  (fail rate: 50%)  →  ~ UNRELIABLE — proceed with caution
+  Last experience: failure (episode ep_incident_investigation_73)
+
+  Task: incident_investigation
+  Outcomes seen: 1 success, 0 failure, 1 warning  (fail rate: 0%)  →  ✓ Generally safe
+  Last experience: success (episode ep_incident_investigation_72)
+
+  Task: incident_investigation
+  Outcomes seen: 0 success, 1 failure, 0 warning  (fail rate: 100%)  →  ⚠ HIGH FAILURE — avoid this approach
+  Last experience: failure (episode ep_incident_investigation_68)
+
+  Task: incident_investigation
+  Outcomes seen: 1 success, 0 failure, 1 warning  (fail rate: 0%)  →  ✓ Generally safe
+  Last experience: success (episode ep_incident_investigation_67)
+
+  Task: incident_investigation
+  Outcomes seen: 1 success, 0 failure, 0 warning  (fail rate: 0%)  →  ✓ Generally safe
+  Last experience: success (episode ep_incident_investigation_66)
+
+  Task: incident_investigation
+  Outcomes seen: 1 success, 0 failure, 0 warning  (fail rate: 0%)  →  ✓ Generally safe
+  Last experience: success (episode ep_incident_investigation_64)
+
+  Task: incident_investigation
+  Outcomes seen: 1 success, 0 failure, 1 warning  (fail rate: 0%)  →  ✓ Generally safe
+  Last experience: success (episode ep_incident_investigation_61)
+
+  [L1] WHAT I REMEMBER  (cause-effect abstracts)
+  ───────────────────────────────────────────────
+  ~ [WARNING]  incident_investigation  (ep_incident_investigation_74)
+  "The outcome of repeated warnings was caused by the service's memory limits being set significantly below its actual working set, leading to out-of-memory terminations by the kernel. The researcher diagnosed the issue, identified the root cause, and applied a resolution strategy to address the memory limits. For future incidents, it is crucial to ensure that memory limits are appropriately configured to match the service's requirements to prevent similar disruptions."
+
+  ✗ [FAILURE]  incident_investigation  (ep_incident_investigation_73)
+  "The outcome of failure was caused by a breaking dependency change introduced during deployment without a feature flag, leading to a sudden spike in error rates. The researcher ran diagnostics and identified the root cause but was unable to resolve the issue effectively. For future incidents, it is crucial to implement feature flags for significant changes to mitigate risks associated with breaking dependencies."
+
+  ✓ [SUCCESS]  incident_investigation  (ep_incident_investigation_72)
+  "The successful outcome of the incident investigation was caused by the exhaustion of the cloud volume's provisioned IOPS budget, leading to a significant increase in write latency as the application stalled. The researcher effectively diagnosed the issue by reviewing logs and identifying the root cause, then applied a resolution strategy and monitored the results. For similar future situations, it is crucial to proactively monitor IOPS usage and adjust provisioning to prevent performance bottlenecks."
+
+  ~ [WARNING]  incident_investigation  (ep_incident_investigation_69)
+  "The outcome of a warning was caused by the exhaustion of the cloud volume's provisioned IOPS budget, leading to a tenfold increase in write latency as the application stalled. The researcher identified the root cause through diagnostics and logs, and applied a resolution strategy to monitor the situation. For future incidents, it is crucial to proactively manage and monitor IOPS provisioning to prevent similar performance bottlenecks."
+
+  ✗ [FAILURE]  incident_investigation  (ep_incident_investigation_68)
+  "The outcome of the incident investigation was a failure due to CoreDNS pods being overloaded and dropping queries following a cluster network change, which led to hostname resolution errors in cross-service calls. The researcher ran diagnostics and identified the root cause but was unable to implement a successful resolution strategy. For future situations, it is crucial to ensure that DNS services are adequately scaled and monitored, especially after network changes, to prevent similar overload issues."
+
+  ✓ [SUCCESS]  incident_investigation  (ep_incident_investigation_67)
+  "The successful resolution of the service flapping alerts was caused by identifying a memory pressure loop that led to the process crashing. The key action taken was running diagnostics and reviewing logs to pinpoint the root cause, followed by applying a targeted resolution strategy. For future incidents, it is crucial to conduct thorough diagnostics and log reviews promptly to identify and address underlying issues before they escalate."
+
+  ✓ [SUCCESS]  incident_investigation  (ep_incident_investigation_66)
+  "The successful resolution of the network saturation incident was caused by identifying a misconfigured batch job that was saturating the primary network, leading to degraded service performance. The key action taken was running diagnostics and reviewing logs to pinpoint the root cause, followed by applying a targeted resolution strategy. For future incidents, it is crucial to conduct thorough diagnostics and log reviews promptly to identify and address misconfigurations before they impact service performance."
+
+  ✓ [SUCCESS]  incident_investigation  (ep_incident_investigation_64)
+  "The successful resolution of DNS resolution failures was caused by overloaded CoreDNS pods that dropped queries following a cluster network change. The researcher identified the root cause through diagnostics and logs, then applied a targeted resolution strategy while monitoring the results. For future incidents, it is crucial to promptly assess system load and network changes to prevent similar service disruptions."
+
+  ✓ [SUCCESS]  incident_investigation  (ep_incident_investigation_63)
+  "The outcome of successfully resolving the error spike was caused by identifying a breaking dependency change introduced during deployment. The key action taken was running diagnostics and reviewing logs to pinpoint the root cause, followed by implementing a resolution strategy. For future incidents, it is crucial to ensure that breaking changes are communicated and managed effectively to prevent similar error spikes."
+
+  ~ [WARNING]  incident_investigation  (ep_incident_investigation_62)
+  "The outcome of repeated service flapping alerts was caused by a memory pressure loop that led to process crashes. The researcher diagnosed the issue by reviewing logs and applied a resolution strategy to stabilize the service. For future incidents, it is crucial to monitor memory usage closely to prevent similar oscillations between healthy and unhealthy states."
+
+  ✓ [SUCCESS]  incident_investigation  (ep_incident_investigation_61)
+  "The outcome of the incident investigation was successful due to the identification of a breaking dependency change introduced during deployment, which caused a spike in error rates. The key action taken was running diagnostics and reviewing logs to pinpoint the root cause, followed by applying a resolution strategy. For future incidents, it is crucial to implement feature flags for breaking changes to mitigate risks during deployments."
+
+  ~ [WARNING]  incident_investigation  (ep_incident_investigation_60)
+  "The outcome of a warning was caused by a breaking dependency change introduced during deployment, leading to a spike in error rates from near-zero to 30%. The researcher identified the root cause through diagnostics and applied a resolution strategy to mitigate the issue. For future incidents, it is crucial to implement feature flags for breaking changes to prevent unexpected errors post-deployment."
+
+  [L2] MY DETAILED EXPERIENCES  (full traces)
+  ────────────────────────────────────────────
+  ~ [WARNING]  incident_investigation  (ep_incident_investigation_74)
+  [RESEARCHER] Task: incident_investigation | Situation: pod oom killed in cluster | Outcome: warning Step 1: Received task. Context: The service kept restarting every few minutes due to out-of-memory termination by the kernel. Memory limits were set far below the actual working set  Step 2: Ran diagn...
+
+  ✗ [FAILURE]  incident_investigation  (ep_incident_investigation_73)
+  [RESEARCHER] Task: incident_investigation | Situation: error spike after deploy | Outcome: failure Step 1: Received task. Context: Error rate jumped from near-zero to 30% within minutes of the deployment completing. A breaking dependency change was introduced without a feature fla Step 2: Ran diagno...
+
+  ✓ [SUCCESS]  incident_investigation  (ep_incident_investigation_72)
+  [RESEARCHER] Task: incident_investigation | Situation: disk iops throttling | Outcome: success Step 1: Received task. Context: Write latency jumped 10x as the application stalled waiting on storage operations to complete. The cloud volume's provisioned IOPS budget was exhauste Step 2: Ran diagnostic...
+
+  ~ [WARNING]  incident_investigation  (ep_incident_investigation_69)
+  [RESEARCHER] Task: incident_investigation | Situation: disk iops throttling | Outcome: warning Step 1: Received task. Context: Write latency jumped 10x as the application stalled waiting on storage operations to complete. The cloud volume's provisioned IOPS budget was exhauste Step 2: Ran diagnostic...
+
+  ✗ [FAILURE]  incident_investigation  (ep_incident_investigation_68)
+  [RESEARCHER] Task: incident_investigation | Situation: dns resolution failures | Outcome: failure Step 1: Received task. Context: Cross-service calls failed with hostname resolution errors after a cluster network change. CoreDNS pods were overloaded and dropping queries under the Step 2: Ran diagnos...
+
+  ✓ [SUCCESS]  incident_investigation  (ep_incident_investigation_67)
+  [RESEARCHER] Task: incident_investigation | Situation: service flapping alerts | Outcome: success Step 1: Received task. Context: On-call was paged repeatedly as the service oscillated between healthy and unhealthy states. A memory pressure loop caused the process to crash and re Step 2: Ran diagnos...
+
+  ✓ [SUCCESS]  incident_investigation  (ep_incident_investigation_66)
+  [RESEARCHER] Task: incident_investigation | Situation: network saturation | Outcome: success Step 1: Received task. Context: All services degraded simultaneously as inter-service call latency spiked to several seconds. A misconfigured batch job was saturating the primary net Step 2: Ran diagnostics,...
+
+  ✓ [SUCCESS]  incident_investigation  (ep_incident_investigation_64)
+  [RESEARCHER] Task: incident_investigation | Situation: dns resolution failures | Outcome: success Step 1: Received task. Context: Cross-service calls failed with hostname resolution errors after a cluster network change. CoreDNS pods were overloaded and dropping queries under the Step 2: Ran diagnos...
+
+  ✓ [SUCCESS]  incident_investigation  (ep_incident_investigation_63)
+  [RESEARCHER] Task: incident_investigation | Situation: error spike after deploy | Outcome: success Step 1: Received task. Context: Error rate jumped from near-zero to 30% within minutes of the deployment completing. A breaking dependency change was introduced without a feature fla Step 2: Ran diagno...
+
+  ~ [WARNING]  incident_investigation  (ep_incident_investigation_62)
+  [RESEARCHER] Task: incident_investigation | Situation: service flapping alerts | Outcome: warning Step 1: Received task. Context: On-call was paged repeatedly as the service oscillated between healthy and unhealthy states. A memory pressure loop caused the process to crash and re Step 2: Ran diagnos...
+
+  ✓ [SUCCESS]  incident_investigation  (ep_incident_investigation_61)
+  [RESEARCHER] Task: incident_investigation | Situation: error spike after deploy | Outcome: success Step 1: Received task. Context: Error rate jumped from near-zero to 30% within minutes of the deployment completing. A breaking dependency change was introduced without a feature fla Step 2: Ran diagno...
+
+  ~ [WARNING]  incident_investigation  (ep_incident_investigation_60)
+  [RESEARCHER] Task: incident_investigation | Situation: error spike after deploy | Outcome: warning Step 1: Received task. Context: Error rate jumped from near-zero to 30% within minutes of the deployment completing. A breaking dependency change was introduced without a feature fla Step 2: Ran diagno...
+
+
+──────────────────────────────────────────────────────────────────────
+  AGENT: EXECUTOR
+──────────────────────────────────────────────────────────────────────
+
+  [L0] WHAT I WATCH OUT FOR
+  ─────────────────────────
+  Task: release_validation
+  Outcomes seen: 1 success, 0 failure, 0 warning  (fail rate: 0%)  →  ✓ Generally safe
+  Last experience: success (episode ep_release_validation_99)
+
+  Task: release_validation
+  Outcomes seen: 1 success, 0 failure, 1 warning  (fail rate: 0%)  →  ✓ Generally safe
+  Last experience: success (episode ep_release_validation_98)
+
+  Task: release_validation
+  Outcomes seen: 0 success, 0 failure, 1 warning  (fail rate: 0%)  →  ✓ Generally safe
+  Last experience: warning (episode ep_release_validation_97)
+
+  Task: release_validation
+  Outcomes seen: 1 success, 0 failure, 0 warning  (fail rate: 0%)  →  ✓ Generally safe
+  Last experience: success (episode ep_release_validation_83)
+
+  Task: release_validation
+  Outcomes seen: 1 success, 0 failure, 0 warning  (fail rate: 0%)  →  ✓ Generally safe
+  Last experience: success (episode ep_release_validation_82)
+
+  Task: release_validation
+  Outcomes seen: 1 success, 0 failure, 0 warning  (fail rate: 0%)  →  ✓ Generally safe
+  Last experience: success (episode ep_release_validation_81)
+
+  Task: release_validation
+  Outcomes seen: 1 success, 0 failure, 0 warning  (fail rate: 0%)  →  ✓ Generally safe
+  Last experience: success (episode ep_release_validation_80)
+
+  [L1] WHAT I REMEMBER  (cause-effect abstracts)
+  ───────────────────────────────────────────────
+  ✓ [SUCCESS]  release_validation  (ep_release_validation_99)
+  "The successful outcome of the release validation was caused by identifying a missing environment variable that prevented newly deployed instances from joining the load balancer pool due to a failing readiness probe. The key action taken was running diagnostics and reviewing logs to pinpoint the root cause, followed by applying a resolution strategy. For similar future situations, it is crucial to ensure all necessary environment variables are correctly configured before deployment to avoid readiness probe failures."
+
+  ✓ [SUCCESS]  release_validation  (ep_release_validation_98)
+  "The outcome of the release validation was successful due to the executor's identification of a subtle behavior change in the new version that led to elevated error rates for a small percentage of users. The key action taken was running diagnostics and applying a resolution strategy based on the root cause analysis. For future situations, it is crucial to monitor error rates closely during canary releases and be prepared to quickly diagnose and address any issues that arise."
+
+  ~ [WARNING]  release_validation  (ep_release_validation_97)
+  "The outcome of a warning during the release validation was caused by failures in the end-to-end smoke suite, specifically due to a broken test selector and an associated issue in the critical checkout user journey. The executor's key action was to run diagnostics, review logs, and apply a resolution strategy to address the identified root cause. For similar future situations, it is essential to prioritize thorough diagnostics and documentation to facilitate quick resolution and learning from recurring issues."
+
+  ~ [WARNING]  release_validation  (ep_release_validation_91)
+  "The outcome of a warning during the release validation was caused by a subtle behavior change in the new version that led to significantly higher error rates for 5% of users. The executor's key action was to run diagnostics, identify the root cause, and apply a resolution strategy while monitoring the results. For future situations, it is crucial to thoroughly assess the impact of behavior changes in new versions during canary releases to prevent similar issues."
+
+  ✓ [SUCCESS]  release_validation  (ep_release_validation_83)
+  "The successful outcome was caused by identifying and resolving a feature flag misconfiguration that exposed an incomplete feature to all production users due to a kill-switch being in the wrong state. The key action taken was running diagnostics and applying a resolution strategy to correct the configuration drift between staging and production. For future situations, it is crucial to ensure consistent configuration management across environments to prevent similar issues."
+
+  ✓ [SUCCESS]  release_validation  (ep_release_validation_82)
+  "The successful outcome of the release validation was achieved by identifying and resolving a broken test selector and an associated issue during the post-deployment smoke suite failures. The key action taken was running diagnostics and reviewing logs to pinpoint the root cause, followed by applying a resolution strategy and monitoring the results. For similar future situations, it is essential to conduct thorough diagnostics and documentation to ensure swift identification and resolution of issues."
+
+  ✓ [SUCCESS]  release_validation  (ep_release_validation_81)
+  "The successful outcome of the release validation was achieved by identifying a subtle performance regression that caused the rollout to pause at 20% traffic due to metrics falling below the SLO gate. The executor's key action was to run diagnostics and apply a resolution strategy to address the root cause. For future situations, it is essential to promptly diagnose performance issues and implement corrective measures to ensure smooth rollouts."
+
+  ✓ [SUCCESS]  release_validation  (ep_release_validation_80)
+  "The successful outcome of the release validation was caused by the identification of absent schema columns due to the prior non-execution of the migration script. The executor's key action was to run diagnostics and apply a resolution strategy to address the root cause. For future situations, it is crucial to ensure that all necessary migration scripts are executed before deploying new service versions to prevent similar errors."
+
+  [L2] MY DETAILED EXPERIENCES  (full traces)
+  ────────────────────────────────────────────
+  ✓ [SUCCESS]  release_validation  (ep_release_validation_99)
+  [EXECUTOR] Task: release_validation | Situation: health check endpoint down | Outcome: success Step 1: Received task. Context: Newly deployed instances never joined the load balancer pool because the readiness probe kept failing. A missing environment variable caused the healt Step 2: Ran diagnostic...
+
+  ✓ [SUCCESS]  release_validation  (ep_release_validation_98)
+  [EXECUTOR] Task: release_validation | Situation: canary rollback needed | Outcome: success Step 1: Received task. Context: The new version serving 5% of traffic showed error rates significantly above the baseline. A subtle behavior change caused failures only for users in  Step 2: Ran diagnostics, r...
+
+  ~ [WARNING]  release_validation  (ep_release_validation_97)
+  [EXECUTOR] Task: release_validation | Situation: e2e smoke failures | Outcome: warning Step 1: Received task. Context: The post-deployment smoke suite failed on the critical checkout user journey immediately. Investigation revealed both a broken test selector and an ac Step 2: Ran diagnostics, revie...
+
+  ~ [WARNING]  release_validation  (ep_release_validation_91)
+  [EXECUTOR] Task: release_validation | Situation: canary rollback needed | Outcome: warning Step 1: Received task. Context: The new version serving 5% of traffic showed error rates significantly above the baseline. A subtle behavior change caused failures only for users in  Step 2: Ran diagnostics, r...
+
+  ✓ [SUCCESS]  release_validation  (ep_release_validation_83)
+  [EXECUTOR] Task: release_validation | Situation: feature flag misconfiguration | Outcome: success Step 1: Received task. Context: An incomplete feature was exposed to all production users because a kill-switch was in the wrong state. Configuration drift between staging and produc Step 2: Ran diagnos...
+
+  ✓ [SUCCESS]  release_validation  (ep_release_validation_82)
+  [EXECUTOR] Task: release_validation | Situation: e2e smoke failures | Outcome: success Step 1: Received task. Context: The post-deployment smoke suite failed on the critical checkout user journey immediately. Investigation revealed both a broken test selector and an ac Step 2: Ran diagnostics, revie...
+
+  ✓ [SUCCESS]  release_validation  (ep_release_validation_81)
+  [EXECUTOR] Task: release_validation | Situation: rollout stuck at threshold | Outcome: success Step 1: Received task. Context: Progressive delivery paused at 20% traffic because success metrics were just below the SLO gate. The new version had a subtle performance regression v Step 2: Ran diagnostic...
+
+  ✓ [SUCCESS]  release_validation  (ep_release_validation_80)
+  [EXECUTOR] Task: release_validation | Situation: migration checks pending | Outcome: success Step 1: Received task. Context: The new service version started but errored immediately because expected schema columns were absent. The migration script had not been executed before Step 2: Ran diagnostics,...
