@@ -308,6 +308,38 @@ class MemoryStore:
             )
         return out
 
+    def count_canonicals(self, task_type: str, agent_role: str) -> int:
+        cur = self.conn.execute(
+            "SELECT COUNT(*) FROM canonical_situations WHERE task_type = ? AND agent_role = ?",
+            (task_type, agent_role),
+        )
+        return cur.fetchone()[0]
+
+    def merge_canonical_embedding(
+        self,
+        task_type: str,
+        agent_role: str,
+        label: str,
+        new_embedding: List[float],
+    ) -> None:
+        """Average the existing canonical embedding with new_embedding and update in place."""
+        cur = self.conn.execute(
+            "SELECT embedding_json FROM canonical_situations WHERE task_type = ? AND agent_role = ? AND label = ?",
+            (task_type, agent_role, label),
+        )
+        row = cur.fetchone()
+        if not row:
+            return
+        existing = json.loads(row[0])
+        merged = [0.5 * a + 0.5 * b for a, b in zip(existing, new_embedding)]
+        norm = sum(x * x for x in merged) ** 0.5 or 1.0
+        merged = [x / norm for x in merged]
+        self.conn.execute(
+            "UPDATE canonical_situations SET embedding_json = ? WHERE task_type = ? AND agent_role = ? AND label = ?",
+            (json.dumps(merged), task_type, agent_role, label),
+        )
+        self.conn.commit()
+
     def register_canonical_situation(
         self,
         task_type: str,

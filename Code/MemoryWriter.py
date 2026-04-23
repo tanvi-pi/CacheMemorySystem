@@ -52,6 +52,32 @@ class LLMAbstractGenerator:
         return response.choices[0].message.content.strip()
 
 
+class SituationNormalizer:
+    """Normalizes a raw situation string into a short canonical label via LLM."""
+
+    _SYSTEM = (
+        "You are a situation taxonomy encoder. Convert a raw situation description "
+        "into a short, canonical 2-5 word label suitable for a situation vocabulary. "
+        "Output only the label, lowercase, no punctuation."
+    )
+
+    def __init__(self, client: Any, model: str = "gpt-4o-mini"):
+        self.client = client
+        self.model = model
+
+    def normalize(self, situation: str) -> str:
+        response = self.client.chat.completions.create(
+            model=self.model,
+            messages=[
+                {"role": "system", "content": self._SYSTEM},
+                {"role": "user", "content": situation},
+            ],
+            max_tokens=20,
+            temperature=0.0,
+        )
+        return response.choices[0].message.content.strip().lower()
+
+
 class MemoryWriter:
     """Writes finalized episodes into L0, L1 and L2-backed storage."""
 
@@ -66,6 +92,10 @@ class MemoryWriter:
         self.embedder = embedder
         self.abstract_generator = abstract_generator
         self.always_generate = always_generate
+        self._normalizer: Optional[SituationNormalizer] = None
+        if abstract_generator is not None:
+            self._normalizer = SituationNormalizer(abstract_generator.client)
+        self._max_canonicals = 10  # 6 initial + 4 new
 
     def store_episode(
         self,
@@ -112,4 +142,27 @@ class MemoryWriter:
         situation_for_key = canonical if canonical is not None else situation_signature
         key = stable_hash_key(ep.task_type, ep.agent_role, situation_for_key)
         self.store.upsert_l0_signal(key, ep.task_type, ep.agent_role, ep.outcome, ep.episode_id)
+
+        # Dynamic canonical update: use a lower threshold (0.50) to find merge candidates.
+        # - sim >= 0.50: close enough to an existing canonical → merge embeddings (average)
+        # - sim <  0.50 + success + under cap: truly novel → register as new canonical
+        merge_target = self.store.resolve_situation(
+            ep.task_type, ep.agent_role, sit_embedding, threshold=0.50
+        )
+        if merge_target is not None:
+            self.store.merge_canonical_embedding(
+                ep.task_type, ep.agent_role, merge_target, sit_embedding
+            )
+        elif ep.outcome == "success":
+            if self.store.count_canonicals(ep.task_type, ep.agent_role) < self._max_canonicals:
+                label = (
+                    self._normalizer.normalize(situation_signature)
+                    if self._normalizer is not None
+                    else situation_signature
+                )
+                label_emb = self.embedder.embed(label)
+                self.store.register_canonical_situation(
+                    ep.task_type, ep.agent_role, label, label_emb
+                )
+
         return ep.episode_id
