@@ -1110,6 +1110,28 @@ def run_benchmark(
                     d["accuracy_pct"] = round(100 * d["correct"] / evaluable, 1) if evaluable else None
             return by_task
 
+        canonical_events = system.writer.canonical_events
+        # Summary: new situations added and merges per agent
+        canonical_summary: Dict[str, Any] = {}
+        for ev in canonical_events:
+            role = ev["agent_role"]
+            canonical_summary.setdefault(role, {"added": [], "merged": []})
+            if ev["type"] == "add":
+                canonical_summary[role]["added"].append({
+                    "label": ev["normalized_label"],
+                    "raw_situation": ev["raw_situation"],
+                    "task_type": ev["task_type"],
+                    "episode_id": ev["episode_id"],
+                })
+            elif ev["type"] == "merge":
+                canonical_summary[role]["merged"].append({
+                    "canonical_label": ev["canonical_label"],
+                    "raw_situation": ev["raw_situation"],
+                    "task_type": ev["task_type"],
+                    "outcome": ev["outcome"],
+                    "episode_id": ev["episode_id"],
+                })
+
         report = {
             "config": {
                 "episodes_per_task": episodes_per_task,
@@ -1132,6 +1154,13 @@ def run_benchmark(
                     "accuracy": _accuracy_summary(execution_traces, "flat_retrieval"),
                 },
             },
+            "canonical_evolution": {
+                "total_events": len(canonical_events),
+                "total_added": sum(1 for e in canonical_events if e["type"] == "add"),
+                "total_merged": sum(1 for e in canonical_events if e["type"] == "merge"),
+                "by_agent": canonical_summary,
+                "full_event_log": canonical_events,
+            },
             "accuracy_analysis": _task_accuracy_analysis(execution_traces),
             "execution_traces": execution_traces,
             "agent_memory": agent_memory,
@@ -1153,6 +1182,34 @@ def run_benchmark(
         memory_lines.append(f"  Generated : {report['config']['generated_at']}")
         memory_lines.append(f"  Episodes  : {episodes_per_task} per task")
         memory_lines.append(f"  OpenAI    : embeddings={use_openai}  llm_abstracts={llm_abstracts}")
+        memory_lines.append("=" * 70)
+
+        # Canonical evolution summary
+        ce = report["canonical_evolution"]
+        memory_lines.append("")
+        memory_lines.append("=" * 70)
+        memory_lines.append("  CANONICAL SITUATION EVOLUTION")
+        memory_lines.append(f"  Total events: {ce['total_events']}  "
+                            f"(added={ce['total_added']}  merged={ce['total_merged']})")
+        memory_lines.append("=" * 70)
+        for role, ev_data in ce["by_agent"].items():
+            memory_lines.append(f"\n  Agent: {role.upper()}")
+            added = ev_data["added"]
+            merged = ev_data["merged"]
+            if added:
+                memory_lines.append(f"  + New situations added ({len(added)}):")
+                for item in added:
+                    memory_lines.append(f"    • [{item['task_type']}] \"{item['label']}\"")
+                    memory_lines.append(f"      raw: \"{item['raw_situation']}\"  (ep {item['episode_id']})")
+            else:
+                memory_lines.append("  + No new situations added.")
+            if merged:
+                memory_lines.append(f"  ~ Embeddings merged into existing canonicals ({len(merged)}):")
+                for item in merged:
+                    memory_lines.append(f"    • [{item['task_type']}] \"{item['raw_situation']}\" → \"{item['canonical_label']}\"")
+            else:
+                memory_lines.append("  ~ No merges performed.")
+        memory_lines.append("")
         memory_lines.append("=" * 70)
 
         for role, mem in agent_memory.items():

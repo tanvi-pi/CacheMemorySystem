@@ -96,6 +96,7 @@ class MemoryWriter:
         if abstract_generator is not None:
             self._normalizer = SituationNormalizer(abstract_generator.client)
         self._max_canonicals = 10  # 6 initial + 4 new
+        self.canonical_events: list = []  # records merges and additions for inspection
 
     def store_episode(
         self,
@@ -153,6 +154,15 @@ class MemoryWriter:
             self.store.merge_canonical_embedding(
                 ep.task_type, ep.agent_role, merge_target, sit_embedding
             )
+            self.canonical_events.append({
+                "type": "merge",
+                "task_type": ep.task_type,
+                "agent_role": ep.agent_role,
+                "canonical_label": merge_target,
+                "raw_situation": situation_signature,
+                "episode_id": ep.episode_id,
+                "outcome": ep.outcome,
+            })
         elif ep.outcome == "success":
             if self.store.count_canonicals(ep.task_type, ep.agent_role) < self._max_canonicals:
                 label = (
@@ -164,5 +174,13 @@ class MemoryWriter:
                 self.store.register_canonical_situation(
                     ep.task_type, ep.agent_role, label, label_emb
                 )
+                self.canonical_events.append({
+                    "type": "add",
+                    "task_type": ep.task_type,
+                    "agent_role": ep.agent_role,
+                    "normalized_label": label,
+                    "raw_situation": situation_signature,
+                    "episode_id": ep.episode_id,
+                })
 
         return ep.episode_id
