@@ -14,6 +14,89 @@ from RetrievalContext import RetrievalContext
 from TieredRetrievalPolicy import FlatRetrievalPolicy
 
 
+class ScoredJudge:
+    """Rubric-based LLM judge: scores retrieved memory on relevance + actionability (1-5 each)."""
+
+    _SYSTEM = (
+        "You are evaluating an AI agent's memory retrieval system. "
+        "You will be shown a query the agent received and a memory it retrieved. "
+        "Score the retrieved memory on two dimensions:\n"
+        "  relevance (1-5): how closely does the retrieved memory match the situation in the query?\n"
+        "  actionability (1-5): how useful is the guidance in the retrieved memory for solving the query?\n"
+        "Respond with valid JSON only, in the format: {\"relevance\": N, \"actionability\": N}"
+    )
+
+    def __init__(self, api_key: Optional[str] = None, model: str = "gpt-4o-mini"):
+        try:
+            import openai
+        except ImportError:
+            raise ImportError("openai package required: pip install openai")
+        self.client = openai.OpenAI(api_key=api_key or os.environ.get("OPENAI_API_KEY"))
+        self.model = model
+
+    def score(self, query: str, abstract: str) -> Dict[str, Any]:
+        """Returns {'relevance': 1-5, 'actionability': 1-5} or zeros on parse failure."""
+        try:
+            response = self.client.chat.completions.create(
+                model=self.model,
+                messages=[
+                    {"role": "system", "content": self._SYSTEM},
+                    {"role": "user", "content": (
+                        f"Query: {query}\n\n"
+                        f"Retrieved memory:\n{abstract}"
+                    )},
+                ],
+                max_tokens=30,
+                temperature=0.0,
+            )
+            raw = response.choices[0].message.content.strip()
+            parsed = json.loads(raw)
+            return {
+                "relevance": int(parsed.get("relevance", 0)),
+                "actionability": int(parsed.get("actionability", 0)),
+            }
+        except Exception:
+            return {"relevance": 0, "actionability": 0}
+
+
+class QualityJudge:
+    """Binary LLM judge: does the retrieved memory help answer the query?"""
+
+    _SYSTEM = (
+        "You are evaluating an AI agent's memory retrieval system. "
+        "You will be shown a query the agent received and a memory it retrieved. "
+        "Decide whether the retrieved memory is relevant and provides useful guidance "
+        "for handling the query. Answer with only 'yes' or 'no'."
+    )
+
+    def __init__(self, api_key: Optional[str] = None, model: str = "gpt-4o-mini"):
+        try:
+            import openai
+        except ImportError:
+            raise ImportError("openai package required: pip install openai")
+        self.client = openai.OpenAI(api_key=api_key or os.environ.get("OPENAI_API_KEY"))
+        self.model = model
+
+    def judge(self, query: str, abstract: str) -> bool:
+        """Returns True if the retrieved memory is relevant to the query."""
+        response = self.client.chat.completions.create(
+            model=self.model,
+            messages=[
+                {"role": "system", "content": self._SYSTEM},
+                {"role": "user", "content": (
+                    f"Query: {query}\n\n"
+                    f"Retrieved memory:\n{abstract}\n\n"
+                    "Does this retrieved memory provide relevant and useful guidance "
+                    "for handling the query? Answer yes or no only."
+                )},
+            ],
+            max_tokens=5,
+            temperature=0.0,
+        )
+        answer = response.choices[0].message.content.strip().lower()
+        return answer.startswith("yes")
+
+
 TASKS: Dict[str, str] = {
     "db_query_debug": "planner",
     "api_integration": "coder",
@@ -926,6 +1009,8 @@ def run_benchmark(
     llm_abstracts: bool = False,
     openai_key: Optional[str] = None,
     output_path: Optional[str] = None,
+    eval_quality: bool = False,
+    eval_quality_scored: bool = False,
 ) -> None:
     for suffix in ("", "-wal", "-shm"):
         p = db_path + suffix
@@ -1006,6 +1091,71 @@ def run_benchmark(
         flat_results.append(flat_result)
 
         execution_traces.append(_build_trace(idx, q, tiered, flat_result))
+
+    # ── Quality evaluation (LLM judge) ───────────────────────────────────────
+    if eval_quality:
+        judge = QualityJudge(api_key=openai_key)
+        print(f"\n[quality] Running LLM judge on {len(execution_traces)} queries...")
+        for i, trace in enumerate(execution_traces):
+            query_text = trace["query"]
+
+            # Tiered: judge top abstract hit
+            t_hits = trace["tiered_retrieval"]["l1_abstract_hits"]
+            if t_hits:
+                top_abstract = t_hits[0]["abstract"]
+                trace["quality_correct_tiered"] = judge.judge(query_text, top_abstract)
+            else:
+                trace["quality_correct_tiered"] = False
+
+            # Flat: judge top abstract hit
+            f_hits = trace["flat_retrieval"]["l1_abstract_hits"]
+            if f_hits:
+                top_abstract = f_hits[0]["abstract"]
+                trace["quality_correct_flat"] = judge.judge(query_text, top_abstract)
+            else:
+                trace["quality_correct_flat"] = False
+
+            if (i + 1) % 10 == 0:
+                print(f"[quality] {i + 1}/{len(execution_traces)} done")
+
+        t_quality = sum(1 for t in execution_traces if t.get("quality_correct_tiered"))
+        f_quality = sum(1 for t in execution_traces if t.get("quality_correct_flat"))
+        n = len(execution_traces)
+        print(f"\n[quality] Tiered relevance: {t_quality}/{n} ({100*t_quality//n}%)")
+        print(f"[quality] Flat   relevance: {f_quality}/{n} ({100*f_quality//n}%)")
+
+    # ── Scored quality evaluation (Option B) ─────────────────────────────────
+    if eval_quality_scored:
+        scored_judge = ScoredJudge(api_key=openai_key)
+        print(f"\n[scored] Running rubric judge on {len(execution_traces)} queries...")
+        for i, trace in enumerate(execution_traces):
+            query_text = trace["query"]
+
+            t_hits = trace["tiered_retrieval"]["l1_abstract_hits"]
+            trace["quality_score_tiered"] = (
+                scored_judge.score(query_text, t_hits[0]["abstract"]) if t_hits
+                else {"relevance": 0, "actionability": 0}
+            )
+
+            f_hits = trace["flat_retrieval"]["l1_abstract_hits"]
+            trace["quality_score_flat"] = (
+                scored_judge.score(query_text, f_hits[0]["abstract"]) if f_hits
+                else {"relevance": 0, "actionability": 0}
+            )
+
+            if (i + 1) % 10 == 0:
+                print(f"[scored] {i + 1}/{len(execution_traces)} done")
+
+        def _avg_score(traces: List[Dict[str, Any]], key: str, dim: str) -> float:
+            vals = [t[key][dim] for t in traces if key in t and t[key][dim] > 0]
+            return round(sum(vals) / len(vals), 2) if vals else 0.0
+
+        print(f"\n[scored] {'Dimension':<16} {'Tiered':>8} {'Flat':>8}")
+        print(f"[scored] {'-'*32}")
+        for dim in ("relevance", "actionability"):
+            t_avg = _avg_score(execution_traces, "quality_score_tiered", dim)
+            f_avg = _avg_score(execution_traces, "quality_score_flat", dim)
+            print(f"[scored] {dim:<16} {t_avg:>8.2f} {f_avg:>8.2f}")
 
     _summarize(tiered_results, "Tiered Policy (L0/L1/L2)")
     _summarize(flat_results, "Flat Baseline")
@@ -1161,6 +1311,66 @@ def run_benchmark(
                 "by_agent": canonical_summary,
                 "full_event_log": canonical_events,
             },
+            "quality_evaluation": (
+                {
+                    "enabled": True,
+                    "judge_model": "gpt-4o-mini",
+                    "tiered_relevance_pct": round(
+                        100 * sum(1 for t in execution_traces if t.get("quality_correct_tiered")) / len(execution_traces), 1
+                    ),
+                    "flat_relevance_pct": round(
+                        100 * sum(1 for t in execution_traces if t.get("quality_correct_flat")) / len(execution_traces), 1
+                    ),
+                    "by_query_type": {
+                        qt: {
+                            "tiered_pct": round(
+                                100 * sum(1 for t in execution_traces if t.get("query_type") == qt and t.get("quality_correct_tiered"))
+                                / max(1, sum(1 for t in execution_traces if t.get("query_type") == qt)), 1
+                            ),
+                            "flat_pct": round(
+                                100 * sum(1 for t in execution_traces if t.get("query_type") == qt and t.get("quality_correct_flat"))
+                                / max(1, sum(1 for t in execution_traces if t.get("query_type") == qt)), 1
+                            ),
+                            "queries": sum(1 for t in execution_traces if t.get("query_type") == qt),
+                        }
+                        for qt in ("paraphrased", "verbatim", "confusor", "novel")
+                    },
+                }
+                if eval_quality else {"enabled": False}
+            ),
+            "quality_evaluation_scored": (
+                {
+                    "enabled": True,
+                    "judge_model": "gpt-4o-mini",
+                    "scoring": "relevance 1-5, actionability 1-5",
+                    "avg_scores": {
+                        "tiered": {
+                            dim: round(sum(t["quality_score_tiered"][dim] for t in execution_traces if "quality_score_tiered" in t and t["quality_score_tiered"][dim] > 0)
+                                       / max(1, sum(1 for t in execution_traces if "quality_score_tiered" in t and t["quality_score_tiered"][dim] > 0)), 2)
+                            for dim in ("relevance", "actionability")
+                        },
+                        "flat": {
+                            dim: round(sum(t["quality_score_flat"][dim] for t in execution_traces if "quality_score_flat" in t and t["quality_score_flat"][dim] > 0)
+                                       / max(1, sum(1 for t in execution_traces if "quality_score_flat" in t and t["quality_score_flat"][dim] > 0)), 2)
+                            for dim in ("relevance", "actionability")
+                        },
+                    },
+                    "by_query_type": {
+                        qt: {
+                            policy: {
+                                dim: round(
+                                    sum(t[score_key][dim] for t in execution_traces if t.get("query_type") == qt and score_key in t and t[score_key][dim] > 0)
+                                    / max(1, sum(1 for t in execution_traces if t.get("query_type") == qt and score_key in t and t[score_key][dim] > 0)), 2
+                                )
+                                for dim in ("relevance", "actionability")
+                            }
+                            for policy, score_key in (("tiered", "quality_score_tiered"), ("flat", "quality_score_flat"))
+                        }
+                        for qt in ("paraphrased", "verbatim", "confusor", "novel")
+                    },
+                }
+                if eval_quality_scored else {"enabled": False}
+            ),
             "accuracy_analysis": _task_accuracy_analysis(execution_traces),
             "execution_traces": execution_traces,
             "agent_memory": agent_memory,
@@ -1283,6 +1493,10 @@ def main() -> None:
                         help="OpenAI API key (falls back to OPENAI_API_KEY env var)")
     parser.add_argument("--output", default=None,
                         help="Save detailed results to this JSON file (e.g. results.json)")
+    parser.add_argument("--eval-quality", action="store_true",
+                        help="Run binary LLM judge (yes/no relevance) on retrieved memories (requires OpenAI)")
+    parser.add_argument("--eval-quality-scored", action="store_true",
+                        help="Run rubric LLM judge (relevance + actionability 1-5) on retrieved memories (requires OpenAI)")
     args = parser.parse_args()
 
     run_benchmark(
@@ -1294,6 +1508,8 @@ def main() -> None:
         llm_abstracts=not args.no_llm_abstracts,
         openai_key=args.openai_key,
         output_path=args.output,
+        eval_quality=args.eval_quality,
+        eval_quality_scored=args.eval_quality_scored,
     )
 
 
