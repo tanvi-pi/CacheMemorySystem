@@ -1114,6 +1114,82 @@ def _condition_tiered_memory(
     return results
 
 
+def _build_mem0(api_key: str) -> Any:
+    try:
+        from mem0 import Memory
+    except ImportError:
+        raise ImportError("Install mem0ai: pip install mem0ai")
+    os.environ["OPENAI_API_KEY"] = api_key
+    return Memory()
+
+
+def _seed_locomo_mem0(mem0: Any, conversations: List[Dict]) -> int:
+    """Seed Mem0 with the same LOCOMO turns used by the other conditions."""
+    user_id = "locomo_user"
+    total = 0
+    for conv_idx, conv in enumerate(conversations):
+        turns = _extract_locomo_turns(conv, conv_idx)
+        print(f"  [conv {conv_idx}] seeding {len(turns)} turns into Mem0...")
+        for t in turns:
+            # Mem0's LLM extraction expects message-list format, not raw strings
+            text = f"[{t['date']}] {t['speaker']} said: {t['text']}"
+            mem0.add(
+                [{"role": "user", "content": text}],
+                user_id=user_id,
+                metadata={
+                    "conv_id": t["conv_id"],
+                    "speaker": t["speaker"],
+                    "date": t["date"],
+                },
+            )
+            total += 1
+    print(f"[mem0] {total} turns seeded\n")
+    return total
+
+
+def _condition_mem0(
+    test_qs: List[Dict],
+    mem0: Any,
+    client: Any,
+    model: str,
+) -> List[Dict]:
+    user_id = "locomo_user"
+    results = []
+    for q in test_qs:
+        t0 = time.time()
+        try:
+            raw = mem0.search(q["question"], user_id=user_id, limit=5)
+            # Handle v1 (list) and v2 ({"results": [...]} dict) response formats
+            mem_results = raw.get("results", []) if isinstance(raw, dict) else raw
+            snippets = [r.get("memory", "") for r in mem_results if r.get("memory")]
+            memory_context = "\n\n".join(
+                f"[Memory {i+1}]: {s}" for i, s in enumerate(snippets)
+            )
+            hits_n = len(mem_results)
+        except Exception as e:
+            print(f"  [mem0 search error] {e}")
+            memory_context = ""
+            hits_n = 0
+        retrieval_ms = int((time.time() - t0) * 1000)
+
+        evidence_type = q.get("evidence_type", "")
+        max_ans_tokens = 120 if evidence_type == "open_domain" else 50
+        answer, tokens, latency = _call_gpt(
+            q["question"], memory_context, client, model, max_tokens=max_ans_tokens
+        )
+        results.append({
+            "question": q["question"],
+            "gold": q["answer"],
+            "predicted": answer,
+            "em": exact_match(answer, q["answer"]),
+            "f1": f1_score(answer, q["answer"]),
+            "tokens": tokens,
+            "latency_ms": latency + retrieval_ms,
+            "hits_returned": hits_n,
+        })
+    return results
+
+
 # ══════════════════════════════════════════════════════════════════════════════
 # ABLATION CONDITIONS
 # ══════════════════════════════════════════════════════════════════════════════
@@ -1324,10 +1400,17 @@ def _print_report(summaries: List[Dict], dataset: str = "hotpotqa") -> None:
         )
 
     if dataset == "locomo":
-        print(f"\n  Mem0 published results on LOCOMO (for comparison):")
-        print(f"  {'Mem0 (base)':<22} single_hop F1=38.72  multi_hop F1=28.64")
-        print(f"  {'Mem0^g (graph)':<22} temporal F1=51.55   open_domain F1=51.73")
-        print(f"  {'Mem0 vs OpenAI':<22} +26% J-score improvement over OpenAI memory")
+        has_live_mem0 = any(s["condition"] == "mem0" for s in summaries)
+        if has_live_mem0:
+            print(f"\n  Note: mem0 above is measured on this synthetic dataset.")
+            print(f"  Published Mem0 baselines (original LOCOMO benchmark, different dataset):")
+            print(f"  {'Mem0 (base)':<22} single_hop F1=38.72  multi_hop F1=28.64")
+        else:
+            print(f"\n  Mem0 published results on LOCOMO (for comparison — different dataset):")
+            print(f"  {'Mem0 (base)':<22} single_hop F1=38.72  multi_hop F1=28.64")
+            print(f"  {'Mem0^g (graph)':<22} temporal F1=51.55   open_domain F1=51.73")
+            print(f"  {'Mem0 vs OpenAI':<22} +26% J-score improvement over OpenAI memory")
+            print(f"  Run with --mem0 to measure Mem0 on this dataset for a direct comparison.")
     else:
         print(f"\n  Published HotpotQA baselines (for context):")
         print(f"  {'GPT-4o zero-shot':<22} ~55-65% F1  (no retrieval, no memory)")
@@ -1340,26 +1423,44 @@ def _print_locomo_breakdown(
     tiered_results: List[Dict],
     flat_results: List[Dict],
     no_mem_results: List[Dict],
+    mem0_results: Optional[List[Dict]] = None,
 ) -> None:
     """Print per-question-type breakdown matching Mem0's reporting format."""
     print(f"  LOCOMO breakdown by question type:")
-    print(f"  {'-'*60}")
-    print(f"  {'Type':<16} {'no_mem F1':>10} {'flat F1':>10} {'tiered F1':>10} {'gain':>8}")
-    print(f"  {'-'*60}")
+    print(f"  {'-'*70}")
+    if mem0_results:
+        print(f"  {'Type':<16} {'no_mem F1':>10} {'flat F1':>10} {'mem0 F1':>10} {'tiered F1':>10} {'gain':>8}")
+    else:
+        print(f"  {'Type':<16} {'no_mem F1':>10} {'flat F1':>10} {'tiered F1':>10} {'gain':>8}")
+    print(f"  {'-'*70}")
 
+    LOW_N_THRESHOLD = 20
     types = ["single_hop", "multi_hop", "temporal", "open_domain"]
+    low_n_types = []
     for qtype in types:
         no_rs  = [r for r in no_mem_results  if r.get("evidence_type") == qtype]
         fl_rs  = [r for r in flat_results    if r.get("evidence_type") == qtype]
         ti_rs  = [r for r in tiered_results  if r.get("evidence_type") == qtype]
         if not ti_rs:
             continue
+        n = len(ti_rs)
+        flag = " *" if n < LOW_N_THRESHOLD else ""
+        if n < LOW_N_THRESHOLD:
+            low_n_types.append(f"{qtype} (n={n})")
         no_f1 = round(100 * sum(r["f1"] for r in no_rs) / max(len(no_rs), 1), 1)
         fl_f1 = round(100 * sum(r["f1"] for r in fl_rs) / max(len(fl_rs), 1), 1)
         ti_f1 = round(100 * sum(r["f1"] for r in ti_rs) / max(len(ti_rs), 1), 1)
         gain  = round(ti_f1 - no_f1, 1)
         sign  = "+" if gain >= 0 else ""
-        print(f"  {qtype:<16} {no_f1:>10} {fl_f1:>10} {ti_f1:>10} {sign}{gain:>7}%")
+        label = f"{qtype} (n={n}){flag}"
+        if mem0_results:
+            m0_rs = [r for r in mem0_results if r.get("evidence_type") == qtype]
+            m0_f1 = round(100 * sum(r["f1"] for r in m0_rs) / max(len(m0_rs), 1), 1)
+            print(f"  {label:<22} {no_f1:>10} {fl_f1:>10} {m0_f1:>10} {ti_f1:>10} {sign}{gain:>7}%")
+        else:
+            print(f"  {label:<22} {no_f1:>10} {fl_f1:>10} {ti_f1:>10} {sign}{gain:>7}%")
+    if low_n_types:
+        print(f"\n  * Low sample count — report as indicative only: {', '.join(low_n_types)}")
     print()
 
 
@@ -1433,6 +1534,7 @@ def run_locomo_benchmark(
     model: str,
     output: Optional[str],
     db_path: str,
+    mem0_key: Optional[str] = None,
 ) -> None:
     for suffix in ("", "-wal", "-shm"):
         p = db_path + suffix
@@ -1466,30 +1568,30 @@ def run_locomo_benchmark(
 
     print(f"[dataset] {total_turns} turns seeded | {len(all_test_qs)} test questions")
 
-    est_calls = len(all_test_qs) * 4
+    n_conds = 5 if mem0_key else 4
+    est_calls = len(all_test_qs) * n_conds
     est_cost = round(est_calls * 0.001, 2)
     print(f"[cost] Estimated ~{est_calls} GPT calls, ~${est_cost} at gpt-4o-mini rates")
-    print(f"[testing] Running 4 conditions on {len(all_test_qs)} questions...\n")
+    print(f"[testing] Running {n_conds} conditions on {len(all_test_qs)} questions...\n")
 
-    print("[1/4] no_memory       — GPT answers cold (cannot see conversations)")
+    print(f"[1/{n_conds}] no_memory       — GPT answers cold (cannot see conversations)")
     r_none = _condition_no_memory(all_test_qs, client, model)
-    # Attach evidence_type for breakdown reporting
     for r, q in zip(r_none, all_test_qs):
         r["evidence_type"] = q.get("evidence_type", "unknown")
 
-    print("[2/4] buffer_memory   — Last 8 turns, no search")
+    print(f"[2/{n_conds}] buffer_memory   — Last 8 turns, no search")
     r_buf = _condition_buffer_memory(all_test_qs, store, client, model)
     for r, q in zip(r_buf, all_test_qs):
         r["evidence_type"] = q.get("evidence_type", "unknown")
 
-    print("[3/4] flat_memory     — Vector search, no role/task filter")
+    print(f"[3/{n_conds}] flat_memory     — Vector search, no role/task filter")
     r_flat = _condition_flat_memory(
         all_test_qs, store, embedder, client, model, _classify_locomo_q
     )
     for r, q in zip(r_flat, all_test_qs):
         r["evidence_type"] = q.get("evidence_type", "unknown")
 
-    print("[4/4] tiered_memory   — L0/L1/L2 tiered system")
+    print(f"[4/{n_conds}] tiered_memory   — L0/L1/L2 tiered system")
     r_tiered = _condition_tiered_memory(
         all_test_qs, system, store, embedder, client, model,
         _classify_locomo_q,
@@ -1499,23 +1601,39 @@ def run_locomo_benchmark(
     for r, q in zip(r_tiered, all_test_qs):
         r["evidence_type"] = q.get("evidence_type", "unknown")
 
+    r_mem0: Optional[List[Dict]] = None
+    if mem0_key:
+        print(f"[5/{n_conds}] mem0            — Mem0 memory system (same dataset)")
+        mem0_instance = _build_mem0(mem0_key)
+        _seed_locomo_mem0(mem0_instance, conversations)
+        r_mem0 = _condition_mem0(all_test_qs, mem0_instance, client, model)
+        for r, q in zip(r_mem0, all_test_qs):
+            r["evidence_type"] = q.get("evidence_type", "unknown")
+
     summaries = [
         _summarize("no_memory",     r_none),
         _summarize("buffer_memory", r_buf),
         _summarize("flat_memory",   r_flat),
         _summarize("tiered_memory", r_tiered),
     ]
+    if r_mem0:
+        summaries.append(_summarize("mem0", r_mem0))
+
     _print_report(summaries, dataset="locomo")
-    _print_locomo_breakdown(r_tiered, r_flat, r_none)
+    _print_locomo_breakdown(r_tiered, r_flat, r_none, mem0_results=r_mem0)
 
     if output:
+        per_q = {
+            "no_memory": r_none, "buffer_memory": r_buf,
+            "flat_memory": r_flat, "tiered_memory": r_tiered,
+        }
+        if r_mem0:
+            per_q["mem0"] = r_mem0
         _save_results(
             output, "locomo",
             {"n_conversations": len(conversations), "n_turns": total_turns,
-             "n_test": len(all_test_qs)},
-            embedder, model, summaries,
-            {"no_memory": r_none, "buffer_memory": r_buf,
-             "flat_memory": r_flat, "tiered_memory": r_tiered},
+             "n_test": len(all_test_qs), "mem0_condition": mem0_key is not None},
+            embedder, model, summaries, per_q,
         )
 
 
@@ -1713,6 +1831,12 @@ def main() -> None:
     parser.add_argument("--openai-key", default=None)
     parser.add_argument("--output", default="qa_results.json")
     parser.add_argument("--db-path", default="qa_benchmark.db")
+    parser.add_argument(
+        "--mem0", action="store_true",
+        help="[locomo] Add Mem0 as a 5th condition for a same-dataset comparison. "
+             "Uses the same OpenAI key (--openai-key or OPENAI_API_KEY). "
+             "Requires: pip install mem0ai",
+    )
     args = parser.parse_args()
 
     import openai as openai_lib
@@ -1743,6 +1867,7 @@ def main() -> None:
                 model=args.model,
                 output=args.output,
                 db_path=args.db_path,
+                mem0_key=key if args.mem0 else None,
             )
     else:
         run_hotpotqa_benchmark(

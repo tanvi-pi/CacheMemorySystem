@@ -1,0 +1,1095 @@
+{
+  "config": {
+    "n_confusors_requested": 40,
+    "n_confusors_generated": 30,
+    "episodes_per_task": 20,
+    "seed": 7,
+    "model": "gpt-4o-mini",
+    "generated_at": "2026-05-08T20:07:37",
+    "note": "LLM generation prompt describes only task categories, not the role-partitioning architecture under test."
+  },
+  "summary": {
+    "hand_written": {
+      "label": "Hand-written (original benchmark)",
+      "n": 7,
+      "tiered_top1_pct": 100.0,
+      "flat_top1_pct": 28.6,
+      "advantage_pp": 71.4
+    },
+    "llm_generated": {
+      "label": "LLM-generated (independent)",
+      "n": 30,
+      "tiered_top1_pct": 80.0,
+      "flat_top1_pct": 20.0,
+      "advantage_pp": 60.0
+    }
+  },
+  "hand_written_detail": {
+    "tiered": [
+      {
+        "task_type": "db_query_debug",
+        "role": "planner",
+        "situation": "postgres timeout index",
+        "query": "the system is degraded and users are getting errors \u2014 what should I check first?",
+        "disguise_as": "db_phrased_as_incident",
+        "source": "hand_written",
+        "top1_correct": true,
+        "top3_correct": true,
+        "top1_task": "db_query_debug"
+      },
+      {
+        "task_type": "api_integration",
+        "role": "coder",
+        "situation": "rate limit handling",
+        "query": "I spotted a pattern in this code where upstream calls might overwhelm the external service \u2014 how do we fix it?",
+        "disguise_as": "api_phrased_as_code_review",
+        "source": "hand_written",
+        "top1_correct": true,
+        "top3_correct": true,
+        "top1_task": "api_integration"
+      },
+      {
+        "task_type": "code_review",
+        "role": "reviewer",
+        "situation": "race condition",
+        "query": "production is flapping intermittently and restarts are not fixing it \u2014 something seems non-deterministic",
+        "disguise_as": "code_phrased_as_incident",
+        "source": "hand_written",
+        "top1_correct": true,
+        "top3_correct": true,
+        "top1_task": "code_review"
+      },
+      {
+        "task_type": "incident_investigation",
+        "role": "researcher",
+        "situation": "error spike after deploy",
+        "query": "should we roll back the release? errors started right after the push \u2014 how do we diagnose and decide?",
+        "disguise_as": "incident_phrased_as_release",
+        "source": "hand_written",
+        "top1_correct": true,
+        "top3_correct": true,
+        "top1_task": "incident_investigation"
+      },
+      {
+        "task_type": "release_validation",
+        "role": "executor",
+        "situation": "canary rollback needed",
+        "query": "the new version is returning unexpected responses for some users \u2014 is this a code bug or a rollout problem?",
+        "disguise_as": "release_phrased_as_code",
+        "source": "hand_written",
+        "top1_correct": true,
+        "top3_correct": true,
+        "top1_task": "release_validation"
+      },
+      {
+        "task_type": "db_query_debug",
+        "role": "planner",
+        "situation": "connection pool exhaustion",
+        "query": "the API is timing out for everyone \u2014 infrastructure team says the application is the culprit",
+        "disguise_as": "db_phrased_as_api",
+        "source": "hand_written",
+        "top1_correct": true,
+        "top3_correct": true,
+        "top1_task": "db_query_debug"
+      },
+      {
+        "task_type": "incident_investigation",
+        "role": "researcher",
+        "situation": "network saturation",
+        "query": "all our services are slow at once \u2014 could this be related to the deployment we just did?",
+        "disguise_as": "incident_phrased_as_release",
+        "source": "hand_written",
+        "top1_correct": true,
+        "top3_correct": true,
+        "top1_task": "incident_investigation"
+      }
+    ],
+    "flat": [
+      {
+        "task_type": "db_query_debug",
+        "role": "planner",
+        "situation": "postgres timeout index",
+        "query": "the system is degraded and users are getting errors \u2014 what should I check first?",
+        "disguise_as": "db_phrased_as_incident",
+        "source": "hand_written",
+        "top1_correct": false,
+        "top3_correct": false,
+        "top1_task": "release_validation"
+      },
+      {
+        "task_type": "api_integration",
+        "role": "coder",
+        "situation": "rate limit handling",
+        "query": "I spotted a pattern in this code where upstream calls might overwhelm the external service \u2014 how do we fix it?",
+        "disguise_as": "api_phrased_as_code_review",
+        "source": "hand_written",
+        "top1_correct": false,
+        "top3_correct": true,
+        "top1_task": "release_validation"
+      },
+      {
+        "task_type": "code_review",
+        "role": "reviewer",
+        "situation": "race condition",
+        "query": "production is flapping intermittently and restarts are not fixing it \u2014 something seems non-deterministic",
+        "disguise_as": "code_phrased_as_incident",
+        "source": "hand_written",
+        "top1_correct": false,
+        "top3_correct": true,
+        "top1_task": "release_validation"
+      },
+      {
+        "task_type": "incident_investigation",
+        "role": "researcher",
+        "situation": "error spike after deploy",
+        "query": "should we roll back the release? errors started right after the push \u2014 how do we diagnose and decide?",
+        "disguise_as": "incident_phrased_as_release",
+        "source": "hand_written",
+        "top1_correct": true,
+        "top3_correct": true,
+        "top1_task": "incident_investigation"
+      },
+      {
+        "task_type": "release_validation",
+        "role": "executor",
+        "situation": "canary rollback needed",
+        "query": "the new version is returning unexpected responses for some users \u2014 is this a code bug or a rollout problem?",
+        "disguise_as": "release_phrased_as_code",
+        "source": "hand_written",
+        "top1_correct": true,
+        "top3_correct": true,
+        "top1_task": "release_validation"
+      },
+      {
+        "task_type": "db_query_debug",
+        "role": "planner",
+        "situation": "connection pool exhaustion",
+        "query": "the API is timing out for everyone \u2014 infrastructure team says the application is the culprit",
+        "disguise_as": "db_phrased_as_api",
+        "source": "hand_written",
+        "top1_correct": false,
+        "top3_correct": false,
+        "top1_task": "release_validation"
+      },
+      {
+        "task_type": "incident_investigation",
+        "role": "researcher",
+        "situation": "network saturation",
+        "query": "all our services are slow at once \u2014 could this be related to the deployment we just did?",
+        "disguise_as": "incident_phrased_as_release",
+        "source": "hand_written",
+        "top1_correct": false,
+        "top3_correct": false,
+        "top1_task": "release_validation"
+      }
+    ]
+  },
+  "llm_generated_detail": {
+    "tiered": [
+      {
+        "task_type": "db_query_debug",
+        "role": "planner",
+        "situation": "API response delays",
+        "query": "We're experiencing slow responses from our external service that affects the API calls. How can we optimize these calls?",
+        "disguise_as": "api_integration",
+        "source": "llm_generated",
+        "top1_correct": true,
+        "top3_correct": true,
+        "top1_task": "db_query_debug"
+      },
+      {
+        "task_type": "api_integration",
+        "role": "coder",
+        "situation": "inconsistent rate limiting",
+        "query": "Could you check if our recent changes introduce any memory leaks during API calls under load?",
+        "disguise_as": "code_review",
+        "source": "llm_generated",
+        "top1_correct": true,
+        "top3_correct": true,
+        "top1_task": "api_integration"
+      },
+      {
+        "task_type": "code_review",
+        "role": "reviewer",
+        "situation": "unhandled exceptions",
+        "query": "Are there any deployment scripts that might be causing unexpected errors during the deployment process?",
+        "disguise_as": "release_validation",
+        "source": "llm_generated",
+        "top1_correct": false,
+        "top3_correct": false,
+        "top1_task": null
+      },
+      {
+        "task_type": "incident_investigation",
+        "role": "researcher",
+        "situation": "intermittent database errors",
+        "query": "We're noticing sporadic connection issues that seem to correlate with certain queries. Can you investigate the connection pool settings?",
+        "disguise_as": "db_query_debug",
+        "source": "llm_generated",
+        "top1_correct": true,
+        "top3_correct": true,
+        "top1_task": "incident_investigation"
+      },
+      {
+        "task_type": "release_validation",
+        "role": "executor",
+        "situation": "failed staging deployment",
+        "query": "We had a sudden spike in error rates after the last deployment. Could you analyze any infrastructure failures that could be related?",
+        "disguise_as": "incident_investigation",
+        "source": "llm_generated",
+        "top1_correct": true,
+        "top3_correct": true,
+        "top1_task": "release_validation"
+      },
+      {
+        "task_type": "db_query_debug",
+        "role": "planner",
+        "situation": "high CPU usage",
+        "query": "There was a significant increase in error rates that seems to be affecting overall server performance. What could be causing the high load?",
+        "disguise_as": "incident_investigation",
+        "source": "llm_generated",
+        "top1_correct": true,
+        "top3_correct": true,
+        "top1_task": "db_query_debug"
+      },
+      {
+        "task_type": "api_integration",
+        "role": "coder",
+        "situation": "token expiration issues",
+        "query": "It looks like our database queries are timing out right after we refresh our access token. Could the token handling be affecting performance?",
+        "disguise_as": "db_query_debug",
+        "source": "llm_generated",
+        "top1_correct": true,
+        "top3_correct": true,
+        "top1_task": "api_integration"
+      },
+      {
+        "task_type": "code_review",
+        "role": "reviewer",
+        "situation": "security vulnerability in API",
+        "query": "Can you review our API documentation to ensure we're not exposing memory leaks when users interact with it?",
+        "disguise_as": "api_integration",
+        "source": "llm_generated",
+        "top1_correct": false,
+        "top3_correct": false,
+        "top1_task": null
+      },
+      {
+        "task_type": "incident_investigation",
+        "role": "researcher",
+        "situation": "resource exhaustion",
+        "query": "Our canary release caused an unexpected spike in resource usage. What infrastructure issues should we consider?",
+        "disguise_as": "release_validation",
+        "source": "llm_generated",
+        "top1_correct": false,
+        "top3_correct": false,
+        "top1_task": null
+      },
+      {
+        "task_type": "release_validation",
+        "role": "executor",
+        "situation": "rollback complications",
+        "query": "Can you analyze the code for potential race conditions that might be causing issues with our rollback processes?",
+        "disguise_as": "code_review",
+        "source": "llm_generated",
+        "top1_correct": true,
+        "top3_correct": true,
+        "top1_task": "release_validation"
+      },
+      {
+        "task_type": "db_query_debug",
+        "role": "planner",
+        "situation": "slow queries",
+        "query": "We've had to revert a few recent changes due to slow performance in our API. Could the recent database adjustments be the reason?",
+        "disguise_as": "release_validation",
+        "source": "llm_generated",
+        "top1_correct": true,
+        "top3_correct": true,
+        "top1_task": "db_query_debug"
+      },
+      {
+        "task_type": "api_integration",
+        "role": "coder",
+        "situation": "webhook failures",
+        "query": "We're seeing a lot of HTTP errors when sending webhooks. Is the database connection pool affecting our webhook deliveries?",
+        "disguise_as": "db_query_debug",
+        "source": "llm_generated",
+        "top1_correct": true,
+        "top3_correct": true,
+        "top1_task": "api_integration"
+      },
+      {
+        "task_type": "code_review",
+        "role": "reviewer",
+        "situation": "test coverage gaps",
+        "query": "There are multiple error logs coming from production. Can you track if there are any parts of our codebase that are untested?",
+        "disguise_as": "incident_investigation",
+        "source": "llm_generated",
+        "top1_correct": true,
+        "top3_correct": true,
+        "top1_task": "code_review"
+      },
+      {
+        "task_type": "incident_investigation",
+        "role": "researcher",
+        "situation": "database outages",
+        "query": "We had a successful deployment, but suddenly experienced database outages. What infrastructure problems could relate to this?",
+        "disguise_as": "release_validation",
+        "source": "llm_generated",
+        "top1_correct": true,
+        "top3_correct": true,
+        "top1_task": "incident_investigation"
+      },
+      {
+        "task_type": "release_validation",
+        "role": "executor",
+        "situation": "deployment pipeline errors",
+        "query": "Are there any API rate limiting configurations affecting our ability to deploy in staging?",
+        "disguise_as": "api_integration",
+        "source": "llm_generated",
+        "top1_correct": true,
+        "top3_correct": true,
+        "top1_task": "release_validation"
+      },
+      {
+        "task_type": "db_query_debug",
+        "role": "planner",
+        "situation": "index performance issues",
+        "query": "Can you review our recent API updates to see if any indexing is causing memory leaks?",
+        "disguise_as": "code_review",
+        "source": "llm_generated",
+        "top1_correct": false,
+        "top3_correct": false,
+        "top1_task": null
+      },
+      {
+        "task_type": "api_integration",
+        "role": "coder",
+        "situation": "API usage spikes",
+        "query": "We've noticed spikes in errors that seem to align with our API usage. Should we look into server issues?",
+        "disguise_as": "incident_investigation",
+        "source": "llm_generated",
+        "top1_correct": true,
+        "top3_correct": true,
+        "top1_task": "api_integration"
+      },
+      {
+        "task_type": "code_review",
+        "role": "reviewer",
+        "situation": "security audits",
+        "query": "Could you evaluate if the new API features have introduced any potential race conditions in the code?",
+        "disguise_as": "api_integration",
+        "source": "llm_generated",
+        "top1_correct": true,
+        "top3_correct": true,
+        "top1_task": "code_review"
+      },
+      {
+        "task_type": "incident_investigation",
+        "role": "researcher",
+        "situation": "dependency failures",
+        "query": "Can you investigate any deployment-related issues stemming from failed external service dependencies?",
+        "disguise_as": "release_validation",
+        "source": "llm_generated",
+        "top1_correct": true,
+        "top3_correct": true,
+        "top1_task": "incident_investigation"
+      },
+      {
+        "task_type": "release_validation",
+        "role": "executor",
+        "situation": "deployment timing issues",
+        "query": "We need to analyze if our canary release is the reason for recent spikes in infrastructure errors.",
+        "disguise_as": "incident_investigation",
+        "source": "llm_generated",
+        "top1_correct": true,
+        "top3_correct": true,
+        "top1_task": "release_validation"
+      },
+      {
+        "task_type": "db_query_debug",
+        "role": "planner",
+        "situation": "query optimization",
+        "query": "Is there a way to improve our deployment process to reduce the number of failing queries?",
+        "disguise_as": "release_validation",
+        "source": "llm_generated",
+        "top1_correct": true,
+        "top3_correct": true,
+        "top1_task": "db_query_debug"
+      },
+      {
+        "task_type": "api_integration",
+        "role": "coder",
+        "situation": "authentication failures",
+        "query": "Are the recent authentication failures linked to issues with our database connection configurations?",
+        "disguise_as": "db_query_debug",
+        "source": "llm_generated",
+        "top1_correct": true,
+        "top3_correct": true,
+        "top1_task": "api_integration"
+      },
+      {
+        "task_type": "code_review",
+        "role": "reviewer",
+        "situation": "deadlock reports",
+        "query": "Could you check our incident logs to see if there are unhandled exceptions linked to deadlocks in our code?",
+        "disguise_as": "incident_investigation",
+        "source": "llm_generated",
+        "top1_correct": false,
+        "top3_correct": false,
+        "top1_task": null
+      },
+      {
+        "task_type": "incident_investigation",
+        "role": "researcher",
+        "situation": "system slowdowns",
+        "query": "Our system performance has degraded, coinciding with increased API calls. What infrastructure issues should we check?",
+        "disguise_as": "api_integration",
+        "source": "llm_generated",
+        "top1_correct": false,
+        "top3_correct": false,
+        "top1_task": null
+      },
+      {
+        "task_type": "release_validation",
+        "role": "executor",
+        "situation": "staging environment issues",
+        "query": "Could the recent deployment in staging relate to the performance issues we're seeing in certain queries?",
+        "disguise_as": "db_query_debug",
+        "source": "llm_generated",
+        "top1_correct": true,
+        "top3_correct": true,
+        "top1_task": "release_validation"
+      },
+      {
+        "task_type": "db_query_debug",
+        "role": "planner",
+        "situation": "load testing",
+        "query": "During load testing, we noticed some API features may leak memory. Can you assess the database queries involved?",
+        "disguise_as": "code_review",
+        "source": "llm_generated",
+        "top1_correct": true,
+        "top3_correct": true,
+        "top1_task": "db_query_debug"
+      },
+      {
+        "task_type": "api_integration",
+        "role": "coder",
+        "situation": "webhook retries",
+        "query": "Should we look into potential database issues that could be causing failed webhook retries during the deployment?",
+        "disguise_as": "release_validation",
+        "source": "llm_generated",
+        "top1_correct": true,
+        "top3_correct": true,
+        "top1_task": "api_integration"
+      },
+      {
+        "task_type": "code_review",
+        "role": "reviewer",
+        "situation": "error handling",
+        "query": "Are there unhandled exceptions in our code that could be leading to increased error rates in production?",
+        "disguise_as": "incident_investigation",
+        "source": "llm_generated",
+        "top1_correct": true,
+        "top3_correct": true,
+        "top1_task": "code_review"
+      },
+      {
+        "task_type": "incident_investigation",
+        "role": "researcher",
+        "situation": "service disruptions",
+        "query": "Could the drop in API calls be indicative of a larger issue with our deployment process affecting service uptime?",
+        "disguise_as": "api_integration",
+        "source": "llm_generated",
+        "top1_correct": true,
+        "top3_correct": true,
+        "top1_task": "incident_investigation"
+      },
+      {
+        "task_type": "release_validation",
+        "role": "executor",
+        "situation": "service deployment errors",
+        "query": "Could the failed deployment process relate to some problematic database queries we need to optimize?",
+        "disguise_as": "db_query_debug",
+        "source": "llm_generated",
+        "top1_correct": true,
+        "top3_correct": true,
+        "top1_task": "release_validation"
+      }
+    ],
+    "flat": [
+      {
+        "task_type": "db_query_debug",
+        "role": "planner",
+        "situation": "API response delays",
+        "query": "We're experiencing slow responses from our external service that affects the API calls. How can we optimize these calls?",
+        "disguise_as": "api_integration",
+        "source": "llm_generated",
+        "top1_correct": false,
+        "top3_correct": true,
+        "top1_task": "api_integration"
+      },
+      {
+        "task_type": "api_integration",
+        "role": "coder",
+        "situation": "inconsistent rate limiting",
+        "query": "Could you check if our recent changes introduce any memory leaks during API calls under load?",
+        "disguise_as": "code_review",
+        "source": "llm_generated",
+        "top1_correct": false,
+        "top3_correct": true,
+        "top1_task": "incident_investigation"
+      },
+      {
+        "task_type": "code_review",
+        "role": "reviewer",
+        "situation": "unhandled exceptions",
+        "query": "Are there any deployment scripts that might be causing unexpected errors during the deployment process?",
+        "disguise_as": "release_validation",
+        "source": "llm_generated",
+        "top1_correct": false,
+        "top3_correct": false,
+        "top1_task": "release_validation"
+      },
+      {
+        "task_type": "incident_investigation",
+        "role": "researcher",
+        "situation": "intermittent database errors",
+        "query": "We're noticing sporadic connection issues that seem to correlate with certain queries. Can you investigate the connection pool settings?",
+        "disguise_as": "db_query_debug",
+        "source": "llm_generated",
+        "top1_correct": false,
+        "top3_correct": false,
+        "top1_task": "db_query_debug"
+      },
+      {
+        "task_type": "release_validation",
+        "role": "executor",
+        "situation": "failed staging deployment",
+        "query": "We had a sudden spike in error rates after the last deployment. Could you analyze any infrastructure failures that could be related?",
+        "disguise_as": "incident_investigation",
+        "source": "llm_generated",
+        "top1_correct": true,
+        "top3_correct": true,
+        "top1_task": "release_validation"
+      },
+      {
+        "task_type": "db_query_debug",
+        "role": "planner",
+        "situation": "high CPU usage",
+        "query": "There was a significant increase in error rates that seems to be affecting overall server performance. What could be causing the high load?",
+        "disguise_as": "incident_investigation",
+        "source": "llm_generated",
+        "top1_correct": false,
+        "top3_correct": false,
+        "top1_task": "incident_investigation"
+      },
+      {
+        "task_type": "api_integration",
+        "role": "coder",
+        "situation": "token expiration issues",
+        "query": "It looks like our database queries are timing out right after we refresh our access token. Could the token handling be affecting performance?",
+        "disguise_as": "db_query_debug",
+        "source": "llm_generated",
+        "top1_correct": false,
+        "top3_correct": true,
+        "top1_task": "code_review"
+      },
+      {
+        "task_type": "code_review",
+        "role": "reviewer",
+        "situation": "security vulnerability in API",
+        "query": "Can you review our API documentation to ensure we're not exposing memory leaks when users interact with it?",
+        "disguise_as": "api_integration",
+        "source": "llm_generated",
+        "top1_correct": false,
+        "top3_correct": false,
+        "top1_task": "incident_investigation"
+      },
+      {
+        "task_type": "incident_investigation",
+        "role": "researcher",
+        "situation": "resource exhaustion",
+        "query": "Our canary release caused an unexpected spike in resource usage. What infrastructure issues should we consider?",
+        "disguise_as": "release_validation",
+        "source": "llm_generated",
+        "top1_correct": false,
+        "top3_correct": false,
+        "top1_task": "release_validation"
+      },
+      {
+        "task_type": "release_validation",
+        "role": "executor",
+        "situation": "rollback complications",
+        "query": "Can you analyze the code for potential race conditions that might be causing issues with our rollback processes?",
+        "disguise_as": "code_review",
+        "source": "llm_generated",
+        "top1_correct": true,
+        "top3_correct": true,
+        "top1_task": "release_validation"
+      },
+      {
+        "task_type": "db_query_debug",
+        "role": "planner",
+        "situation": "slow queries",
+        "query": "We've had to revert a few recent changes due to slow performance in our API. Could the recent database adjustments be the reason?",
+        "disguise_as": "release_validation",
+        "source": "llm_generated",
+        "top1_correct": false,
+        "top3_correct": false,
+        "top1_task": "api_integration"
+      },
+      {
+        "task_type": "api_integration",
+        "role": "coder",
+        "situation": "webhook failures",
+        "query": "We're seeing a lot of HTTP errors when sending webhooks. Is the database connection pool affecting our webhook deliveries?",
+        "disguise_as": "db_query_debug",
+        "source": "llm_generated",
+        "top1_correct": false,
+        "top3_correct": false,
+        "top1_task": "release_validation"
+      },
+      {
+        "task_type": "code_review",
+        "role": "reviewer",
+        "situation": "test coverage gaps",
+        "query": "There are multiple error logs coming from production. Can you track if there are any parts of our codebase that are untested?",
+        "disguise_as": "incident_investigation",
+        "source": "llm_generated",
+        "top1_correct": false,
+        "top3_correct": false,
+        "top1_task": null
+      },
+      {
+        "task_type": "incident_investigation",
+        "role": "researcher",
+        "situation": "database outages",
+        "query": "We had a successful deployment, but suddenly experienced database outages. What infrastructure problems could relate to this?",
+        "disguise_as": "release_validation",
+        "source": "llm_generated",
+        "top1_correct": false,
+        "top3_correct": true,
+        "top1_task": "code_review"
+      },
+      {
+        "task_type": "release_validation",
+        "role": "executor",
+        "situation": "deployment pipeline errors",
+        "query": "Are there any API rate limiting configurations affecting our ability to deploy in staging?",
+        "disguise_as": "api_integration",
+        "source": "llm_generated",
+        "top1_correct": true,
+        "top3_correct": true,
+        "top1_task": "release_validation"
+      },
+      {
+        "task_type": "db_query_debug",
+        "role": "planner",
+        "situation": "index performance issues",
+        "query": "Can you review our recent API updates to see if any indexing is causing memory leaks?",
+        "disguise_as": "code_review",
+        "source": "llm_generated",
+        "top1_correct": false,
+        "top3_correct": false,
+        "top1_task": "incident_investigation"
+      },
+      {
+        "task_type": "api_integration",
+        "role": "coder",
+        "situation": "API usage spikes",
+        "query": "We've noticed spikes in errors that seem to align with our API usage. Should we look into server issues?",
+        "disguise_as": "incident_investigation",
+        "source": "llm_generated",
+        "top1_correct": true,
+        "top3_correct": true,
+        "top1_task": "api_integration"
+      },
+      {
+        "task_type": "code_review",
+        "role": "reviewer",
+        "situation": "security audits",
+        "query": "Could you evaluate if the new API features have introduced any potential race conditions in the code?",
+        "disguise_as": "api_integration",
+        "source": "llm_generated",
+        "top1_correct": false,
+        "top3_correct": false,
+        "top1_task": "release_validation"
+      },
+      {
+        "task_type": "incident_investigation",
+        "role": "researcher",
+        "situation": "dependency failures",
+        "query": "Can you investigate any deployment-related issues stemming from failed external service dependencies?",
+        "disguise_as": "release_validation",
+        "source": "llm_generated",
+        "top1_correct": false,
+        "top3_correct": true,
+        "top1_task": "api_integration"
+      },
+      {
+        "task_type": "release_validation",
+        "role": "executor",
+        "situation": "deployment timing issues",
+        "query": "We need to analyze if our canary release is the reason for recent spikes in infrastructure errors.",
+        "disguise_as": "incident_investigation",
+        "source": "llm_generated",
+        "top1_correct": false,
+        "top3_correct": false,
+        "top1_task": "api_integration"
+      },
+      {
+        "task_type": "db_query_debug",
+        "role": "planner",
+        "situation": "query optimization",
+        "query": "Is there a way to improve our deployment process to reduce the number of failing queries?",
+        "disguise_as": "release_validation",
+        "source": "llm_generated",
+        "top1_correct": true,
+        "top3_correct": true,
+        "top1_task": "db_query_debug"
+      },
+      {
+        "task_type": "api_integration",
+        "role": "coder",
+        "situation": "authentication failures",
+        "query": "Are the recent authentication failures linked to issues with our database connection configurations?",
+        "disguise_as": "db_query_debug",
+        "source": "llm_generated",
+        "top1_correct": false,
+        "top3_correct": true,
+        "top1_task": "db_query_debug"
+      },
+      {
+        "task_type": "code_review",
+        "role": "reviewer",
+        "situation": "deadlock reports",
+        "query": "Could you check our incident logs to see if there are unhandled exceptions linked to deadlocks in our code?",
+        "disguise_as": "incident_investigation",
+        "source": "llm_generated",
+        "top1_correct": false,
+        "top3_correct": false,
+        "top1_task": "incident_investigation"
+      },
+      {
+        "task_type": "incident_investigation",
+        "role": "researcher",
+        "situation": "system slowdowns",
+        "query": "Our system performance has degraded, coinciding with increased API calls. What infrastructure issues should we check?",
+        "disguise_as": "api_integration",
+        "source": "llm_generated",
+        "top1_correct": false,
+        "top3_correct": false,
+        "top1_task": "code_review"
+      },
+      {
+        "task_type": "release_validation",
+        "role": "executor",
+        "situation": "staging environment issues",
+        "query": "Could the recent deployment in staging relate to the performance issues we're seeing in certain queries?",
+        "disguise_as": "db_query_debug",
+        "source": "llm_generated",
+        "top1_correct": true,
+        "top3_correct": true,
+        "top1_task": "release_validation"
+      },
+      {
+        "task_type": "db_query_debug",
+        "role": "planner",
+        "situation": "load testing",
+        "query": "During load testing, we noticed some API features may leak memory. Can you assess the database queries involved?",
+        "disguise_as": "code_review",
+        "source": "llm_generated",
+        "top1_correct": false,
+        "top3_correct": false,
+        "top1_task": "code_review"
+      },
+      {
+        "task_type": "api_integration",
+        "role": "coder",
+        "situation": "webhook retries",
+        "query": "Should we look into potential database issues that could be causing failed webhook retries during the deployment?",
+        "disguise_as": "release_validation",
+        "source": "llm_generated",
+        "top1_correct": false,
+        "top3_correct": false,
+        "top1_task": "release_validation"
+      },
+      {
+        "task_type": "code_review",
+        "role": "reviewer",
+        "situation": "error handling",
+        "query": "Are there unhandled exceptions in our code that could be leading to increased error rates in production?",
+        "disguise_as": "incident_investigation",
+        "source": "llm_generated",
+        "top1_correct": false,
+        "top3_correct": true,
+        "top1_task": "incident_investigation"
+      },
+      {
+        "task_type": "incident_investigation",
+        "role": "researcher",
+        "situation": "service disruptions",
+        "query": "Could the drop in API calls be indicative of a larger issue with our deployment process affecting service uptime?",
+        "disguise_as": "api_integration",
+        "source": "llm_generated",
+        "top1_correct": false,
+        "top3_correct": true,
+        "top1_task": "release_validation"
+      },
+      {
+        "task_type": "release_validation",
+        "role": "executor",
+        "situation": "service deployment errors",
+        "query": "Could the failed deployment process relate to some problematic database queries we need to optimize?",
+        "disguise_as": "db_query_debug",
+        "source": "llm_generated",
+        "top1_correct": false,
+        "top3_correct": true,
+        "top1_task": "api_integration"
+      }
+    ]
+  },
+  "llm_confusors_text": [
+    {
+      "task_type": "db_query_debug",
+      "role": "planner",
+      "situation": "API response delays",
+      "query": "We're experiencing slow responses from our external service that affects the API calls. How can we optimize these calls?",
+      "disguise_as": "api_integration",
+      "source": "llm_generated"
+    },
+    {
+      "task_type": "api_integration",
+      "role": "coder",
+      "situation": "inconsistent rate limiting",
+      "query": "Could you check if our recent changes introduce any memory leaks during API calls under load?",
+      "disguise_as": "code_review",
+      "source": "llm_generated"
+    },
+    {
+      "task_type": "code_review",
+      "role": "reviewer",
+      "situation": "unhandled exceptions",
+      "query": "Are there any deployment scripts that might be causing unexpected errors during the deployment process?",
+      "disguise_as": "release_validation",
+      "source": "llm_generated"
+    },
+    {
+      "task_type": "incident_investigation",
+      "role": "researcher",
+      "situation": "intermittent database errors",
+      "query": "We're noticing sporadic connection issues that seem to correlate with certain queries. Can you investigate the connection pool settings?",
+      "disguise_as": "db_query_debug",
+      "source": "llm_generated"
+    },
+    {
+      "task_type": "release_validation",
+      "role": "executor",
+      "situation": "failed staging deployment",
+      "query": "We had a sudden spike in error rates after the last deployment. Could you analyze any infrastructure failures that could be related?",
+      "disguise_as": "incident_investigation",
+      "source": "llm_generated"
+    },
+    {
+      "task_type": "db_query_debug",
+      "role": "planner",
+      "situation": "high CPU usage",
+      "query": "There was a significant increase in error rates that seems to be affecting overall server performance. What could be causing the high load?",
+      "disguise_as": "incident_investigation",
+      "source": "llm_generated"
+    },
+    {
+      "task_type": "api_integration",
+      "role": "coder",
+      "situation": "token expiration issues",
+      "query": "It looks like our database queries are timing out right after we refresh our access token. Could the token handling be affecting performance?",
+      "disguise_as": "db_query_debug",
+      "source": "llm_generated"
+    },
+    {
+      "task_type": "code_review",
+      "role": "reviewer",
+      "situation": "security vulnerability in API",
+      "query": "Can you review our API documentation to ensure we're not exposing memory leaks when users interact with it?",
+      "disguise_as": "api_integration",
+      "source": "llm_generated"
+    },
+    {
+      "task_type": "incident_investigation",
+      "role": "researcher",
+      "situation": "resource exhaustion",
+      "query": "Our canary release caused an unexpected spike in resource usage. What infrastructure issues should we consider?",
+      "disguise_as": "release_validation",
+      "source": "llm_generated"
+    },
+    {
+      "task_type": "release_validation",
+      "role": "executor",
+      "situation": "rollback complications",
+      "query": "Can you analyze the code for potential race conditions that might be causing issues with our rollback processes?",
+      "disguise_as": "code_review",
+      "source": "llm_generated"
+    },
+    {
+      "task_type": "db_query_debug",
+      "role": "planner",
+      "situation": "slow queries",
+      "query": "We've had to revert a few recent changes due to slow performance in our API. Could the recent database adjustments be the reason?",
+      "disguise_as": "release_validation",
+      "source": "llm_generated"
+    },
+    {
+      "task_type": "api_integration",
+      "role": "coder",
+      "situation": "webhook failures",
+      "query": "We're seeing a lot of HTTP errors when sending webhooks. Is the database connection pool affecting our webhook deliveries?",
+      "disguise_as": "db_query_debug",
+      "source": "llm_generated"
+    },
+    {
+      "task_type": "code_review",
+      "role": "reviewer",
+      "situation": "test coverage gaps",
+      "query": "There are multiple error logs coming from production. Can you track if there are any parts of our codebase that are untested?",
+      "disguise_as": "incident_investigation",
+      "source": "llm_generated"
+    },
+    {
+      "task_type": "incident_investigation",
+      "role": "researcher",
+      "situation": "database outages",
+      "query": "We had a successful deployment, but suddenly experienced database outages. What infrastructure problems could relate to this?",
+      "disguise_as": "release_validation",
+      "source": "llm_generated"
+    },
+    {
+      "task_type": "release_validation",
+      "role": "executor",
+      "situation": "deployment pipeline errors",
+      "query": "Are there any API rate limiting configurations affecting our ability to deploy in staging?",
+      "disguise_as": "api_integration",
+      "source": "llm_generated"
+    },
+    {
+      "task_type": "db_query_debug",
+      "role": "planner",
+      "situation": "index performance issues",
+      "query": "Can you review our recent API updates to see if any indexing is causing memory leaks?",
+      "disguise_as": "code_review",
+      "source": "llm_generated"
+    },
+    {
+      "task_type": "api_integration",
+      "role": "coder",
+      "situation": "API usage spikes",
+      "query": "We've noticed spikes in errors that seem to align with our API usage. Should we look into server issues?",
+      "disguise_as": "incident_investigation",
+      "source": "llm_generated"
+    },
+    {
+      "task_type": "code_review",
+      "role": "reviewer",
+      "situation": "security audits",
+      "query": "Could you evaluate if the new API features have introduced any potential race conditions in the code?",
+      "disguise_as": "api_integration",
+      "source": "llm_generated"
+    },
+    {
+      "task_type": "incident_investigation",
+      "role": "researcher",
+      "situation": "dependency failures",
+      "query": "Can you investigate any deployment-related issues stemming from failed external service dependencies?",
+      "disguise_as": "release_validation",
+      "source": "llm_generated"
+    },
+    {
+      "task_type": "release_validation",
+      "role": "executor",
+      "situation": "deployment timing issues",
+      "query": "We need to analyze if our canary release is the reason for recent spikes in infrastructure errors.",
+      "disguise_as": "incident_investigation",
+      "source": "llm_generated"
+    },
+    {
+      "task_type": "db_query_debug",
+      "role": "planner",
+      "situation": "query optimization",
+      "query": "Is there a way to improve our deployment process to reduce the number of failing queries?",
+      "disguise_as": "release_validation",
+      "source": "llm_generated"
+    },
+    {
+      "task_type": "api_integration",
+      "role": "coder",
+      "situation": "authentication failures",
+      "query": "Are the recent authentication failures linked to issues with our database connection configurations?",
+      "disguise_as": "db_query_debug",
+      "source": "llm_generated"
+    },
+    {
+      "task_type": "code_review",
+      "role": "reviewer",
+      "situation": "deadlock reports",
+      "query": "Could you check our incident logs to see if there are unhandled exceptions linked to deadlocks in our code?",
+      "disguise_as": "incident_investigation",
+      "source": "llm_generated"
+    },
+    {
+      "task_type": "incident_investigation",
+      "role": "researcher",
+      "situation": "system slowdowns",
+      "query": "Our system performance has degraded, coinciding with increased API calls. What infrastructure issues should we check?",
+      "disguise_as": "api_integration",
+      "source": "llm_generated"
+    },
+    {
+      "task_type": "release_validation",
+      "role": "executor",
+      "situation": "staging environment issues",
+      "query": "Could the recent deployment in staging relate to the performance issues we're seeing in certain queries?",
+      "disguise_as": "db_query_debug",
+      "source": "llm_generated"
+    },
+    {
+      "task_type": "db_query_debug",
+      "role": "planner",
+      "situation": "load testing",
+      "query": "During load testing, we noticed some API features may leak memory. Can you assess the database queries involved?",
+      "disguise_as": "code_review",
+      "source": "llm_generated"
+    },
+    {
+      "task_type": "api_integration",
+      "role": "coder",
+      "situation": "webhook retries",
+      "query": "Should we look into potential database issues that could be causing failed webhook retries during the deployment?",
+      "disguise_as": "release_validation",
+      "source": "llm_generated"
+    },
+    {
+      "task_type": "code_review",
+      "role": "reviewer",
+      "situation": "error handling",
+      "query": "Are there unhandled exceptions in our code that could be leading to increased error rates in production?",
+      "disguise_as": "incident_investigation",
+      "source": "llm_generated"
+    },
+    {
+      "task_type": "incident_investigation",
+      "role": "researcher",
+      "situation": "service disruptions",
+      "query": "Could the drop in API calls be indicative of a larger issue with our deployment process affecting service uptime?",
+      "disguise_as": "api_integration",
+      "source": "llm_generated"
+    },
+    {
+      "task_type": "release_validation",
+      "role": "executor",
+      "situation": "service deployment errors",
+      "query": "Could the failed deployment process relate to some problematic database queries we need to optimize?",
+      "disguise_as": "db_query_debug",
+      "source": "llm_generated"
+    }
+  ]
+}
