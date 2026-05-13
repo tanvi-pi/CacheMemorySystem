@@ -28,6 +28,7 @@ class MultiAgentSystem:
         embedder: Any = None,
         abstract_generator: Any = None,
         always_generate_abstracts: bool = False,
+        policy_kwargs: Optional[Dict[str, Any]] = None,
     ):
         if not roles:
             raise ValueError("roles must contain at least one agent role")
@@ -40,10 +41,11 @@ class MultiAgentSystem:
             always_generate=always_generate_abstracts,
         )
         self.task_role_map = task_role_map or {}
+        _policy_kwargs = policy_kwargs or {}
 
         self.agents: Dict[str, Agent] = {}
         for role in roles:
-            policy = TieredRetrievalPolicy(self.store, self.embedder)
+            policy = TieredRetrievalPolicy(self.store, self.embedder, **_policy_kwargs)
             self.agents[role] = Agent(role, policy, self.writer)
 
     def _resolve_role(self, task_type: str, role: Optional[str]) -> Agent:

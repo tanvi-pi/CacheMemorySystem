@@ -38,6 +38,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import os
 import re
 import string
@@ -1207,11 +1208,12 @@ def _condition_ablation_no_l0(
 ) -> List[Dict]:
     """
     Ablation: disable L0 early-exit signal.
-    Uses TieredRetrievalPolicy with l0_fail_threshold=2.0 so L0 never
-    short-circuits. Measures the contribution of outcome-aware hash signals.
+    Uses TieredRetrievalPolicy with l0_sim_threshold=2.0 so L0 never
+    matches (cosine similarity is at most 1.0). Measures the contribution
+    of outcome-aware hash signals.
     """
     from TieredRetrievalPolicy import TieredRetrievalPolicy as TRP
-    ablation_policy = TRP(store, embedder, l0_fail_threshold=2.0)
+    ablation_policy = TRP(store, embedder, l0_sim_threshold=2.0)
     flat_policy = FlatRetrievalPolicy(store, embedder, topk=5)
     results = []
     tier_counts: Dict[str, int] = {}
@@ -1637,6 +1639,103 @@ def run_locomo_benchmark(
         )
 
 
+def _run_ablation_once(
+    all_test_qs: List[Dict],
+    system: Any,
+    store: Any,
+    embedder: Any,
+    client: Any,
+    model: str,
+) -> Dict[str, List[Dict]]:
+    """Run all four ablation conditions once. Returns dict keyed by condition name."""
+    r_full = _condition_tiered_memory(
+        all_test_qs, system, store, embedder, client, model,
+        _classify_locomo_q, token_budget=3000, latency_budget_ms=800,
+    )
+    r_no_l0 = _condition_ablation_no_l0(
+        all_test_qs, system, store, embedder, client, model,
+        _classify_locomo_q, token_budget=3000, latency_budget_ms=800,
+    )
+    r_no_l2 = _condition_ablation_no_l2(
+        all_test_qs, system, store, embedder, client, model,
+        _classify_locomo_q, token_budget=3000, latency_budget_ms=800,
+    )
+    r_no_role = _condition_flat_memory(
+        all_test_qs, store, embedder, client, model, _classify_locomo_q
+    )
+    return {
+        "full_tiered": r_full,
+        "no_l0":       r_no_l0,
+        "no_l2":       r_no_l2,
+        "no_role":     r_no_role,
+    }
+
+
+def _aggregate_ablation_runs(all_runs: List[Dict[str, List[Dict]]]) -> List[Dict]:
+    """Compute mean ± std across multiple ablation runs."""
+    conditions = ["full_tiered", "no_l0", "no_l2", "no_role"]
+    aggregated = []
+    for cond in conditions:
+        summaries = [_summarize(cond, run[cond]) for run in all_runs]
+        em_vals  = [s["exact_match_pct"] for s in summaries]
+        f1_vals  = [s["f1_pct"]          for s in summaries]
+        tok_vals = [s["avg_tokens"]       for s in summaries]
+        lat_vals = [s["avg_latency_ms"]   for s in summaries]
+
+        def _mean(v: List[float]) -> float:
+            return sum(v) / len(v)
+
+        def _std(v: List[float]) -> float:
+            m = _mean(v)
+            return math.sqrt(sum((x - m) ** 2 for x in v) / max(len(v) - 1, 1))
+
+        aggregated.append({
+            "condition":    cond,
+            "em_mean":      round(_mean(em_vals),  1),
+            "em_std":       round(_std(em_vals),   1),
+            "f1_mean":      round(_mean(f1_vals),  1),
+            "f1_std":       round(_std(f1_vals),   1),
+            "avg_tokens":   round(_mean(tok_vals), 0),
+            "avg_latency_ms": round(_mean(lat_vals), 0),
+            "n_runs":       len(all_runs),
+        })
+    return aggregated
+
+
+def _print_ablation_report(aggregated: List[Dict]) -> None:
+    n_runs = aggregated[0]["n_runs"]
+    print(f"\n{'='*76}")
+    print(f"  ABLATION STUDY — Component Contribution Analysis  ({n_runs} runs, mean ± std)")
+    print(f"{'='*76}")
+    print(f"  {'Condition':<22} {'EM (mean±std)':>16} {'F1 (mean±std)':>16} {'Tokens':>8} {'Latency':>10}")
+    print(f"  {'-'*72}")
+    for s in aggregated:
+        em_str = f"{s['em_mean']} ± {s['em_std']}"
+        f1_str = f"{s['f1_mean']} ± {s['f1_std']}"
+        print(
+            f"  {s['condition']:<22} {em_str:>16} {f1_str:>16} "
+            f"{int(s['avg_tokens']):>8} {int(s['avg_latency_ms']):>9}ms"
+        )
+
+    full = aggregated[0]
+    print(f"\n  Drop from full_tiered (mean F1 delta ± combined std):")
+    print(f"  {'-'*72}")
+    labels = {
+        "no_l0":   "remove L0 hash signals",
+        "no_l2":   "remove L2 escalation",
+        "no_role": "remove role partitioning",
+    }
+    for s in aggregated[1:]:
+        f1_delta = round(full["f1_mean"] - s["f1_mean"], 1)
+        # Combined std for a difference of two means
+        combined_std = round(math.sqrt(full["f1_std"] ** 2 + s["f1_std"] ** 2), 1)
+        sign = "-" if f1_delta >= 0 else "+"
+        robust = "robust" if abs(f1_delta) > combined_std else "within noise"
+        label = labels.get(s["condition"], s["condition"])
+        print(f"  {label:<32} F1: {sign}{abs(f1_delta):.1f} ± {combined_std}  [{robust}]")
+    print(f"{'='*76}\n")
+
+
 def run_locomo_ablation(
     n_conversations: int,
     client: Any,
@@ -1644,16 +1743,13 @@ def run_locomo_ablation(
     model: str,
     output: Optional[str],
     db_path: str,
+    n_runs: int = 3,
 ) -> None:
     """
     Ablation study: runs 3 ablated variants alongside the full tiered system
     to isolate the contribution of each architectural component.
-
-    Conditions:
-      full_tiered     — complete L0/L1/L2 system (baseline)
-      no_l0           — L0 early-exit disabled; measures contribution of hash signals
-      no_l2           — L2 escalation disabled; measures contribution of full-trace retrieval
-      no_role         — flat search (no role partitioning); measures contribution of role filtering
+    Repeats n_runs times and reports mean ± std to establish which deltas
+    are robust to GPT answer-generation variance.
     """
     for suffix in ("", "-wal", "-shm"):
         p = db_path + suffix
@@ -1682,87 +1778,37 @@ def run_locomo_ablation(
         all_test_qs.extend(qa_items)
 
     print(f"[ablation] {total_turns} turns seeded | {len(all_test_qs)} test questions")
-    print(f"[ablation] Running 4 conditions (full + 3 ablations)...\n")
+    print(f"[ablation] Running {n_runs} × 4 conditions to compute mean ± std...\n")
 
-    print("[1/4] full_tiered     — complete L0/L1/L2 system")
-    r_full = _condition_tiered_memory(
-        all_test_qs, system, store, embedder, client, model,
-        _classify_locomo_q, token_budget=3000, latency_budget_ms=800,
-    )
-    for r, q in zip(r_full, all_test_qs):
-        r["evidence_type"] = q.get("evidence_type", "unknown")
+    all_runs: List[Dict[str, List[Dict]]] = []
+    for run_idx in range(n_runs):
+        print(f"  ── Run {run_idx + 1}/{n_runs} ──────────────────────────")
+        run_results = _run_ablation_once(all_test_qs, system, store, embedder, client, model)
+        # Attach evidence_type for per-type breakdown
+        for cond_results in run_results.values():
+            for r, q in zip(cond_results, all_test_qs):
+                r["evidence_type"] = q.get("evidence_type", "unknown")
+        all_runs.append(run_results)
 
-    print("[2/4] no_l0           — L0 early-exit disabled")
-    r_no_l0 = _condition_ablation_no_l0(
-        all_test_qs, system, store, embedder, client, model,
-        _classify_locomo_q, token_budget=3000, latency_budget_ms=800,
-    )
-    for r, q in zip(r_no_l0, all_test_qs):
-        r["evidence_type"] = q.get("evidence_type", "unknown")
+    aggregated = _aggregate_ablation_runs(all_runs)
+    _print_ablation_report(aggregated)
 
-    print("[3/4] no_l2           — L2 escalation disabled")
-    r_no_l2 = _condition_ablation_no_l2(
-        all_test_qs, system, store, embedder, client, model,
-        _classify_locomo_q, token_budget=3000, latency_budget_ms=800,
-    )
-    for r, q in zip(r_no_l2, all_test_qs):
-        r["evidence_type"] = q.get("evidence_type", "unknown")
-
-    print("[4/4] no_role         — flat search, no role partitioning")
-    r_no_role = _condition_flat_memory(
-        all_test_qs, store, embedder, client, model, _classify_locomo_q
-    )
-    for r, q in zip(r_no_role, all_test_qs):
-        r["evidence_type"] = q.get("evidence_type", "unknown")
-
-    summaries = [
-        _summarize("full_tiered", r_full),
-        _summarize("no_l0",       r_no_l0),
-        _summarize("no_l2",       r_no_l2),
-        _summarize("no_role",     r_no_role),
-    ]
-
-    print(f"\n{'='*70}")
-    print(f"  ABLATION STUDY — Component Contribution Analysis")
-    print(f"{'='*70}")
-    print(f"  {'Condition':<22} {'EM %':>7} {'F1 %':>7} {'Tokens':>9} {'Latency':>11}")
-    print(f"  {'-'*60}")
-    for s in summaries:
-        print(
-            f"  {s['condition']:<22} {s['exact_match_pct']:>7} {s['f1_pct']:>7} "
-            f"{s['avg_tokens']:>9} {s['avg_latency_ms']:>10}ms"
-        )
-
-    full_s = summaries[0]
-    print(f"\n  Drop from full_tiered when component removed:")
-    print(f"  {'-'*60}")
-    labels = {
-        "no_l0":   "remove L0 hash signals",
-        "no_l2":   "remove L2 escalation",
-        "no_role": "remove role partitioning",
-    }
-    for s in summaries[1:]:
-        em_drop = round(full_s["exact_match_pct"] - s["exact_match_pct"], 1)
-        f1_drop = round(full_s["f1_pct"] - s["f1_pct"], 1)
-        label = labels.get(s["condition"], s["condition"])
-        sign_em = "-" if em_drop >= 0 else "+"
-        sign_f1 = "-" if f1_drop >= 0 else "+"
-        print(
-            f"  {label:<30}  EM: {sign_em}{abs(em_drop)}%   F1: {sign_f1}{abs(f1_drop)}%"
-        )
-
-    print(f"\n  Per-type breakdown:")
-    _print_locomo_breakdown(r_full, r_no_role, r_no_l2)
-    print(f"{'='*70}\n")
+    # Use the last run's per-question results for the breakdown table
+    last = all_runs[-1]
+    print(f"  Per-type breakdown (last run):")
+    _print_locomo_breakdown(last["full_tiered"], last["no_role"], last["no_l2"])
 
     if output:
         _save_results(
             output, "locomo_ablation",
             {"n_conversations": len(conversations), "n_turns": total_turns,
-             "n_test": len(all_test_qs)},
-            embedder, model, summaries,
-            {"full_tiered": r_full, "no_l0": r_no_l0,
-             "no_l2": r_no_l2, "no_role": r_no_role},
+             "n_test": len(all_test_qs), "n_runs": n_runs},
+            embedder, model,
+            [{"condition": s["condition"], "exact_match_pct": s["em_mean"],
+              "f1_pct": s["f1_mean"], "avg_tokens": s["avg_tokens"],
+              "avg_latency_ms": s["avg_latency_ms"]} for s in aggregated],
+            {"full_tiered": last["full_tiered"], "no_l0": last["no_l0"],
+             "no_l2": last["no_l2"], "no_role": last["no_role"]},
         )
 
 
@@ -1825,6 +1871,8 @@ def main() -> None:
                         help="[locomo] Number of conversations to load (max 10, default 10)")
     parser.add_argument("--ablation", action="store_true",
                         help="[locomo] Run ablation study instead of standard 4-condition benchmark")
+    parser.add_argument("--n-ablation-runs", type=int, default=3,
+                        help="[locomo --ablation] Repeat ablation this many times and report mean ± std (default 3)")
     # Shared args
     parser.add_argument("--model", default="gpt-4o-mini",
                         help="OpenAI model for answer generation (default gpt-4o-mini)")
@@ -1858,6 +1906,7 @@ def main() -> None:
                 model=args.model,
                 output=args.output,
                 db_path=args.db_path,
+                n_runs=args.n_ablation_runs,
             )
         else:
             run_locomo_benchmark(

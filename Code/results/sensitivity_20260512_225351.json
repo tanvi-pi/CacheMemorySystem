@@ -1,0 +1,487 @@
+{
+  "config": {
+    "episodes_per_task": 20,
+    "num_queries": 100,
+    "tuning_seed": 42,
+    "defaults": {
+      "l0_sim_threshold": 0.65,
+      "l1_min_sim": 0.15,
+      "min_confidence_for_l1_only": 0.55,
+      "weak_l1_sim_threshold": 0.25,
+      "retry_escalate_to_l2": 2
+    },
+    "generated_at": "2026-05-12T22:53:51",
+    "note": "One-at-a-time sensitivity sweep. Tuning seed (42) is disjoint from the evaluation seed (7) used in Tables 2-5."
+  },
+  "results": {
+    "l0_sim_threshold": [
+      {
+        "value": 0.45,
+        "is_default": false,
+        "top1_pct": 81.0,
+        "avg_tokens": 353.3,
+        "tier_counts": {
+          "L0": 38,
+          "L1": 35,
+          "L2": 27
+        },
+        "evaluable": 79
+      },
+      {
+        "value": 0.5,
+        "is_default": false,
+        "top1_pct": 81.0,
+        "avg_tokens": 353.2,
+        "tier_counts": {
+          "L0": 38,
+          "L1": 35,
+          "L2": 27
+        },
+        "evaluable": 79
+      },
+      {
+        "value": 0.55,
+        "is_default": false,
+        "top1_pct": 81.0,
+        "avg_tokens": 353.3,
+        "tier_counts": {
+          "L0": 38,
+          "L1": 35,
+          "L2": 27
+        },
+        "evaluable": 79
+      },
+      {
+        "value": 0.6,
+        "is_default": false,
+        "top1_pct": 81.0,
+        "avg_tokens": 353.2,
+        "tier_counts": {
+          "L0": 38,
+          "L1": 35,
+          "L2": 27
+        },
+        "evaluable": 79
+      },
+      {
+        "value": 0.65,
+        "is_default": true,
+        "top1_pct": 81.0,
+        "avg_tokens": 353.3,
+        "tier_counts": {
+          "L0": 38,
+          "L1": 35,
+          "L2": 27
+        },
+        "evaluable": 79
+      },
+      {
+        "value": 0.7,
+        "is_default": false,
+        "top1_pct": 81.0,
+        "avg_tokens": 353.3,
+        "tier_counts": {
+          "L0": 38,
+          "L1": 35,
+          "L2": 27
+        },
+        "evaluable": 79
+      },
+      {
+        "value": 0.75,
+        "is_default": false,
+        "top1_pct": 81.0,
+        "avg_tokens": 353.3,
+        "tier_counts": {
+          "L0": 38,
+          "L1": 35,
+          "L2": 27
+        },
+        "evaluable": 79
+      },
+      {
+        "value": 0.8,
+        "is_default": false,
+        "top1_pct": 81.0,
+        "avg_tokens": 353.3,
+        "tier_counts": {
+          "L0": 38,
+          "L1": 35,
+          "L2": 27
+        },
+        "evaluable": 79
+      },
+      {
+        "value": 0.85,
+        "is_default": false,
+        "top1_pct": 81.0,
+        "avg_tokens": 353.2,
+        "tier_counts": {
+          "L0": 38,
+          "L1": 35,
+          "L2": 27
+        },
+        "evaluable": 79
+      }
+    ],
+    "l1_min_sim": [
+      {
+        "value": 0.05,
+        "is_default": false,
+        "top1_pct": 81.0,
+        "avg_tokens": 535.5,
+        "tier_counts": {
+          "L0": 38,
+          "L1": 29,
+          "L2": 33
+        },
+        "evaluable": 79
+      },
+      {
+        "value": 0.1,
+        "is_default": false,
+        "top1_pct": 81.0,
+        "avg_tokens": 473.5,
+        "tier_counts": {
+          "L0": 38,
+          "L1": 30,
+          "L2": 32
+        },
+        "evaluable": 79
+      },
+      {
+        "value": 0.15,
+        "is_default": true,
+        "top1_pct": 81.0,
+        "avg_tokens": 353.3,
+        "tier_counts": {
+          "L0": 38,
+          "L1": 35,
+          "L2": 27
+        },
+        "evaluable": 79
+      },
+      {
+        "value": 0.2,
+        "is_default": false,
+        "top1_pct": 78.5,
+        "avg_tokens": 227.0,
+        "tier_counts": {
+          "L0": 38,
+          "L1": 44,
+          "L2": 18
+        },
+        "evaluable": 79
+      },
+      {
+        "value": 0.25,
+        "is_default": false,
+        "top1_pct": 70.9,
+        "avg_tokens": 117.9,
+        "tier_counts": {
+          "L0": 38,
+          "L1": 52,
+          "L2": 10
+        },
+        "evaluable": 79
+      },
+      {
+        "value": 0.3,
+        "is_default": false,
+        "top1_pct": 63.3,
+        "avg_tokens": 90.8,
+        "tier_counts": {
+          "L0": 38,
+          "L1": 53,
+          "L2": 9
+        },
+        "evaluable": 79
+      }
+    ],
+    "min_confidence_for_l1_only": [
+      {
+        "value": 0.35,
+        "is_default": false,
+        "top1_pct": 81.0,
+        "avg_tokens": 308.3,
+        "tier_counts": {
+          "L0": 38,
+          "L1": 41,
+          "L2": 21
+        },
+        "evaluable": 79
+      },
+      {
+        "value": 0.4,
+        "is_default": false,
+        "top1_pct": 81.0,
+        "avg_tokens": 308.3,
+        "tier_counts": {
+          "L0": 38,
+          "L1": 41,
+          "L2": 21
+        },
+        "evaluable": 79
+      },
+      {
+        "value": 0.45,
+        "is_default": false,
+        "top1_pct": 81.0,
+        "avg_tokens": 321.7,
+        "tier_counts": {
+          "L0": 38,
+          "L1": 39,
+          "L2": 23
+        },
+        "evaluable": 79
+      },
+      {
+        "value": 0.5,
+        "is_default": false,
+        "top1_pct": 81.0,
+        "avg_tokens": 344.3,
+        "tier_counts": {
+          "L0": 38,
+          "L1": 36,
+          "L2": 26
+        },
+        "evaluable": 79
+      },
+      {
+        "value": 0.55,
+        "is_default": true,
+        "top1_pct": 81.0,
+        "avg_tokens": 353.3,
+        "tier_counts": {
+          "L0": 38,
+          "L1": 35,
+          "L2": 27
+        },
+        "evaluable": 79
+      },
+      {
+        "value": 0.6,
+        "is_default": false,
+        "top1_pct": 81.0,
+        "avg_tokens": 370.9,
+        "tier_counts": {
+          "L0": 38,
+          "L1": 32,
+          "L2": 30
+        },
+        "evaluable": 79
+      },
+      {
+        "value": 0.65,
+        "is_default": false,
+        "top1_pct": 81.0,
+        "avg_tokens": 379.6,
+        "tier_counts": {
+          "L0": 38,
+          "L1": 31,
+          "L2": 31
+        },
+        "evaluable": 79
+      },
+      {
+        "value": 0.7,
+        "is_default": false,
+        "top1_pct": 81.0,
+        "avg_tokens": 393.3,
+        "tier_counts": {
+          "L0": 38,
+          "L1": 29,
+          "L2": 33
+        },
+        "evaluable": 79
+      },
+      {
+        "value": 0.75,
+        "is_default": false,
+        "top1_pct": 81.0,
+        "avg_tokens": 393.3,
+        "tier_counts": {
+          "L0": 38,
+          "L1": 29,
+          "L2": 33
+        },
+        "evaluable": 79
+      }
+    ],
+    "weak_l1_sim_threshold": [
+      {
+        "value": 0.1,
+        "is_default": false,
+        "top1_pct": 81.0,
+        "avg_tokens": 290.5,
+        "tier_counts": {
+          "L0": 38,
+          "L1": 43,
+          "L2": 19
+        },
+        "evaluable": 79
+      },
+      {
+        "value": 0.15,
+        "is_default": false,
+        "top1_pct": 81.0,
+        "avg_tokens": 290.5,
+        "tier_counts": {
+          "L0": 38,
+          "L1": 43,
+          "L2": 19
+        },
+        "evaluable": 79
+      },
+      {
+        "value": 0.2,
+        "is_default": false,
+        "top1_pct": 81.0,
+        "avg_tokens": 313.0,
+        "tier_counts": {
+          "L0": 38,
+          "L1": 40,
+          "L2": 22
+        },
+        "evaluable": 79
+      },
+      {
+        "value": 0.25,
+        "is_default": true,
+        "top1_pct": 81.0,
+        "avg_tokens": 353.3,
+        "tier_counts": {
+          "L0": 38,
+          "L1": 35,
+          "L2": 27
+        },
+        "evaluable": 79
+      },
+      {
+        "value": 0.3,
+        "is_default": false,
+        "top1_pct": 81.0,
+        "avg_tokens": 388.6,
+        "tier_counts": {
+          "L0": 38,
+          "L1": 30,
+          "L2": 32
+        },
+        "evaluable": 79
+      },
+      {
+        "value": 0.35,
+        "is_default": false,
+        "top1_pct": 81.0,
+        "avg_tokens": 406.5,
+        "tier_counts": {
+          "L0": 38,
+          "L1": 28,
+          "L2": 34
+        },
+        "evaluable": 79
+      },
+      {
+        "value": 0.4,
+        "is_default": false,
+        "top1_pct": 81.0,
+        "avg_tokens": 406.5,
+        "tier_counts": {
+          "L0": 38,
+          "L1": 28,
+          "L2": 34
+        },
+        "evaluable": 79
+      }
+    ],
+    "retry_escalate_to_l2": [
+      {
+        "value": 1,
+        "is_default": false,
+        "top1_pct": 81.0,
+        "avg_tokens": 411.3,
+        "tier_counts": {
+          "L0": 38,
+          "L1": 27,
+          "L2": 35
+        },
+        "evaluable": 79
+      },
+      {
+        "value": 2,
+        "is_default": true,
+        "top1_pct": 81.0,
+        "avg_tokens": 353.3,
+        "tier_counts": {
+          "L0": 38,
+          "L1": 35,
+          "L2": 27
+        },
+        "evaluable": 79
+      },
+      {
+        "value": 3,
+        "is_default": false,
+        "top1_pct": 81.0,
+        "avg_tokens": 277.9,
+        "tier_counts": {
+          "L0": 38,
+          "L1": 44,
+          "L2": 18
+        },
+        "evaluable": 79
+      },
+      {
+        "value": 4,
+        "is_default": false,
+        "top1_pct": 81.0,
+        "avg_tokens": 224.4,
+        "tier_counts": {
+          "L0": 38,
+          "L1": 51,
+          "L2": 11
+        },
+        "evaluable": 79
+      },
+      {
+        "value": 5,
+        "is_default": false,
+        "top1_pct": 81.0,
+        "avg_tokens": 224.4,
+        "tier_counts": {
+          "L0": 38,
+          "L1": 51,
+          "L2": 11
+        },
+        "evaluable": 79
+      }
+    ]
+  },
+  "stability_summary": {
+    "l0_sim_threshold": {
+      "top1_range_pp": 0.0,
+      "top1_std_pp": 0.0,
+      "token_range_pct": 0.0
+    },
+    "l1_min_sim": {
+      "top1_range_pp": 17.7,
+      "top1_std_pp": 6.7,
+      "token_range_pct": 83.0
+    },
+    "min_confidence_for_l1_only": {
+      "top1_range_pp": 0.0,
+      "top1_std_pp": 0.0,
+      "token_range_pct": 21.6
+    },
+    "weak_l1_sim_threshold": {
+      "top1_range_pp": 0.0,
+      "top1_std_pp": 0.0,
+      "token_range_pct": 28.5
+    },
+    "retry_escalate_to_l2": {
+      "top1_range_pp": 0.0,
+      "top1_std_pp": 0.0,
+      "token_range_pct": 45.4
+    }
+  }
+}

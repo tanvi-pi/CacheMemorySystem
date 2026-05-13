@@ -52,6 +52,8 @@ class TieredRetrievalPolicy:
         min_confidence_for_l1_only: float = 0.55,
         retry_escalate_to_l2: int = 2,
         l2_topk: int = 2,
+        weak_l1_sim_threshold: float = 0.25,
+        l1_min_sim: float = 0.15,
     ):
         self.store = store
         self.embedder = embedder
@@ -59,6 +61,8 @@ class TieredRetrievalPolicy:
         self.min_confidence_for_l1_only = min_confidence_for_l1_only
         self.retry_escalate_to_l2 = retry_escalate_to_l2
         self.l2_topk = l2_topk
+        self.weak_l1_sim_threshold = weak_l1_sim_threshold
+        self.l1_min_sim = l1_min_sim
 
     def retrieve(self, ctx: RetrievalContext) -> Dict[str, Any]:
         t0 = time.perf_counter()
@@ -112,7 +116,7 @@ class TieredRetrievalPolicy:
             agent_role=ctx.agent_role,
             query_embedding=qemb,
             limit=l1_limit,
-            min_sim=0.15,
+            min_sim=self.l1_min_sim,
             max_candidates=l1_max_candidates,
         )
         used["l1"] = True
@@ -126,7 +130,7 @@ class TieredRetrievalPolicy:
         # open_domain), or when the agent is in a retry loop.
         low_conf = ctx.confidence < self.min_confidence_for_l1_only
         retry_loop = ctx.retry_count >= self.retry_escalate_to_l2
-        weak_l1 = not abstract_hits or abstract_hits[0]["sim"] < 0.25
+        weak_l1 = not abstract_hits or abstract_hits[0]["sim"] < self.weak_l1_sim_threshold
         should_escalate = (weak_l1 and (is_open_domain or low_conf)) or retry_loop
 
         effective_token_budget = (
